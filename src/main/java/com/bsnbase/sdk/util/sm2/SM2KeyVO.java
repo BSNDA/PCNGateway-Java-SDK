@@ -29,7 +29,7 @@ public class SM2KeyVO {
     //SoftPubKey:04+X+Y
     public String getPubHexInSoft(){
         return Util.byteToHex(publicKey.getEncoded());
-        //System.out.println("public key: " + );
+        //System.out.println("公钥: " + );
     }
     public String getPubHexInHard(){
         return SecurityTestAll.SM2PubHardKeyHead +Util.byteToHex(publicKey.getEncoded());

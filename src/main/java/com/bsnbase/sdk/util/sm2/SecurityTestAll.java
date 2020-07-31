@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class SecurityTestAll {
-    //SM2 Public key encoding format
+    //SM2公钥编码格式
     //HardPubKey:3059301306072A8648CE3D020106082A811CCF5501822D03420004+X+Y
     //SoftPubKey:04+X+Y
     public static final String SM2PubHardKeyHead = "3059301306072A8648CE3D020106082A811CCF5501822D034200";
-    //SM2 Encryption ciphertext difference: soft encryption adds 04
-    //SM2 Encryption auto-signature encoding format
+    //SM2加密 密文区别:软加密多了04
+    //SM2加密机签名编码格式
     //HardSign:R+S
     //public static final String SM2PubHardKeyHead="3059301306072A8648CE3D020106082A811CCF5501822D034200";
     //private final String SM4_CBC_IV="";
@@ -23,92 +23,92 @@ public class SecurityTestAll {
 
 
     public static void main(String[] args) throws Exception {
-        System.out.println("--Generates the SM2 secret key--:");
+        System.out.println("--产生SM2秘钥--:");
         SM2KeyVO sm2KeyVO = generateSM2Key();
-        System.out.println("public key:" + sm2KeyVO.getPubHexInSoft());
-        System.out.println("private key:" + sm2KeyVO.getPriHexInSoft());
-        //data encryption
-        System.out.println("--Test encryption start--");
+        System.out.println("公钥:" + sm2KeyVO.getPubHexInSoft());
+        System.out.println("私钥:" + sm2KeyVO.getPriHexInSoft());
+        //数据加密
+        System.out.println("--测试加密开始--");
         String src = "This is string";
-        System.out.println("Original utf-8 hex:" + Util.byteToHex(src.getBytes()));
+        System.out.println("原文UTF-8转hex:" + Util.byteToHex(src.getBytes()));
         String SM2Enc = SM2Enc(sm2KeyVO.getPubHexInSoft(), src);
-        System.out.println("encryption:");
-        System.out.println("chiper:" + SM2Enc);
-        String SM2Dec = SM2Dec(sm2KeyVO.getPriHexInSoft(), SM2Enc);//private key decode
-        System.out.println("decryption:" + SM2Dec);
-        System.out.println("--End of test encryption--");
+        System.out.println("加密:");
+        System.out.println("密文:" + SM2Enc);
+        String SM2Dec = SM2Dec(sm2KeyVO.getPriHexInSoft(), SM2Enc);//私钥解密
+        System.out.println("解密:" + SM2Dec);
+        System.out.println("--测试加密结束--");
 
-        System.out.println("--Test SM2 signatures--");
-        System.out.println("Original hex:" + Util.byteToHex(src.getBytes()));
+        System.out.println("--测试SM2签名--");
+        System.out.println("原文hex:" + Util.byteToHex(src.getBytes()));
         String s5 = Util.byteToHex(src.getBytes());
 
-        System.out.println("Signature test begins:");
+        System.out.println("签名测试开始:");
         SM2SignVO sign = genSM2Signature(sm2KeyVO.getPriHexInSoft(), s5);
-        System.out.println("Soft-encrypt signature results:" + sign.getSm2_signForSoft());
-        System.out.println("Encrypt machine signature results:" + sign.getSm2_signForHard());
-        //System.out.println("Transfer signature test:"+SM2SignHardToSoft(sign.getSm2_signForHard()));
-        System.out.println("Verify signature 1, software encryption:");
+        System.out.println("软加密签名结果:" + sign.getSm2_signForSoft());
+        System.out.println("加密机签名结果:" + sign.getSm2_signForHard());
+        //System.out.println("转签名测试:"+SM2SignHardToSoft(sign.getSm2_signForHard()));
+        System.out.println("验签1,软件加密方式:");
         boolean b = verifySM2Signature(sm2KeyVO.getPubHexInSoft(), s5, sign.getSm2_signForSoft());
-        System.out.println("verify the signature via software encryption:" + b);
-        System.out.println("verify the signature2, hardware encryption:");
+        System.out.println("软件加密方式验签结果:" + b);
+        System.out.println("验签2,硬件加密方式:");
         String sm2_signForHard = sign.getSm2_signForHard();
-        System.out.println("signature R:"+sign.sign_r);
-        System.out.println("signature S:"+sign.sign_s);
-        //System.out.println("hard:"+sm2_signForHard);
+        System.out.println("签名R:"+sign.sign_r);
+        System.out.println("签名S:"+sign.sign_s);
+        //System.out.println("硬:"+sm2_signForHard);
         b = verifySM2Signature(sm2KeyVO.getPubHexInSoft(), s5, SM2SignHardToSoft(sign.getSm2_signForHard()));
-        System.out.println("verify the signature via hardware encryption:" + b);
+        System.out.println("硬件加密方式验签结果:" + b);
         if (!b) {
             throw new RuntimeException();
         }
-        System.out.println("--end of signature test--");
+        System.out.println("--签名测试结束--");
 
     }
 
-    //SM2 public key soft switch to Hard
+    //SM2公钥soft和Hard转换
     public static String SM2PubKeySoftToHard(String softKey) {
         return SM2PubHardKeyHead + softKey;
     }
 
-    //SM2 public key Hard switch to soft
+    //SM2公钥Hard和soft转换
     public static String SM2PubKeyHardToSoft(String hardKey) {
         return hardKey.replaceFirst(SM2PubHardKeyHead, "");
     }
 
-    //generate asymmetric keys
+    //产生非对称秘钥
     public static SM2KeyVO generateSM2Key() throws IOException {
         SM2KeyVO sm2KeyVO = SM2EncDecUtils.generateKeyPair();
         return sm2KeyVO;
     }
 
-    //Public key encryption
+    //公钥加密
     public static String SM2Enc(String pubKey, String src) throws IOException {
         String encrypt = SM2EncDecUtils.encrypt(Util.hexStringToBytes(pubKey), src.getBytes());
-        //delete 04
+        //删除04
         encrypt=encrypt.substring(2,encrypt.length());
         return encrypt;
     }
 
-    //private key decode
+    //私钥解密
     public static String SM2Dec(String priKey, String encryptedData) throws IOException {
-        // add 04
+        //填充04
         encryptedData="04"+encryptedData;
         byte[] decrypt = SM2EncDecUtils.decrypt(Util.hexStringToBytes(priKey), Util.hexStringToBytes(encryptedData));
         return new String(decrypt);
     }
 
-    //private key signature, parameter 2: the original string must be hex!!!! Because it is directly used to calculate the signature, it may be an SM3 string or a normal string Hex
+    //私钥签名,参数二:原串必须是hex!!!!因为是直接用于计算签名的,可能是SM3串,也可能是普通串转Hex
     public static SM2SignVO genSM2Signature(String priKey, String sourceData) throws Exception {
         SM2SignVO sign = SM2SignVerUtils.Sign2SM2(Util.hexToByte(priKey), Util.hexToByte(sourceData));
         return sign;
     }
 
-    //verify the public key parameter two:  the original string must be hex!! Because it is directly used to calculate the signature, it may be an SM3 string or a normal string Hex
+    //公钥验签,参数二:原串必须是hex!!!!因为是直接用于计算签名的,可能是SM3串,也可能是普通串转Hex
     public static boolean verifySM2Signature(String pubKey, String sourceData, String hardSign) {
         SM2SignVO verify = SM2SignVerUtils.VerifySignSM2(Util.hexStringToBytes(pubKey), Util.hexToByte(sourceData), Util.hexToByte(hardSign));
         return verify.isVerify();
     }
 
-    //SM2 signature Hard to soft
+    //SM2签名Hard转soft
     public static String SM2SignHardToSoft(String hardSign) {
         byte[] bytes = Util.hexToByte(hardSign);
         byte[] r = new byte[bytes.length / 2];
@@ -129,12 +129,12 @@ public class SecurityTestAll {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        // SM2 encryption machine to soft encryption encoding format
+        //SM2加密机转软加密编码格式
         //return SM2SignHardKeyHead+hardSign.substring(0, hardSign.length()/2)+SM2SignHardKeyMid+hardSign.substring(hardSign.length()/2);
         return result;
     }
 
-    //abstract calculation
+    //摘要计算
     public static String generateSM3HASH(String src) {
         byte[] md = new byte[32];
         byte[] msg1 = src.getBytes();
@@ -146,7 +146,7 @@ public class SecurityTestAll {
         return s.toUpperCase();
     }
 
-    //Generate a symmetric key
+    //产生对称秘钥
     public static String generateSM4Key() {
         return UUID.randomUUID().toString().replace("-", "");
     }

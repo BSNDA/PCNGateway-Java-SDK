@@ -1,20 +1,20 @@
 package com.bsnbase.sdk.util.sm2;
 
 /**
- *  Value of SM2 signature can be added to delete field property as the case may be
+ * SM2签名所计算的值 可以根据实际情况增加删除字段属性
  */
 public class SM2SignVO {
-    //Hexadecimal private key
+    //16进制的私钥
     public String sm2_userd;
-    //elliptic curve point X
+    //椭圆曲线点X
     public String x_coord;
-    //elliptic curve point Y
+    //椭圆曲线点Y
     public String y_coord;
-    //SM3 abstract Z
+    //SM3摘要Z
     public String sm3_z;
-    //Plaintext data in hexadecimal
+    //明文数据16进制
     public String sign_express;
-    //SM3 abstract value 
+    //SM3摘要值
     public String sm3_digest;
     //R
     public String sign_r;
@@ -24,11 +24,11 @@ public class SM2SignVO {
     public String verify_r;
     //S
     public String verify_s;
-    //signature value 
+    //签名值
     public String sm2_sign;
-    //sign signature verfiy the signature 
+    //sign 签名  verfiy验签
     public String sm2_type;
-    //signature verified or not  true false
+    //是否验签成功  true false
     public boolean isVerify;
     public String getX_coord() {
         return x_coord;

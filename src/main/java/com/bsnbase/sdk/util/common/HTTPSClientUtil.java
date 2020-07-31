@@ -74,7 +74,7 @@ public class HTTPSClientUtil {
     }
 
     private static void setHeader(HttpRequestBase request, Map<String, String> paramHeader) {
-        // Setup Header
+        // 设置Header
         if (paramHeader != null) {
             Set<String> keySet = paramHeader.keySet();
             for (String key : keySet) {
@@ -84,7 +84,7 @@ public class HTTPSClientUtil {
     }
 
     private static void setBody(HttpPost httpPost, String bodyJson, String charset) throws Exception {
-        // Setup parameters
+        // 设置参数
         if (bodyJson != null && bodyJson.length() > 0) {
             StringEntity stringEntity = new StringEntity(bodyJson,charset);
             httpPost.setEntity(stringEntity);

@@ -18,22 +18,22 @@ public class SM3Until {
     }
 
     /**
-     * sm3 encryption algorithm
+     * sm3加密算法
      */
     public static String encrypt(String paramStr){
-        //Convert the returned hash value to a hexadecimal string
+        //将返回的hash值转换成16进制字符串
         String resultHexString = "";
-        //convert string to byte array
+        //字符串转换byte数组
         byte[] srcData = paramStr.getBytes();
         byte[] resultHash = hash(srcData);
-        //convert returned value to a hexadecimal string
+        //将返回的值转换成16进制字符串
         resultHexString = ByteUtils.toHexString(resultHash);
         return resultHexString;
     }
 
     /**
-     * return length=32 byte array
-     * @explain generate the corresponding hash value
+     * 返回长度=32的byte数组
+     * @explain 生成对应的hash值
      * @param srcData
      * @return
      */
@@ -46,7 +46,7 @@ public class SM3Until {
     }
 
     /**
-     * Encryption by key
+     * 通过密钥进行加密
      * @param prk
      * @param srcData
      * @return
@@ -63,7 +63,7 @@ public class SM3Until {
     }
 
     /**
-     * Determine if the source data is consistent with the encrypted data
+     * 判断源数据和加密数据是否一致
      * @param strStr
      * @param sm3HexString
      * @return

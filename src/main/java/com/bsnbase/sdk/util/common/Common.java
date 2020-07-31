@@ -27,7 +27,7 @@ public class Common {
 
 
     /**
-     * string converted to byte arrays 
+     * string与 byte数组转换
      *
      * @param s
      */
@@ -48,14 +48,26 @@ public class Common {
     }
 
     public static String readFile(String path) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
-        String line = null;
-        StringBuilder sb =new StringBuilder();
-        while ((line = br.readLine()) != null) {
-            sb.append(line+"\r\n");
+        StringBuilder info = new StringBuilder();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(path));
+            String tempString;
+            while ((tempString = br.readLine()) != null) {
+                info.append(tempString).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return info.toString();
         }
-
-        return sb.toString();
     }
 
 }

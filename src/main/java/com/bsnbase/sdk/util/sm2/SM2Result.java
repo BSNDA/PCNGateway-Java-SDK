@@ -5,13 +5,13 @@ import java.math.BigInteger;
 public class SM2Result {
     public SM2Result() {
     }
-    // Signature r
+    // 签名r
     public BigInteger r;
     public BigInteger s;
-    //verify the signature R
+    //验签R
     public BigInteger R;
 
-    // exchange the key
+    // 密钥交换
     public byte[] sa;
     public byte[] sb;
     public byte[] s1;

@@ -17,24 +17,24 @@ import java.security.SecureRandom;
 
 
 public class SM2Factory {
-    /*-----------------------Parameters related to state algorithm begin-----------
+    /*-----------------------国密算法相关参数begin-----------
      * ------------------*/
-    //A The First Factor
+    //A 第一系数
     private static final BigInteger a  = new BigInteger("fffffffeffffffffffffffffffffffffffffffff00000000fffffffffffffffc",16);
-    //B The Second Factor
+    //B 第二系数
     private static final BigInteger b  = new BigInteger("28e9fa9e9d9f5e344d5a9e4bcf6509a7f39789f515ab8f92ddbcbd414d940e93",16);
-    //Curve X Coefficient
+    //曲线X系数
     private static final BigInteger gx = new BigInteger("32c4ae2c1f1981195f9904466a39c9948fe30bbff2660be1715a4589334c74c7",16);
-    //Curve Y Coefficient
+    //曲线Y系数
     private static final BigInteger gy = new BigInteger("bc3736a2f4f6779c59bdcee36b692153d0a9877cc62a474002df32e52139f0a0",16);
-    //Producer Order Coeffiencient
+    //生产者顺序系数
     private static final BigInteger n  = new BigInteger("fffffffeffffffffffffffffffffffff7203df6b21c6052b53bbf40939d54123",16);
-    //Prime Number
+    //素数
     private static final BigInteger p  = new BigInteger("fffffffeffffffffffffffffffffffffffffffff00000000ffffffffffffffff",16);
-    //Factor Coefficient 1
+    //因子系数 1
     private static final int h  = 1;
-    /*-----------------------Parameter related to State algorithm end-----------------------------*/
-    //Some necessary classes
+    /*-----------------------国密算法相关参数end-----------------------------*/
+    //一些必要类
     public final ECFieldElement ecc_gx_fieldelement;
     public final ECFieldElement ecc_gy_fieldelement;
     public final ECCurve ecc_curve;
@@ -42,7 +42,7 @@ public class SM2Factory {
     public final ECDomainParameters ecc_bc_spec;
     public final ECKeyPairGenerator ecc_key_pair_generator;
     /**
-     * Initialize method
+     * 初始化方法
      * @return
      */
     public static SM2Factory getInstance(){
@@ -55,7 +55,7 @@ public class SM2Factory {
 
         this.ecc_curve = new ECCurve.Fp(this.p, this.a, this.b);
 
-        this.ecc_point_g = new ECPoint.Fp(this.ecc_curve, this.ecc_gx_fieldelement,this.ecc_gy_fieldelement);
+        this.ecc_point_g = new ECPoint.Fp(this.ecc_curve, this.ecc_gx_fieldelement,this.ecc_gy_fieldelement,true);
         this.ecc_bc_spec = new ECDomainParameters(this.ecc_curve, this.ecc_point_g, this.n);
 
         ECKeyGenerationParameters ecc_ecgenparam;
@@ -65,7 +65,7 @@ public class SM2Factory {
         this.ecc_key_pair_generator.init(ecc_ecgenparam);
     }
     /**
-     * Calculate Z according to the private key and curve parameters
+     * 根据私钥、曲线参数计算Z
      * @param userId
      * @param userKey
      * @return
@@ -101,7 +101,7 @@ public class SM2Factory {
         return md;
     }
     /**
-     * Signature correlation value calculation
+     * 签名相关值计算
      * @param md
      * @param userD
      * @param userKey
@@ -115,7 +115,7 @@ public class SM2Factory {
         BigInteger s = null;
         do {
             do {
-                // Formal environment
+                // 正式环境
                 AsymmetricCipherKeyPair keypair = ecc_key_pair_generator.generateKeyPair();
                 ECPrivateKeyParameters ecpriv = (ECPrivateKeyParameters) keypair.getPrivate();
                 ECPublicKeyParameters ecpub = (ECPublicKeyParameters) keypair.getPublic();
@@ -123,8 +123,8 @@ public class SM2Factory {
                 kp = ecpub.getQ();
                 //System.out.println("BigInteger:" + k + "\nECPoint:" + kp);
 
-                //System.out.println("calculated curve pointX1: "+ kp.getXCoord().toBigInteger().toString(16));
-                //System.out.println("calculated curve pointY1: "+ kp.getYCoord().toBigInteger().toString(16));
+                //System.out.println("计算曲线点X1: "+ kp.getXCoord().toBigInteger().toString(16));
+                //System.out.println("计算曲线点Y1: "+ kp.getYCoord().toBigInteger().toString(16));
                 //System.out.println("");
                 // r
                 r = e.add(kp.getXCoord().toBigInteger());
@@ -144,12 +144,12 @@ public class SM2Factory {
         sm2Result.s = s;
     }
     /**
-     * verify signature
-     * @param md sm3 summary
-     * @param userKey An ecpoint object based on the public key decode 
-     * @param r No particular meaning
-     * @param s No particular meaning
-     * @param sm2Result Object that receives the parameter
+     * 验签
+     * @param md sm3摘要
+     * @param userKey 根据公钥decode一个ecpoint对象
+     * @param r 没有特殊含义
+     * @param s 没有特殊含义
+     * @param sm2Result 接收参数的对象
      */
     public void sm2Verify(byte md[], ECPoint userKey, BigInteger r,
                           BigInteger s, SM2Result sm2Result) {
@@ -160,13 +160,13 @@ public class SM2Factory {
             return;
         } else {
             ECPoint x1y1 = ecc_point_g.multiply(sm2Result.s);
-            //System.out.println("calculated curve pointX0: "+ x1y1.normalize().getXCoord().toBigInteger().toString(16));
-            //System.out.println("calculated curve pointY0: "+ x1y1.normalize().getYCoord().toBigInteger().toString(16));
+            //System.out.println("计算曲线点X0: "+ x1y1.normalize().getXCoord().toBigInteger().toString(16));
+            //System.out.println("计算曲线点Y0: "+ x1y1.normalize().getYCoord().toBigInteger().toString(16));
             //System.out.println("");
 
             x1y1 = x1y1.add(userKey.multiply(t));
-            //System.out.println("calculated curve pointX1: "+ x1y1.normalize().getXCoord().toBigInteger().toString(16));
-            //System.out.println("calculated curve pointY1: "+ x1y1.normalize().getYCoord().toBigInteger().toString(16));
+            //System.out.println("计算曲线点X1: "+ x1y1.normalize().getXCoord().toBigInteger().toString(16));
+            //System.out.println("计算曲线点Y1: "+ x1y1.normalize().getYCoord().toBigInteger().toString(16));
             //System.out.println("");
             sm2Result.R = e.add(x1y1.normalize().getXCoord().toBigInteger()).mod(this.n);
             //System.out.println("R: " + sm2Result.R.toString(16));

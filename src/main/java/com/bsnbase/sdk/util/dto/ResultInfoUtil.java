@@ -1,10 +1,20 @@
 package com.bsnbase.sdk.util.dto;
 
-
+/**
+ * 功能描述：封装返回信息工具类
+ *
+ * @Created by 2018-05-27 10:17
+ */
 public class ResultInfoUtil {
 
+    /**
+     * 返回成功
+     */
     private static final int SUCCESS_CODE = 0;
 
+    /**
+     * 错误标识
+     */
     private static final int ERROR_CODE = -1;
 
 
@@ -12,11 +22,11 @@ public class ResultInfoUtil {
         return successResult(message, null);
     }
     public static ResultInfo successResult() {
-        return successResult("success", null);
+        return successResult("处理成功", null);
     }
 
     public static ResultInfo successResult(Object data) {
-        return successResult("success", data);
+        return successResult("处理成功", data);
     }
 
     public static ResultInfo successResult(String message, Object data) {

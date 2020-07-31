@@ -14,9 +14,9 @@ public abstract class HTTPSClient extends HttpClientBuilder {
     protected ConnectionSocketFactory connectionSocketFactory;
 
     /**
-     * Initialize HTTPSClient
+     * 初始化HTTPSClient
      *
-     * @return return to the current instance
+     * @return 返回当前实例
      * @throws Exception
      */
     public CloseableHttpClient init(String keystorePath) throws Exception {
@@ -28,17 +28,17 @@ public abstract class HTTPSClient extends HttpClientBuilder {
     }
 
     /**
-     * prepare for cert registration
+     * 准备证书验证
      *
      * @throws Exception
      */
     public abstract void prepareCertificate(String keystorePath) throws Exception;
 
     /**
-     * register protocol and interface, this method can be reeritten in sub-class. 
+     * 注册协议和端口, 此方法也可以被子类重写
      */
     protected void regist() {
-        // Setup the object that handles the socket connection factory corresponding to the protocol HTTP and HTTPS 
+        // 设置协议http和https对应的处理socket链接工厂的对象
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", this.connectionSocketFactory)
@@ -46,7 +46,7 @@ public abstract class HTTPSClient extends HttpClientBuilder {
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         HttpClients.custom().setConnectionManager(connManager);
 
-        // create a custim httpclient object 
+        // 创建自定义的httpclient对象
         this.client = HttpClients.custom().setConnectionManager(connManager).build();
     }
 }

@@ -1,24 +1,20 @@
 package com.bsnbase.sdk.client.fabric.service;
 
-import java.io.IOException;
-
-import com.alibaba.fastjson.JSONObject;
 import com.bsnbase.sdk.entity.base.BaseReqModel;
 import com.bsnbase.sdk.entity.base.BaseResModel;
 import com.bsnbase.sdk.entity.config.Config;
-import com.bsnbase.sdk.entity.req.ReqGetBlockInformation;
-import com.bsnbase.sdk.entity.req.ReqGetLedgerInfo;
-import com.bsnbase.sdk.entity.req.ReqGetTransaction;
-import com.bsnbase.sdk.entity.res.ResGetBlockInformation;
-import com.bsnbase.sdk.entity.res.ResGetLedgerInfo;
-import com.bsnbase.sdk.entity.res.ResGetTransaction;
-import com.bsnbase.sdk.entity.res.ResUserRegister;
+import com.bsnbase.sdk.entity.req.fabric.ReqGetBlockInformation;
+import com.bsnbase.sdk.entity.req.fabric.ReqGetLedgerInfo;
+import com.bsnbase.sdk.entity.req.fabric.ReqGetTransaction;
+import com.bsnbase.sdk.entity.res.fabric.ResGetBlockInformation;
+import com.bsnbase.sdk.entity.res.fabric.ResGetLedgerInfo;
+import com.bsnbase.sdk.entity.res.fabric.ResGetTransaction;
 import com.bsnbase.sdk.util.common.HttpService;
 
 public class NodeService {
    
 	/**
-     * get transaction data 
+     * 获取交易信息
      * @param reqData
      */
 	public static ResGetTransaction getTransaction(ReqGetTransaction reqData){
@@ -33,7 +29,7 @@ public class NodeService {
 	}
 
     /**
-     * get block data 
+     * 获取块信息
      * @param reqData
      */
 	public static ResGetBlockInformation getBlockInfo(ReqGetBlockInformation reqData){
@@ -47,7 +43,7 @@ public class NodeService {
 	}
 
     /**
-     * get the latest ledger data 
+     * 获取最新账本信息
      */
 	
 	public static ResGetLedgerInfo getLedgerInfo(){

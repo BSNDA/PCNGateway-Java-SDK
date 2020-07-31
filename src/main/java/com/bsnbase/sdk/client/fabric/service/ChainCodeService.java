@@ -4,12 +4,12 @@ import com.bsnbase.sdk.entity.base.BaseReqModel;
 import com.bsnbase.sdk.entity.base.BaseResModel;
 import com.bsnbase.sdk.entity.base.BaseResArrayModel;
 import com.bsnbase.sdk.entity.config.Config;
-import com.bsnbase.sdk.entity.req.ReqChainCodeQuery;
-import com.bsnbase.sdk.entity.req.ReqChainCodeRegister;
-import com.bsnbase.sdk.entity.req.ReqChainCodeRemove;
-import com.bsnbase.sdk.entity.res.ResChainCodeQuery;
-import com.bsnbase.sdk.entity.res.ResChainCodeRegister;
-import com.bsnbase.sdk.entity.res.ResChainCodeRemove;
+import com.bsnbase.sdk.entity.req.fabric.ReqChainCodeQuery;
+import com.bsnbase.sdk.entity.req.fabric.ReqChainCodeRegister;
+import com.bsnbase.sdk.entity.req.fabric.ReqChainCodeRemove;
+import com.bsnbase.sdk.entity.res.fabric.ResChainCodeQuery;
+import com.bsnbase.sdk.entity.res.fabric.ResChainCodeRegister;
+import com.bsnbase.sdk.entity.res.fabric.ResChainCodeRemove;
 import com.bsnbase.sdk.util.common.HttpService;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ChainCodeService {
 	
 	
     /**
-     * register event chaincode
+     * 链码事件注册
      * @param reqData
      */
 	public static ResChainCodeRegister eventRegister(ReqChainCodeRegister reqData){
@@ -27,14 +27,13 @@ public class ChainCodeService {
         BaseReqModel<ReqChainCodeRegister> req = new  BaseReqModel<ReqChainCodeRegister>();
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(reqData);
-        //req.sign();
         HttpService<ReqChainCodeRegister,ResChainCodeRegister> httpService =new HttpService<ReqChainCodeRegister,ResChainCodeRegister>();
         BaseResModel<ResChainCodeRegister> res = httpService.post(req,api, Config.config.getCert(),ResChainCodeRegister.class);
         return res.getBody();
     }
 
     /**
-     * event chaincode query 
+     * 链码事件查询
      * @return
      */
 	public static List<ResChainCodeQuery> eventQuery(){
@@ -51,7 +50,7 @@ public class ChainCodeService {
 	}
 
     /**
-     * logout event chaincode 
+     * 链码事件注销
      * @param reqData
      * @return
      * @throws Exception

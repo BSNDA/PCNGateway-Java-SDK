@@ -16,17 +16,18 @@ import javax.json.JsonException;
 import java.io.File;
 
 
-public class HttpService<T extends Object&IBody,K extends Object&IBody> {
+public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
-    public BaseResModel<K> post(BaseReqModel<T> req,String url,String cert ,Class<K> clazz){
+    public BaseResModel<K> post(BaseReqModel<T> req, String url, String cert, Class<K> clazz) {
 
         String res;
-        BaseResModel<K> resModel =new BaseResModel<K>();
+        BaseResModel<K> resModel = new BaseResModel<K>();
         try {
-            res = doPost(req,url,cert);
+            req.sign();
+            res = doPost(req, url, cert);
 
-            System.out.println("response results：" + res);
-        }catch (GlobalException e){
+            System.out.println("响应结果：" + res);
+        } catch (GlobalException e) {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,30 +41,30 @@ public class HttpService<T extends Object&IBody,K extends Object&IBody> {
 
                 String bodystr = JSON.toJSONString(resModel.getBody());
 
-                resModel.setBody(JSON.parseObject(bodystr,clazz));
+                resModel.setBody(JSON.parseObject(bodystr, clazz));
 
             } catch (JsonException e) {
-                throw new GlobalException("failed to convert data, invalid response results");
+                throw new GlobalException(ResultInfoEnum.DATA_CONVERSION_ERROR);
             }
-            // verify the signature and convert data
+            // 验签、数据转换
             if (resModel == null) {
-                throw new GlobalException("invalid response results");
+                throw new GlobalException(ResultInfoEnum.INVALID_RESPONSE_ERROR);
             }
 
             boolean result = false;
             try {
-                result =resModel.verify() ;
+                result = resModel.verify();
             } catch (Exception e) {
                 throw new GlobalException(ResultInfoEnum.RES_MAC_ERROR);
             }
 
             if (!result) {
-                throw new GlobalException("failed to verify the signature");
+                throw new GlobalException(ResultInfoEnum.RES_MAC_ERROR);
             }
 
             if (resModel.getHeader().getCode() != 0) {
                 throw new GlobalException(resModel.getHeader().getMsg());
-            }else {
+            } else {
 
 
             }
@@ -76,14 +77,15 @@ public class HttpService<T extends Object&IBody,K extends Object&IBody> {
 
     }
 
-    public BaseResArrayModel<K> arrayPost(BaseReqModel<T> req, String url, String cert , Class<K> clazz){
+    public BaseResModel<K> noSignPost(BaseReqModel<T> req, String url, String cert, Class<K> clazz) {
 
-        String res ;
-        BaseResArrayModel<K> resModel =new BaseResArrayModel<K>();
+        String res;
+        BaseResModel<K> resModel = new BaseResModel<K>();
         try {
-            res = doPost(req,url,cert);
-
-            System.out.println("response result：" + res);
+            res = doPost(req, url, cert);
+            System.out.println("响应结果：" + res);
+        } catch (GlobalException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             throw new GlobalException(ResultInfoEnum.SYSTEM_ERROR);
@@ -96,30 +98,71 @@ public class HttpService<T extends Object&IBody,K extends Object&IBody> {
 
                 String bodystr = JSON.toJSONString(resModel.getBody());
 
-                resModel.setBody(JSON.parseArray(bodystr,clazz));
+                resModel.setBody(JSON.parseObject(bodystr, clazz));
 
             } catch (JsonException e) {
-                throw new GlobalException("failed to convert data, invalid response results");
+                throw new GlobalException(ResultInfoEnum.DATA_CONVERSION_ERROR);
             }
-            // verify the signature, convert data 
+            // 验签、数据转换
             if (resModel == null) {
-                throw new GlobalException("invalid response results");
+                throw new GlobalException(ResultInfoEnum.INVALID_RESPONSE_ERROR);
+            }
+
+            if (resModel.getHeader().getCode() != 0) {
+                throw new GlobalException(resModel.getHeader().getMsg());
+            } else {
+            }
+            return resModel;
+        } else {
+            throw new GlobalException(ResultInfoEnum.SYSTEM_ERROR);
+        }
+
+    }
+
+    public BaseResArrayModel<K> arrayPost(BaseReqModel<T> req, String url, String cert, Class<K> clazz) {
+
+        String res;
+        BaseResArrayModel<K> resModel = new BaseResArrayModel<K>();
+        try {
+            res = doPost(req, url, cert);
+
+            System.out.println("响应结果：" + res);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GlobalException(ResultInfoEnum.SYSTEM_ERROR);
+        }
+
+        if (res != null && res.length() > 0) {
+            try {
+
+                resModel = JSON.parseObject(res, resModel.getClass());
+
+                String bodystr = JSON.toJSONString(resModel.getBody());
+
+                resModel.setBody(JSON.parseArray(bodystr, clazz));
+
+            } catch (JsonException e) {
+                throw new GlobalException(ResultInfoEnum.DATA_CONVERSION_ERROR);
+            }
+            // 验签、数据转换
+            if (resModel == null) {
+                throw new GlobalException(ResultInfoEnum.INVALID_RESPONSE_ERROR);
             }
 
             boolean result = false;
             try {
-                result =resModel.verify() ;
+                result = resModel.verify();
             } catch (Exception e) {
                 throw new GlobalException(ResultInfoEnum.RES_MAC_ERROR);
             }
 
             if (!result) {
-                throw new GlobalException("failed to verify the signature");
+                throw new GlobalException(ResultInfoEnum.RES_MAC_ERROR);
             }
 
             if (resModel.getHeader().getCode() != 0) {
                 throw new GlobalException(resModel.getHeader().getMsg());
-            }else {
+            } else {
 
 
             }
@@ -133,14 +176,15 @@ public class HttpService<T extends Object&IBody,K extends Object&IBody> {
     }
 
     private String doPost(@NotNull BaseReqModel<T> req, String url, String cert) throws Exception {
-        req.sign();
         String param = JSON.toJSONString(req);
+        System.out.println("------发送数据格式-------------:" + param);
         HttpClient httpClient = getHttpClient(cert);
         String res = HTTPSClientUtil.doPost(httpClient, url, param);
 
-        System.out.println("response results：" + res);
+        System.out.println("响应结果：" + res);
         return res;
     }
+
 
     private HttpClient getHttpClient(String httpCertPath) throws Exception {
         Resource keystoreResource = new ClassPathResource(httpCertPath);

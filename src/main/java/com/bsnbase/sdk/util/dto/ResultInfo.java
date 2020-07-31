@@ -1,13 +1,25 @@
 package com.bsnbase.sdk.util.dto;
 
 
+/**
+ * 功能描述：返回信息
+ * @Created by 2018-05-27 10:06
+ */
 public class ResultInfo<T> {
 
-
+    /**
+     * 返回标识
+     */
     private String code;
 
+    /**
+     * 提示信息
+     */
     private String msg;
 
+    /**
+     * 数据信息
+     */
     private T data;
 
 

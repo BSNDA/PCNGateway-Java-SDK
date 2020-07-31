@@ -3,52 +3,55 @@ package com.bsnbase.sdk.entity.config;
 import java.io.IOException;
 
 import com.bsnbase.sdk.client.fabric.service.AppService;
-import com.bsnbase.sdk.entity.res.ResUserInfo;
+import com.bsnbase.sdk.entity.res.fabric.ResUserInfo;
+import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
 import com.bsnbase.sdk.util.keystore.IKeyStore;
 import com.bsnbase.sdk.util.keystore.KeyStore;
+import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
+
 import lombok.Data;
 
 @Data
 public class Config {
     /**
-     *  PCN gateway address
+     * 节点网关地址
      */
     String api;
     /**
-     *user number
+     * 用户编号
      */
     String userCode;
     /**
-     *user code
+     * 用户编号
      */
     String appCode;
     /**
-     *DApp code
+     * 应用公钥
      */
     String puk;
     /**
-     *Private key
+     * 应用私钥
      */
     String prk;
     /**
-     *cert storage directory
+     * 证书存数目录
      */
     String mspDir;
     /**
-     *cert
+     * 证书
      */
     String cert;
 
-    //APPinfo
+    //APP信息
     ResUserInfo appInfo;
 
-    //subuser cert storage processing 
+    //子用户证书存储处理
     IKeyStore keyStore;
 
     public static Config config;
 
-    public void initConfig(Config cg){
+    public void initConfig(Config cg) {
         if (config == null) {
             config = cg;
             keyStore = new KeyStore(config.getMspDir());
@@ -57,10 +60,9 @@ public class Config {
                 res = AppService.getAppInfo();
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new GlobalException("failed access to App info");
+                throw new GlobalException(ResultInfoEnum.GET_APP_INFO_ERROR);
             }
             appInfo = res;
-
         }
     }
 }
