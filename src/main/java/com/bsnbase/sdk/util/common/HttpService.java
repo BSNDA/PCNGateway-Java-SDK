@@ -124,6 +124,7 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
         String res;
         BaseResArrayModel<K> resModel = new BaseResArrayModel<K>();
         try {
+            req.sign();
             res = doPost(req, url, cert);
 
             System.out.println("响应结果：" + res);
