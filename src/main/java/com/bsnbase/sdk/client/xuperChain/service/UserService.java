@@ -17,12 +17,12 @@ public class UserService {
      * @return
      * @throws IOException
      */
-    public static ResUserRegister userRegister(ReqUserRegister register) throws IOException {
+    public static ResUserRegister userRegister(ReqUserRegister register) {
         String api = Config.config.getApi() + "/api/xuperchain/v1/user/register";
         BaseReqModel<ReqUserRegister> req = new BaseReqModel<>(register);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqUserRegister, ResUserRegister> httpService = new HttpService<ReqUserRegister, ResUserRegister>();
-        BaseResModel<ResUserRegister> res = httpService.post(req, api, Config.config.getCert(), ResUserRegister.class);
+        BaseResModel<ResUserRegister> res = httpService.post(req, api,  ResUserRegister.class);
         ResUserRegister body = res.getBody();
         return body;
     }

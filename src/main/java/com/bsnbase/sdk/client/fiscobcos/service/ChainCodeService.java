@@ -26,7 +26,7 @@ public class ChainCodeService {
         BaseReqModel<ReqChainCodeRegister> req = new BaseReqModel<ReqChainCodeRegister>(reqData);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqChainCodeRegister, ResChainCodeRegister> httpService = new HttpService<ReqChainCodeRegister, ResChainCodeRegister>();
-        BaseResModel<ResChainCodeRegister> res = httpService.post(req, api, Config.config.getCert(), ResChainCodeRegister.class);
+        BaseResModel<ResChainCodeRegister> res = httpService.post(req, api,  ResChainCodeRegister.class);
         return res.getBody();
     }
 
@@ -40,7 +40,7 @@ public class ChainCodeService {
         BaseReqModel<ReqChainCodeQuery> req = new BaseReqModel<ReqChainCodeQuery>();
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqChainCodeQuery, ResChainCodeQuery> httpService = new HttpService<ReqChainCodeQuery, ResChainCodeQuery>();
-        BaseResArrayModel<ResChainCodeQuery> res = httpService.arrayPost(req, api, Config.config.getCert(), ResChainCodeQuery.class);
+        BaseResArrayModel<ResChainCodeQuery> res = httpService.arrayPost(req, api,  ResChainCodeQuery.class);
         return res.getBody();
     }
 
@@ -56,7 +56,7 @@ public class ChainCodeService {
         BaseReqModel<ReqChainCodeCancel> req = new BaseReqModel<>(reqData);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqChainCodeCancel, ResChainCodeCancel> httpService = new HttpService<>();
-        BaseResModel<ResChainCodeCancel> res = httpService.post(req, api, Config.config.getCert(), ResChainCodeCancel.class);
+        BaseResModel<ResChainCodeCancel> res = httpService.post(req, api,  ResChainCodeCancel.class);
         return res.getBody();
     }
 

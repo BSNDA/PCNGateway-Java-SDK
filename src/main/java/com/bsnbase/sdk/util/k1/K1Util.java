@@ -10,7 +10,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class K1Util {
-    static final Base64.Decoder decoder = Base64.getDecoder();
+    static final Base64.Decoder DECODER = Base64.getDecoder();
 
     /**
      * k1签名
@@ -48,7 +48,7 @@ public class K1Util {
     public static PrivateKey loadECPrivateKey(String content, String algorithm) throws Exception {
         String privateKeyPEM = content.replaceAll("-----BEGIN PRIVATE KEY-----", "")
                 .replaceAll("-----END PRIVATE KEY-----", "").replace("\r", "").replace("\n", "");
-        byte[] asBytes = decoder.decode(privateKeyPEM.replace("\r\n", ""));
+        byte[] asBytes = DECODER.decode(privateKeyPEM.replace("\r\n", ""));
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(asBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return keyFactory.generatePrivate(spec);
@@ -57,7 +57,7 @@ public class K1Util {
     public static PublicKey loadECPublicKey(String content, String algorithm) throws Exception {
         String strPublicKey = content.replaceAll("-----BEGIN PUBLIC KEY-----", "")
                 .replaceAll("-----END PUBLIC KEY-----", "").replace("\r", "").replace("\n", "");
-        byte[] asBytes = decoder.decode(strPublicKey.replace("\r\n", ""));
+        byte[] asBytes = DECODER.decode(strPublicKey.replace("\r\n", ""));
         X509EncodedKeySpec spec = new X509EncodedKeySpec(asBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return keyFactory.generatePublic(spec);
@@ -98,10 +98,10 @@ public class K1Util {
 //        K1Util.savePublicKeyAsPEM(publicKey, "publickey.pem");
 //        K1Util.savePrivateKeyAsPEM(privateKey, "privatekey.pem");
         PrivateKey privateKey =K1Util.loadECPrivateKey(Common.readFile(Common.getClassPathResource("cert/k1/private_key.pem")),"EC");
-        PublicKey publicKey =  K1Util.loadECPublicKey(Common.readFile(Common.getClassPathResource("cert/k1/public_key.pem")),"EC");
+        PublicKey publicKey =  K1Util.loadECPublicKey(Common.readFile(Common.getClassPathResource("cert/k1/public_Key.pem")),"EC");
         String data = "-1用户已存在";
         // 生成秘钥，在实际业务中，应该加载秘钥
-//        PublicKey publicKey1 = K1Util.loadECPublicKey(Common.readFile(Common.getClassPathResource("cert/k1/public_key.pem")), "EC");
+//        PublicKey publicKey1 = K1Util.loadECPublicKey(Common.readFile(Common.getClassPathResource("cert/k1/public_Key.pem")), "EC");
 //        PrivateKey privateKey1 = K1Util.loadECPrivateKey(Common.readFile(Common.getClassPathResource("cert/k1/private_Key.pem")), "EC");
 
         // 计算签名

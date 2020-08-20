@@ -9,9 +9,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
 
-/**
- * @author 2020-7-30
- */
 public  class K1Algorithm implements AlgorithmTypeHandle {
     /**
      * @param stringPrivateKey

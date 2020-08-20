@@ -1,220 +1,254 @@
 package com.bsnbase.sdk.client.fiscobcos.test;
 
-import com.bsnbase.sdk.client.fiscobcos.service.ChainCodeService;
-import com.bsnbase.sdk.client.fiscobcos.service.NodeService;
-import com.bsnbase.sdk.client.fiscobcos.service.UserService;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.bsnbase.sdk.client.fiscobcos.FiscobcosClient;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.fiscobcos.*;
+import com.bsnbase.sdk.entity.res.fiscobcos.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FiscobcosTest {
 
+    /**
+     *
+     * 初始化config
+     *
+     * config中puk字段为网关公钥，在证书下载压缩包gatewayCert目录下，可为空
+     * puk字段为空时系统使用默认网关公钥请求
+     */
 
-    //    //初始化config   R1
-//    public void initConfig() throws IOException {
-//        Config config = new Config();
-//        config.setAppCode("app0001202004161020152918451");
-//        config.setUserCode("USER0001202004151958010871292");
-//        config.setApi("http://192.168.1.43:17502");
-//        config.setCert("cert/bsn_gateway_https.crt");
-//        config.setPrk("cert/private_key.pem");
-//        config.setPuk("cert/public_key.pem");
-//        config.setMspDir("D:/test");
-//        config.initConfig(config);
-//    }
-    //初始化config    Sm2
+
     public void initConfig() throws IOException {
-            Config config = new Config();
-        config.setAppCode("app0001202006221045063821068");
-        config.setUserCode("USER0001202005281426464614357");
-        config.setApi("http://192.168.1.43:17502");
-        config.setCert("cert/bsn_gateway_https.crt");
-        config.setPrk("cert/sm2/private_key.pem");
-        config.setPuk("cert/sm2/public_key.pem");
+        Config config = new Config();
+        config.setAppCode("app0001202008071659558652683");
+        config.setUserCode("gaowanqiu");
+        config.setApi("https://suzhounode.bsngate.com:17602");
+        config.setPrk("cert/private_key.pem");
+        config.setPrk("cert/public_Key.pem");
         config.setMspDir("D:/test");
         config.initConfig(config);
     }
-    //k1
-//    public void initConfig() throws IOException {
-//        Config config = new Config();
-//        config.setAppCode("app0001202006042323057101002");
-//        config.setUserCode("USER0001202006042321579692440");
-//        config.setApi("http://192.168.1.43:17502");
-//        config.setCert("cert/bsn_gateway_https.crt");
-//        config.setPrk("cert/k1/private_key.pem");
-//        config.setPuk("cert/k1/public_key.pem");
-//        config.setMspDir("D:/test");
-//        config.initConfig(config);
-//    }
 
     @Test
     /**
-     *"userId": "abc",
-     *"userAddress": "0x63011363406b75c62fea55f6a826f25fafc9c580"
      * 注册用户
      */
     public void testRegister() {
         try {
             initConfig();
             ReqUserRegister reqUserRegister = new ReqUserRegister();
-            reqUserRegister.setUserId("aaa");
-            UserService.userRegister(reqUserRegister);
-        } catch (IOException e) {
+            reqUserRegister.setUserId("testSdk1");
+            ResUserRegister resUserRegister = FiscobcosClient.register(reqUserRegister);
+            System.out.println(JSONObject.toJSONString(resUserRegister, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    //7.3.2密钥托管模式下调用智能合约接口
-    @Test
-    public void reqChainCode() throws IOException {
-        initConfig();
-        ReqUserRegister reqUserRegister = new ReqUserRegister();
-        reqUserRegister.setUserId("abc");
-        ReqKeyEscrow resKeyEscrow = new ReqKeyEscrow();
-        resKeyEscrow.setContractName("111");
-        resKeyEscrow.setFuncName("funcName");
-        resKeyEscrow.setFuncParam("funcParam");
-        NodeService.reqChainCode(resKeyEscrow);
-    }
-
     /**
-     * 7.3.4获取交易回执接口
+     *  密钥托管模式下调用智能合约接口
      */
     @Test
-    public void getTxReceiptByTxHash() throws IOException, NoSuchAlgorithmException {
-        initConfig();
-        ReqGetTxReceiptByTxHash reqGetTxReceiptByTxHash = new ReqGetTxReceiptByTxHash();
-        reqGetTxReceiptByTxHash.setTxHash("0x90e8df4398468bec0cda353a5868a957b0afb0930e73b6c2ac407455765ccc1f");
-        NodeService.getTxReceiptByTxHash(reqGetTxReceiptByTxHash);
+    public void reqChainCode(){
+        try {
+            initConfig();
+            ReqKeyEscrow reqKeyEscrow = new ReqKeyEscrow();
+            reqKeyEscrow.setUserId("testSdk1");
+            reqKeyEscrow.setContractName("111");
+            reqKeyEscrow.setFuncName("funcName");
+            reqKeyEscrow.setFuncParam("funcParam");
+            ResKeyEscrow resKeyEscrow = FiscobcosClient.reqChainCode(reqKeyEscrow);
+            System.out.println(JSONObject.toJSONString(resKeyEscrow, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-
     /**
-     * 7.3.5获取交易信息接口
+     * 公钥上传模式下调用智能合约接口
      */
     @Test
-    public void getTxInfoByTxHash() throws IOException, NoSuchAlgorithmException {
-        initConfig();
-        ReqGetTransaction reqGetTxReceiptByTxHash = new ReqGetTransaction();
-        reqGetTxReceiptByTxHash.setTxHash("0x90e8df4398468bec0cda353a5868a957b0afb0930e73b6c2ac407455765ccc1f");
-        NodeService.getTxInfoByTxHash(reqGetTxReceiptByTxHash);
+    public void trans() {
+        try {
+            initConfig();
+            String abi ="[{\"constant\":false,\"inputs\":[{\"name\":\"base_id\",\"type\":\"string\"},{\"name\":\"base_key\",\"type\":\"int256\"},{\"name\":\"base_value\",\"type\":\"string\"}],\"name\":\"update\",\"outputs\":[{\"name\":\"\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"base_id\",\"type\":\"string\"},{\"name\":\"base_key\",\"type\":\"int256\"}],\"name\":\"remove\",\"outputs\":[{\"name\":\"\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"base_id\",\"type\":\"string\"},{\"name\":\"base_key\",\"type\":\"int256\"},{\"name\":\"base_value\",\"type\":\"string\"}],\"name\":\"insert\",\"outputs\":[{\"name\":\"\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"base_id\",\"type\":\"string\"}],\"name\":\"select\",\"outputs\":[{\"name\":\"\",\"type\":\"string[]\"},{\"name\":\"\",\"type\":\"int256[]\"},{\"name\":\"\",\"type\":\"string[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]";
+            String funcName ="insert";
+            String contactName="BsnBaseContract";
+            String contractAddress ="0x9217f004c88e7cfea9b35d99b95dcdcc003e606b";
+            List<Object> funcParam = new ArrayList<>();
+            funcParam.add("s0604");
+            funcParam.add(5);
+            funcParam.add("aa");
+            String name="test0611";
+            ReqTransData reqTransData=new ReqTransData();
+            reqTransData.setContractAbi(abi);
+            reqTransData.setContractAddress(contractAddress);
+            reqTransData.setFuncName(funcName);
+            reqTransData.setFuncParam(funcParam);
+            reqTransData.setContractName(contactName);
+            reqTransData.setUserName(name);
+            ResTrans trans = FiscobcosClient.trans(reqTransData);
+            System.out.println(JSONObject.toJSONString(trans, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * 7.3.6获取块信息接口
+     * 获取交易回执接口
+     */
+    @Test
+    public void getTxReceiptByTxHash(){
+        try {
+            initConfig();
+            ReqGetTxReceiptByTxHash reqGetTxReceiptByTxHash = new ReqGetTxReceiptByTxHash();
+            reqGetTxReceiptByTxHash.setTxHash("0x90e8df4398468bec0cda353a5868a957b0afb0930e73b6c2ac407455765ccc1f");
+            ResGetTxReceiptByTxHash txReceiptByTxHash = FiscobcosClient.getTxReceiptByTxHash(reqGetTxReceiptByTxHash);
+            System.out.println(JSONObject.toJSONString(txReceiptByTxHash, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 获取交易信息接口
+     */
+    @Test
+    public void getTxInfoByTxHash() {
+        try {
+            initConfig();
+            ReqGetTransaction reqGetTxReceiptByTxHash = new ReqGetTransaction();
+            reqGetTxReceiptByTxHash.setTxHash("0x90e8df4398468bec0cda353a5868a957b0afb0930e73b6c2ac407455765ccc1f");
+            ResGetTransaction txInfoByTxHash = FiscobcosClient.getTxInfoByTxHash(reqGetTxReceiptByTxHash);
+            System.out.println(JSONObject.toJSONString(txInfoByTxHash, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取块信息接口
      *
      */
     @Test
-    public void getBlockInfo() throws IOException, NoSuchAlgorithmException {
-        initConfig();
-        ReqGetBlockInformation reqGetBlockInformation = new ReqGetBlockInformation();
-        reqGetBlockInformation.setBlockHash("0x755f3e7833778f674e1b025f513f05722ba7248be43a3c9168b880847814021a");
-        reqGetBlockInformation.setBlockNumber("1");
-        NodeService.getBlockInfo(reqGetBlockInformation);
+    public void getBlockInfo(){
+        try {
+            initConfig();
+            ReqGetBlockInformation reqGetBlockInformation = new ReqGetBlockInformation();
+            reqGetBlockInformation.setBlockHash("0x755f3e7833778f674e1b025f513f05722ba7248be43a3c9168b880847814021a");
+            reqGetBlockInformation.setBlockNumber("1");
+            ResGetBlockInformation blockInfo = FiscobcosClient.getBlockInfo(reqGetBlockInformation);
+            System.out.println(JSONObject.toJSONString(blockInfo, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * 7.3.7获取应用内的块高接口
+     * 获取应用内的块高接口
      *
      */
     @Test
-    public void getBlockHeight() throws IOException, NoSuchAlgorithmException {
-        initConfig();
-        NodeService.getBlockHeight();
+    public void getBlockHeight() {
+        try {
+            initConfig();
+            ResGetBlockHeight blockHeight = FiscobcosClient.getBlockHeight();
+            System.out.println(JSONObject.toJSONString(blockHeight, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * 7.3.8获取应用内的交易总数接口
+     * 获取应用内的交易总数接口
      *
      */
     @Test
-    public void getTxCount() throws IOException, NoSuchAlgorithmException {
-        initConfig();
-        NodeService.getTxCount();
+    public void getTxCount(){
+        try {
+            initConfig();
+            ResGetTxCount txCount = FiscobcosClient.getTxCount();
+            System.out.println(JSONObject.toJSONString(txCount, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * 7.3.9获取块内的交易总数接口
+     *获取块内的交易总数接口
      *
      * @throws IOException
      */
     @Test
-    public void getTxCountByBlockNumber() throws IOException, NoSuchAlgorithmException {
-        initConfig();
-        ReqGetTxCountByBlockNumber reqGetTxCountByBlockNumber = new ReqGetTxCountByBlockNumber();
-        reqGetTxCountByBlockNumber.setBlockNumber("22");
-        NodeService.getTxCountByBlockNumber(reqGetTxCountByBlockNumber);
+    public void getTxCountByBlockNumber(){
+        try {
+            initConfig();
+            ReqGetTxCountByBlockNumber reqGetTxCountByBlockNumber = new ReqGetTxCountByBlockNumber();
+            reqGetTxCountByBlockNumber.setBlockNumber("22");
+            ResGetTxCountByBlockNumber txCountByBlockNumber = FiscobcosClient.getTxCountByBlockNumber(reqGetTxCountByBlockNumber);
+            System.out.println(JSONObject.toJSONString(txCountByBlockNumber, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * 7.3.10链码事件注册接口
+     *链码事件注册接口
+     */
+    @Test
+    public void eventRegister() {
+        try {
+            initConfig();
+            ReqChainCodeRegister reqChainCodeRegister=new ReqChainCodeRegister();
+            reqChainCodeRegister.setEventType(1);
+            reqChainCodeRegister.setContractAddress("0x9217f004c88e7cfea9b35d99b95dcdcc003e606b");
+            reqChainCodeRegister.setContractName("BsnBaseContractk1");
+            reqChainCodeRegister.setNotifyUrl("http://127.0.0.1:18080");
+            reqChainCodeRegister.setAttachArgs("abc=123");
+            ResChainCodeRegister resChainCodeRegister = FiscobcosClient.eventRegister(reqChainCodeRegister);
+            System.out.println(JSONObject.toJSONString(resChainCodeRegister, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 链码事件查询接口
+     */
+    @Test
+    public void eventQuery(){
+        try {
+            initConfig();
+            List<ResChainCodeQuery> resChainCodeQueries = FiscobcosClient.eventQuery();
+            System.out.println(JSONObject.toJSONString(resChainCodeQueries, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      *
+     * 链码事件取消接口
      */
     @Test
-    public void eventRegister() throws IOException, NoSuchAlgorithmException {
-        initConfig();
-        ReqChainCodeRegister reqChainCodeRegister=new ReqChainCodeRegister();
-        reqChainCodeRegister.setEventType(1);
-        reqChainCodeRegister.setContractAddress("0x866aefc204b8f8fdc3e45b908fd43d76667d7f76");
-        reqChainCodeRegister.setContractName("BsnBaseContractk1");
-        reqChainCodeRegister.setNotifyUrl("http://127.0.0.1:18080");
-        reqChainCodeRegister.setAttachArgs("abc=123");
-        ChainCodeService.eventRegister(reqChainCodeRegister);
+    public void eventRemove(){
+        try {
+            initConfig();
+            ReqChainCodeCancel reqChainCodeCancel=new ReqChainCodeCancel();
+            reqChainCodeCancel.setEventId("992b172844174d0795e06826a9d8f6da");
+            ResChainCodeCancel resChainCodeCancel = FiscobcosClient.eventRemove(reqChainCodeCancel);
+            System.out.println(JSONObject.toJSONString(resChainCodeCancel, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * 7.3.11链码事件查询接口
-     */
-    @Test
-    public void eventQuery() throws Exception {
-        initConfig();
-        ChainCodeService.eventQuery();
-    }
-
-
-    /**
-     *
-     * 7.3.12链码事件取消接口
-     *"msg": "删除出现异常"
-     */
-    @Test
-    public void eventRemove() throws Exception {
-        initConfig();
-        ReqChainCodeCancel reqChainCodeCancel=new ReqChainCodeCancel();
-        reqChainCodeCancel.setEventId("123");
-        ChainCodeService.eventRemove(reqChainCodeCancel);
-    }
-
-
-    /**
-     *
-     * 7.3.12链码事件取消接口
-     */
-    @Test
-    public void trans() throws Exception {
-        initConfig();
-        String abi ="[{\"constant\":false,\"inputs\":[{\"name\":\"base_id\",\"type\":\"string\"},{\"name\":\"base_key\",\"type\":\"int256\"},{\"name\":\"base_value\",\"type\":\"string\"}],\"name\":\"update\",\"outputs\":[{\"name\":\"\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"base_id\",\"type\":\"string\"},{\"name\":\"base_key\",\"type\":\"int256\"}],\"name\":\"remove\",\"outputs\":[{\"name\":\"\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"base_id\",\"type\":\"string\"},{\"name\":\"base_key\",\"type\":\"int256\"},{\"name\":\"base_value\",\"type\":\"string\"}],\"name\":\"insert\",\"outputs\":[{\"name\":\"\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"base_id\",\"type\":\"string\"}],\"name\":\"select\",\"outputs\":[{\"name\":\"\",\"type\":\"string[]\"},{\"name\":\"\",\"type\":\"int256[]\"},{\"name\":\"\",\"type\":\"string[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]";
-        String funcName ="insert";
-        String contactName="BsnBaseContract";
-        String contractAddress ="0xc206db9e77e547b015e2cb39d23ff8b0314746a4";
-        List<Object> funcParam = new ArrayList<>();
-        funcParam.add("s0604");
-        funcParam.add(5);
-        funcParam.add("aa");
-        String name="test0611";
-        ReqTransData reqTransData=new ReqTransData();
-        reqTransData.setContractAbi(abi);
-        reqTransData.setContractAddress(contractAddress);
-        reqTransData.setFuncName(funcName);
-        reqTransData.setFuncParam(funcParam);
-        reqTransData.setContractName(contactName);
-        reqTransData.setUserName(name);
-        NodeService.trans(reqTransData);
-    }
 }

@@ -28,14 +28,14 @@ public class UserService {
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(register);
         HttpService<ReqUserRegister, ResUserRegister> httpService = new HttpService<ReqUserRegister, ResUserRegister>();
-        BaseResModel<ResUserRegister> res = httpService.post(req, api, Config.config.getCert(), ResUserRegister.class);
+        BaseResModel<ResUserRegister> res = httpService.post(req, api,  ResUserRegister.class);
 
         ResUserRegister body = res.getBody();
         return body;
     }
 
     /**
-     * 用户非托管模式用户证书登记
+     * 公钥上传模式用户证书登记
      *
      * @param kes
      * @return
@@ -52,7 +52,7 @@ public class UserService {
         req.setBody(kes);
 
         HttpService<ReqKeyEscrowEnroll, ResKeyEscrowEnroll> httpService = new HttpService<ReqKeyEscrowEnroll, ResKeyEscrowEnroll>();
-        BaseResModel<ResKeyEscrowEnroll> res = httpService.post(req, api, Config.config.getCert(), ResKeyEscrowEnroll.class);
+        BaseResModel<ResKeyEscrowEnroll> res = httpService.post(req, api,  ResKeyEscrowEnroll.class);
 
         ResKeyEscrowEnroll body = res.getBody();
 

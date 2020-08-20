@@ -2,10 +2,12 @@ package com.bsnbase.sdk.entity.base;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.bsnbase.sdk.entity.config.Config;
+import com.bsnbase.sdk.entity.config.PublicConfig;
 import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
 import com.bsnbase.sdk.util.algorithm.AlgorithmTypeContext;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -30,7 +32,12 @@ public class BaseResArrayModel<T extends Object & IBody> implements IBaseResMode
         }
         AlgorithmTypeEnum algorithmTypeEnum = AlgorithmTypeEnum.fromAlgorithmTypeEnum(Config.config.getAppInfo().getAlgorithmType());
         AlgorithmTypeContext algorithmTypeContext = new AlgorithmTypeContext(algorithmTypeEnum);
-        boolean verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(Common.readFile(Common.getClassPathResource(Config.config.getPuk())),this.mac, signValue);
+        boolean verify ;
+        if(StringUtils.isBlank(Config.config.getPuk())){
+            verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(PublicConfig.getPublicKey(algorithmTypeEnum),  this.mac,signValue);
+        }else{
+            verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(Common.readFile(Common.getClassPathResource(Config.config.getPuk())),  this.mac,signValue);
+        }
         return verify;
     }
 

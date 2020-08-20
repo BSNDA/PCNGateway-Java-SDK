@@ -28,7 +28,7 @@ public class NodeService {
         BaseReqModel<ReqKeyEscrow> req = new BaseReqModel<ReqKeyEscrow>(kes);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqKeyEscrow, ResKeyEscrow> httpService = new HttpService<ReqKeyEscrow, ResKeyEscrow>();
-        BaseResModel<ResKeyEscrow> res = httpService.post(req, api, Config.config.getCert(), ResKeyEscrow.class);
+        BaseResModel<ResKeyEscrow> res = httpService.post(req, api, ResKeyEscrow.class);
         return res.getBody();
 
     }
@@ -43,7 +43,7 @@ public class NodeService {
         BaseReqModel<ReqGetTransaction> req = new BaseReqModel<ReqGetTransaction>(reqData);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqGetTransaction, ResGetTransaction> httpService = new HttpService<ReqGetTransaction, ResGetTransaction>();
-        BaseResModel<ResGetTransaction> res = httpService.post(req, api, Config.config.getCert(), ResGetTransaction.class);
+        BaseResModel<ResGetTransaction> res = httpService.post(req, api, ResGetTransaction.class);
 
         return res.getBody();
     }
@@ -58,7 +58,7 @@ public class NodeService {
         BaseReqModel<ReqGetBlockInformation> req = new BaseReqModel<ReqGetBlockInformation>(reqData);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqGetBlockInformation, ResGetBlockInformation> httpService = new HttpService<ReqGetBlockInformation, ResGetBlockInformation>();
-        BaseResModel<ResGetBlockInformation> res = httpService.post(req, api, Config.config.getCert(), ResGetBlockInformation.class);
+        BaseResModel<ResGetBlockInformation> res = httpService.post(req, api, ResGetBlockInformation.class);
         return res.getBody();
     }
 

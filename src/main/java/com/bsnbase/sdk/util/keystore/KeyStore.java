@@ -45,6 +45,7 @@ public class KeyStore implements IKeyStore{
         return getCertDirPath()+name+"@"+appCode+"_cert.pem";
     }
 
+    @Override
     public void storeUserPrivateKey(String name, String appCode, PrivateKey privateKey) throws IOException {
 
         JcaPKCS8Generator gen1 = new JcaPKCS8Generator(privateKey, null);
@@ -63,7 +64,8 @@ public class KeyStore implements IKeyStore{
         osw.flush();
     }
 
-    public void storeUserCert(String name,String appCode,String cert) throws IOException {
+    @Override
+    public void storeUserCert(String name, String appCode, String cert) throws IOException {
         FileOutputStream fos = new FileOutputStream(getCertPath(name,appCode));
         OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
         osw.write(cert);
@@ -72,6 +74,7 @@ public class KeyStore implements IKeyStore{
 
 
 
+    @Override
     public TransactionUser loadUser(String name, String appCode) throws IOException {
         TransactionUser user = new TransactionUser();
 

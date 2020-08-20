@@ -40,12 +40,5 @@ public class StoreUtils {
             throw new GlobalException("获取CSR异常");
         }
     }
-    public static byte[] signData(String algorithm, byte[] data, PrivateKey key) throws Exception {
-        Signature signer = Signature.getInstance(algorithm);
-        signer.initSign(key);
-        signer.update(data);
-        return (signer.sign());
-    }
-
 
 }

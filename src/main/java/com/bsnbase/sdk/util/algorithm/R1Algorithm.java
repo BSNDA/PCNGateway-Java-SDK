@@ -86,4 +86,5 @@ public class R1Algorithm implements AlgorithmTypeHandle {
         return user;
     }
 
+
 }

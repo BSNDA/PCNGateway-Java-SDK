@@ -120,7 +120,9 @@ public class Sm2SignUtil {
         boolean flag = false;
         byte[] sm3Hash = Base64.getDecoder().decode(sm3Base64String);
         byte[] newHash = SM3Digest(srcStr.getBytes(StandardCharsets.UTF_8));
-        if (Arrays.equals(newHash, sm3Hash)) flag = true;
+        if (Arrays.equals(newHash, sm3Hash)) {
+            flag = true;
+        }
         return flag;
     }
 
@@ -137,7 +139,7 @@ public class Sm2SignUtil {
             PemObject po = pr.readPemObject();
             Object obj = pem.readObject();
             JcaPEMKeyConverter jcaPEMKeyConverter = new JcaPEMKeyConverter();
-            if (po.getType().equals("PRIVATE KEY")) {
+            if ("PRIVATE KEY".equals(po.getType())) {
                 privateKey = jcaPEMKeyConverter.getPrivateKey((PrivateKeyInfo) obj);
             } else {
                 privateKey = jcaPEMKeyConverter.getPrivateKey(((PEMKeyPair) obj).getPrivateKeyInfo());
@@ -161,7 +163,7 @@ public class Sm2SignUtil {
             PemObject po = pr.readPemObject();
             Object obj = pem.readObject();
             JcaPEMKeyConverter jcaPEMKeyConverter = new JcaPEMKeyConverter();
-            if (po.getType().equals("PUBLIC KEY")) {
+            if ("PUBLIC KEY".equals(po.getType())) {
                 publicKey = jcaPEMKeyConverter.getPublicKey((SubjectPublicKeyInfo) obj);
             } else {
                 publicKey = jcaPEMKeyConverter.getPublicKey(((PEMKeyPair) obj).getPublicKeyInfo());
@@ -219,7 +221,7 @@ public class Sm2SignUtil {
         //================SM2签名校验========================
 
 //        String privateKeyPath = "D:\\private_Key.pem";
-//        String certPath = "D:\\public_key.pem";
+//        String certPath = "D:\\public_Key.pem";
 //
 //        String unSignString = "USER0001202004151958010871292app0001202004172002586111406ccDown14";
 //        byte[] sm3DigestBytes = SM3Digest(unSignString.getBytes(StandardCharsets.UTF_8));

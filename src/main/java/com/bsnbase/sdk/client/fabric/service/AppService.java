@@ -22,7 +22,7 @@ public class AppService {
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
 
         HttpService<ReqUserInfo,ResUserInfo> httpService =new HttpService<ReqUserInfo,ResUserInfo>();
-        BaseResModel<ResUserInfo> res = httpService.noSignPost(req,api, Config.config.getCert(),ResUserInfo.class );
+        BaseResModel<ResUserInfo> res = httpService.noSignPost(req,api, ResUserInfo.class );
 
         return res.getBody();
     }

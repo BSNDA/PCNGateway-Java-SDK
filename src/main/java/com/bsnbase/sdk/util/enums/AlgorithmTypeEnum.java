@@ -3,8 +3,6 @@ package com.bsnbase.sdk.util.enums;
 
 import com.bsnbase.sdk.util.exception.GlobalException;
 
-import java.util.Objects;
-
 public enum AlgorithmTypeEnum {
     /*
      sm2
@@ -23,9 +21,9 @@ public enum AlgorithmTypeEnum {
     public final int nCode;
 
 
-    AlgorithmTypeEnum(int _nCode) {
+    AlgorithmTypeEnum(int nCode) {
 
-        this.nCode = _nCode;
+        this.nCode = nCode;
 
     }
 

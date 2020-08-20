@@ -3,7 +3,6 @@ package com.bsnbase.sdk.util.enums;
 /**
  * 功能描述：返回信息
  *
- * @Created by 2018-06-12 12:44
  */
 public enum ResultInfoEnum {
     SUCCESS(0, "成功"),

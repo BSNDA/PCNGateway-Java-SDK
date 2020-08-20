@@ -41,6 +41,7 @@ public class Config {
     /**
      * 证书
      */
+    @Deprecated
     String cert;
 
     //APP信息

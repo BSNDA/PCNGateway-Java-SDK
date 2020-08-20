@@ -24,7 +24,7 @@ public class NodeService {
         BaseReqModel<ReqGetTransaction> req = new BaseReqModel<ReqGetTransaction>(reqData);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqGetTransaction, ResGetTransaction> httpService = new HttpService<ReqGetTransaction, ResGetTransaction>();
-        BaseResModel<ResGetTransaction> res = httpService.post(req, api, Config.config.getCert(), ResGetTransaction.class);
+        BaseResModel<ResGetTransaction> res = httpService.post(req, api,  ResGetTransaction.class);
 
         return res.getBody();
     }
@@ -39,7 +39,7 @@ public class NodeService {
         BaseReqModel<ReqGetBlockInformation> req = new BaseReqModel<ReqGetBlockInformation>(reqData);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqGetBlockInformation, ResGetBlockInformation> httpService = new HttpService<ReqGetBlockInformation, ResGetBlockInformation>();
-        BaseResModel<ResGetBlockInformation> res = httpService.post(req, api, Config.config.getCert(), ResGetBlockInformation.class);
+        BaseResModel<ResGetBlockInformation> res = httpService.post(req, api,  ResGetBlockInformation.class);
         return res.getBody();
     }
 
@@ -51,7 +51,7 @@ public class NodeService {
         BaseReqModel req = new BaseReqModel<>();
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService httpService = new HttpService<>();
-        BaseResModel<ResGetBlockHeight> res = httpService.post(req, api, Config.config.getCert(), ResGetBlockHeight.class);
+        BaseResModel<ResGetBlockHeight> res = httpService.post(req, api,  ResGetBlockHeight.class);
         return res.getBody();
     }
 
@@ -69,9 +69,27 @@ public class NodeService {
         System.out.println(kes.getEncryptionValue());
         req.setBody(kes);
         HttpService<ReqKeyEscrow, ResKeyEscrow> httpService = new HttpService<ReqKeyEscrow, ResKeyEscrow>();
-        BaseResModel<ResKeyEscrow> res = httpService.post(req, api, Config.config.getCert(), ResKeyEscrow.class);
+        BaseResModel<ResKeyEscrow> res = httpService.post(req, api,  ResKeyEscrow.class);
         return res.getBody();
 
+    }
+
+
+    /**
+     * 密钥上传模式下调用智能合约接口
+     *
+     * @return
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     */
+    public static ResTrans trans(ReqTransData reqTransData) throws Exception {
+        String api = Config.config.getApi() + "/api/fiscobcos/v1/node/trans";
+        ReqTrans reqTrans = FiscoTransUtil.buildTrans(reqTransData);
+        BaseReqModel<ReqTrans> req = new BaseReqModel<>(reqTrans);
+        req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
+        HttpService<ReqTrans, ResTrans> httpService = new HttpService();
+        BaseResModel<ResTrans> res = httpService.post(req, api,  ResTrans.class);
+        return res.getBody();
     }
 
 
@@ -86,7 +104,7 @@ public class NodeService {
         BaseReqModel<ReqKeyEscrow> req = new BaseReqModel<>();
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService httpService = new HttpService();
-        BaseResModel<ResGetTxCount> res = httpService.post(req, api, Config.config.getCert(), ResGetTxCount.class);
+        BaseResModel<ResGetTxCount> res = httpService.post(req, api,  ResGetTxCount.class);
         return res.getBody();
 
     }
@@ -102,7 +120,7 @@ public class NodeService {
         BaseReqModel<ReqGetTxCountByBlockNumber> req = new BaseReqModel<>(reqGetTxCountByBlockNumber);
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqGetTxCountByBlockNumber, ResGetTxCountByBlockNumber> httpService = new HttpService();
-        BaseResModel<ResGetTxCountByBlockNumber> res = httpService.post(req, api, Config.config.getCert(), ResGetTxCountByBlockNumber.class);
+        BaseResModel<ResGetTxCountByBlockNumber> res = httpService.post(req, api,  ResGetTxCountByBlockNumber.class);
         return res.getBody();
     }
 
@@ -119,25 +137,7 @@ public class NodeService {
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(reqGetTxReceiptByTxHash);
         HttpService<ReqGetTxReceiptByTxHash, ResGetTxReceiptByTxHash> httpService = new HttpService();
-        BaseResModel<ResGetTxReceiptByTxHash> res = httpService.post(req, api, Config.config.getCert(), ResGetTxReceiptByTxHash.class);
-        return res.getBody();
-    }
-
-
-    /**
-     * 交易接口
-     *
-     * @return
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     */
-    public static ResTrans trans(ReqTransData reqTransData) throws Exception {
-        String api = Config.config.getApi() + "/api/fiscobcos/v1/node/trans";
-        ReqTrans reqTrans = FiscoTransUtil.buildTrans(reqTransData);
-        BaseReqModel<ReqTrans> req = new BaseReqModel<>(reqTrans);
-        req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
-        HttpService<ReqTrans, ResTrans> httpService = new HttpService();
-        BaseResModel<ResTrans> res = httpService.post(req, api, Config.config.getCert(), ResTrans.class);
+        BaseResModel<ResGetTxReceiptByTxHash> res = httpService.post(req, api,  ResGetTxReceiptByTxHash.class);
         return res.getBody();
     }
 

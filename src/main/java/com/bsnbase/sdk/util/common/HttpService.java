@@ -2,29 +2,28 @@ package com.bsnbase.sdk.util.common;
 
 import com.alibaba.fastjson.JSON;
 import com.bsnbase.sdk.entity.base.BaseReqModel;
-import com.bsnbase.sdk.entity.base.BaseResModel;
 import com.bsnbase.sdk.entity.base.BaseResArrayModel;
+import com.bsnbase.sdk.entity.base.BaseResModel;
 import com.bsnbase.sdk.entity.base.IBody;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import javax.json.JsonException;
-import java.io.File;
 
 
 public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
-    public BaseResModel<K> post(BaseReqModel<T> req, String url, String cert, Class<K> clazz) {
+    public BaseResModel<K> post(BaseReqModel<T> req, String url,  Class<K> clazz) {
 
         String res;
         BaseResModel<K> resModel = new BaseResModel<K>();
         try {
             req.sign();
-            res = doPost(req, url, cert);
+            res = doPost(req, url);
 
             System.out.println("响应结果：" + res);
         } catch (GlobalException e) {
@@ -77,12 +76,12 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
     }
 
-    public BaseResModel<K> noSignPost(BaseReqModel<T> req, String url, String cert, Class<K> clazz) {
+    public BaseResModel<K> noSignPost(BaseReqModel<T> req, String url, Class<K> clazz) {
 
         String res;
         BaseResModel<K> resModel = new BaseResModel<K>();
         try {
-            res = doPost(req, url, cert);
+            res = doPost(req, url);
             System.out.println("响应结果：" + res);
         } catch (GlobalException e) {
             throw e;
@@ -119,14 +118,15 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
     }
 
-    public BaseResArrayModel<K> arrayPost(BaseReqModel<T> req, String url, String cert, Class<K> clazz) {
+
+
+    public BaseResArrayModel<K> arrayPost(BaseReqModel<T> req, String url,  Class<K> clazz) {
 
         String res;
         BaseResArrayModel<K> resModel = new BaseResArrayModel<K>();
         try {
             req.sign();
-            res = doPost(req, url, cert);
-
+            res = doPost(req, url);
             System.out.println("响应结果：" + res);
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,21 +176,25 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
     }
 
-    private String doPost(@NotNull BaseReqModel<T> req, String url, String cert) throws Exception {
+
+
+    private String doPost(@NotNull BaseReqModel<T> req, String url) throws Exception {
         String param = JSON.toJSONString(req);
         System.out.println("------发送数据格式-------------:" + param);
-        HttpClient httpClient = getHttpClient(cert);
+        HttpClient httpClient = getHttpClient();
         String res = HTTPSClientUtil.doPost(httpClient, url, param);
-
         System.out.println("响应结果：" + res);
         return res;
     }
 
 
-    private HttpClient getHttpClient(String httpCertPath) throws Exception {
-        Resource keystoreResource = new ClassPathResource(httpCertPath);
-        File keystoreFile = keystoreResource.getFile();
-        return new HTTPSCertifiedClient().init(keystoreFile.getAbsolutePath());
+
+
+
+
+    private HttpClient getHttpClient() throws Exception {
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        return httpClient;
     }
 
 }

@@ -13,11 +13,10 @@ import com.bsnbase.sdk.entity.res.fiscobcos.ResGetTxReceiptByTxHash;
 import com.bsnbase.sdk.entity.res.fiscobcos.ResKeyEscrow;
 import com.bsnbase.sdk.util.common.HttpService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-@Service
 public class TransactionService {
 
     /**
@@ -29,12 +28,11 @@ public class TransactionService {
     public static ResKeyEscrow reqChainCode(@NotNull ReqKeyEscrow kes) throws IOException{
     	 String api =  Config.config.getApi() + "/api/fiscobcos/v1/node/reqChainCode";
          BaseReqModel<ReqKeyEscrow> req = new  BaseReqModel<ReqKeyEscrow>();
-//         kes.setNonce(Nonce.getNonceString());
          System.out.println(kes.getEncryptionValue());
          req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
          req.setBody(kes);
          HttpService<ReqKeyEscrow,ResKeyEscrow> httpService =new HttpService<ReqKeyEscrow,ResKeyEscrow>();
-         BaseResModel<ResKeyEscrow> res = httpService.post(req,api, Config.config.getCert(),ResKeyEscrow.class);
+         BaseResModel<ResKeyEscrow> res = httpService.post(req,api, ResKeyEscrow.class);
          return res.getBody();
 
     }
@@ -50,7 +48,7 @@ public class TransactionService {
         BaseReqModel<ReqKeyEscrow> req = new  BaseReqModel<>();
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService httpService =new HttpService();
-        BaseResModel<ResGetTxCount> res = httpService.post(req,api, Config.config.getCert(),ResGetTxCount.class);
+        BaseResModel<ResGetTxCount> res = httpService.post(req,api, ResGetTxCount.class);
         return res.getBody();
 
     }
@@ -66,7 +64,7 @@ public class TransactionService {
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(reqGetTxCountByBlockNumber);
         HttpService<ReqGetTxCountByBlockNumber, ResGetTxCountByBlockNumber> httpService =new HttpService();
-        BaseResModel<ResGetTxCountByBlockNumber> res = httpService.post(req,api, Config.config.getCert(),ResGetTxCountByBlockNumber.class);
+        BaseResModel<ResGetTxCountByBlockNumber> res = httpService.post(req,api, ResGetTxCountByBlockNumber.class);
         return res.getBody();
     }
 
@@ -82,7 +80,7 @@ public class TransactionService {
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(reqGetTxReceiptByTxHash);
         HttpService<ReqGetTxReceiptByTxHash, ResGetTxReceiptByTxHash> httpService =new HttpService();
-        BaseResModel<ResGetTxReceiptByTxHash> res = httpService.post(req,api, Config.config.getCert(),ResGetTxReceiptByTxHash.class);
+        BaseResModel<ResGetTxReceiptByTxHash> res = httpService.post(req,api, ResGetTxReceiptByTxHash.class);
         return res.getBody();
     }
 }

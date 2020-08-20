@@ -23,7 +23,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.Base64;
-import java.util.Date;
 import java.util.Map;
 
 public class TransData {
@@ -96,7 +95,7 @@ public class TransData {
         channelHeader.setExtension(convertToByteString(ext.build()));
         channelHeader.setEpoch(0);
 
-        com.google.protobuf.Timestamp ts = Timestamps.fromMillis(new Date().getTime());
+        com.google.protobuf.Timestamp ts = Timestamps.fromMillis(System.currentTimeMillis());
         channelHeader.setTimestamp(ts);
 
         Common.SignatureHeader.Builder signHeader = Common.SignatureHeader.newBuilder();

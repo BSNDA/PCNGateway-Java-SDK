@@ -23,7 +23,7 @@ public class NodeService {
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(reqData);
         HttpService<ReqGetTransaction,ResGetTransaction> httpService =new HttpService<ReqGetTransaction,ResGetTransaction>();
-        BaseResModel<ResGetTransaction> res = httpService.post(req,api, Config.config.getCert(),ResGetTransaction.class);
+        BaseResModel<ResGetTransaction> res = httpService.post(req,api, ResGetTransaction.class);
 
         return res.getBody();
 	}
@@ -38,7 +38,7 @@ public class NodeService {
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(reqData);
         HttpService<ReqGetBlockInformation,ResGetBlockInformation> httpService =new HttpService<ReqGetBlockInformation,ResGetBlockInformation>();
-        BaseResModel<ResGetBlockInformation> res = httpService.post(req,api, Config.config.getCert(),ResGetBlockInformation.class);
+        BaseResModel<ResGetBlockInformation> res = httpService.post(req,api, ResGetBlockInformation.class);
          return res.getBody();
 	}
 
@@ -51,7 +51,7 @@ public class NodeService {
         BaseReqModel<ReqGetLedgerInfo> req = new  BaseReqModel<ReqGetLedgerInfo>();
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         HttpService<ReqGetLedgerInfo,ResGetLedgerInfo> httpService =new HttpService<ReqGetLedgerInfo,ResGetLedgerInfo>();
-        BaseResModel<ResGetLedgerInfo> res = httpService.post(req,api, Config.config.getCert(),ResGetLedgerInfo.class);
+        BaseResModel<ResGetLedgerInfo> res = httpService.post(req,api, ResGetLedgerInfo.class);
 
         return res.getBody();
 	}

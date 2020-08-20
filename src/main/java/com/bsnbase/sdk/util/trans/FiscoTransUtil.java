@@ -39,7 +39,7 @@ public class FiscoTransUtil {
         BigInteger blockLimit = BigInteger.valueOf(blockHeight+100);
         String signedStr="";
         String encodeTransaction = TransactionAssembleManager.transactionAssembleForMethodInvoke(abi,groupId, blockLimit, contractAddress, funcName, funcParam);
-        if(funcName.toLowerCase().equals("select")){
+        if(("select".equals(funcName.toLowerCase()))){
             signedStr=encodeTransaction;
         }else{
             ECKeyPair ecKeyPair=loadKeyPair(reqTransData.getUserName(),Config.config.getAppCode(),Config.config.getMspDir());

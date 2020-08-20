@@ -11,8 +11,6 @@ import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
-
 import com.bsnbase.sdk.entity.base.BaseReqModel;
 import com.bsnbase.sdk.entity.base.BaseResModel;
 import com.bsnbase.sdk.entity.config.Config;
@@ -25,7 +23,6 @@ import com.bsnbase.sdk.entity.transactionHeader.TransactionUser;
 import com.bsnbase.sdk.util.common.HttpService;
 import com.bsnbase.sdk.util.common.Nonce;
 
-@Service
 public class TransactionService {
 
     /**
@@ -44,12 +41,12 @@ public class TransactionService {
         req.setBody(kes);
 
         HttpService<ReqKeyEscrow, ResKeyEscrow> httpService = new HttpService<ReqKeyEscrow, ResKeyEscrow>();
-        BaseResModel<ResKeyEscrow> res = httpService.post(req, api, Config.config.getCert(), ResKeyEscrow.class);
+        BaseResModel<ResKeyEscrow> res = httpService.post(req, api,  ResKeyEscrow.class);
         return res.getBody();
     }
 
     /**
-     * 密钥非托管模式交易
+     * 公钥上传模式交易
      *
      * @param reqkey
      * @return
@@ -89,7 +86,7 @@ public class TransactionService {
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(keyNo);
         HttpService<ReqKeyEscrowNo, ResKeyEscrowNo> httpService = new HttpService<ReqKeyEscrowNo, ResKeyEscrowNo>();
-        BaseResModel<ResKeyEscrowNo> res = httpService.post(req, api, Config.config.getCert(), ResKeyEscrowNo.class);
+        BaseResModel<ResKeyEscrowNo> res = httpService.post(req, api,  ResKeyEscrowNo.class);
 
         return res.getBody();
 
