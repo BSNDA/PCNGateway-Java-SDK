@@ -4,10 +4,10 @@ import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
 
 public class PublicConfig {
 
-    private static final String PubK_SM = "-----BEGIN PUBLIC KEY-----" +
-            "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEIlh1C0iWAdcKnM/yAaZZT/42NVzT" +
-            "Vyr31H9MDhHbPkp+/B3gsp5iZOr6OTAGO9jpN10/YMIrxt2IMg5auIEvMA==" +
-            "-----END PUBLIC KEY-----";
+    private static final String PubK_SM = "-----BEGIN PUBLIC KEY-----\n" +
+            "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEIlh1C0iWAdcKnM/yAaZZT/42NVzT\n" +
+            "Vyr31H9MDhHbPkp+/B3gsp5iZOr6OTAGO9jpN10/YMIrxt2IMg5auIEvMA==\n" +
+            "-----END PUBLIC KEY-----\n";
 
     private static final String PubK_R1 = "-----BEGIN CERTIFICATE-----" +
             "MIIC+zCCAqGgAwIBAgIUARhAfFSyhzcx9q4LdiYKl2UHo1YwCgYIKoZIzj0EAwIw" +

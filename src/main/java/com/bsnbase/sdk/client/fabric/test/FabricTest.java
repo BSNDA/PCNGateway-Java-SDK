@@ -29,7 +29,7 @@ public class FabricTest {
 		config.setUserCode("USER0001202004241407488301320");
 		config.setApi("https://xinyangnode.bsngate.com:17602");
         config.setPrk("cert/private_key.pem");
-		config.setPuk("cert/public_Key.pem");
+		config.setPuk("cert/public_key.pem");
 		config.setMspDir("D:/test");
         config.initConfig(config);
 	}

@@ -34,7 +34,7 @@ public class XuperChainTest {
         config.setUserCode("ceshi1002");
         config.setApi("https://suzhounode.bsngate.com:17602");
         config.setPrk("cert/private_key.pem");
-        config.setPuk("cert/public_Key.pem");
+        config.setPuk("cert/public_key.pem");
         config.setMspDir("D:/test");
         config.initConfig(config);
     }
