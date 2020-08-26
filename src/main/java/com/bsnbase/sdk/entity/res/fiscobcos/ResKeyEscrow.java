@@ -5,34 +5,34 @@ import lombok.Data;
 
 @Data
 public class ResKeyEscrow implements IBody{
-    boolean constant;
-    String queryInfo;
-    String txId;
-    String blockHash;
+	boolean constant;
+	String queryInfo;
+	String txId;
+	String blockHash;
 	Integer blockNumber;
 	Integer gasUsed;
-    String status;
-    String from;
-    String to;
-    String input;
-    String output;
+	String status;
+	String from;
+	String to;
+	String input;
+	String output;
+	String logs;
 
 	@Override
 	public String getEncryptionValue() {
 		StringBuffer str=new StringBuffer();
-		if(constant){
-			str.append(this.queryInfo == null?"":this.queryInfo);
-		}else{
-			str.append(this.txId == null?"":this.txId)
-		       .append(this.blockHash == null?"":this.blockHash)
-			   .append(this.blockNumber == null?"":this.blockNumber)
-			   .append(this.gasUsed == null?"":this.gasUsed)
-			   .append(this.status == null?"":this.status)
-			   .append(this.from == null?"":this.from)
-			   .append(this.to == null?"":this.to)
-			   .append(this.input == null?"":this.input)
-			   .append(this.output == null?"":this.output);
-		}
+		str.append(constant)
+				.append(this.queryInfo == null?"":this.queryInfo)
+				.append(this.txId == null?"":this.txId)
+				.append(this.blockHash == null?"":this.blockHash)
+				.append(this.blockNumber == null?"":this.blockNumber)
+				.append(this.gasUsed == null?"":this.gasUsed)
+				.append(this.status == null?"":this.status)
+				.append(this.from == null?"":this.from)
+				.append(this.to == null?"":this.to)
+				.append(this.input == null?"":this.input)
+				.append(this.output == null?"":this.output)
+				.append(this.logs == null?"":this.logs);
 		return str.toString();
 
 	}
