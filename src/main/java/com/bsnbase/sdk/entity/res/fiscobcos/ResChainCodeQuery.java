@@ -6,10 +6,10 @@ import lombok.Data;
 @Data
 public class ResChainCodeQuery implements IBody{
     BlockEvent[] blockEvent;
-    BlockContractEvent[] blockContractEvent;
+    BlockContractEvent[] contractEvent;
 	public ResChainCodeQuery(){
 		this.blockEvent = new BlockEvent[]{};
-		this.blockContractEvent =new BlockContractEvent[]{};
+		this.contractEvent =new BlockContractEvent[]{};
 	}
 
 	@Override
@@ -25,8 +25,8 @@ public class ResChainCodeQuery implements IBody{
 			str += (blockEvent.attachArgs == null ? "" : blockEvent.attachArgs);
 			str += (blockEvent.createTime == null ? "" : blockEvent.createTime);
 		}
-		for (int i = 0; i<this.blockContractEvent.length; i++) {
-			BlockContractEvent blockContractEvent = this.blockContractEvent[i];
+		for (int i = 0; i<this.contractEvent.length; i++) {
+			BlockContractEvent blockContractEvent = this.contractEvent[i];
 			str += (blockContractEvent.eventId == null ? "" : blockContractEvent.eventId);
 			str += (blockContractEvent.appcode == null ? "" : blockContractEvent.appcode);
 			str += (blockContractEvent.userCode == null ? "" : blockContractEvent.userCode);
