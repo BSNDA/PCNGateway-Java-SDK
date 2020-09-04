@@ -2,8 +2,6 @@ package com.bsnbase.sdk.util.keystore;
 
 import com.bsnbase.sdk.entity.transactionHeader.TransactionUser;
 import com.bsnbase.sdk.util.common.Common;
-import com.bsnbase.sdk.util.common.StoreUtils;
-import org.apache.commons.net.util.Base64;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.bouncycastle.openssl.jcajce.JcaPKCS8Generator;
 import org.bouncycastle.util.io.pem.PemObject;
@@ -78,10 +76,10 @@ public class KeyStore implements IKeyStore{
     public TransactionUser loadUser(String name, String appCode) throws IOException {
         TransactionUser user = new TransactionUser();
 
-        String key = Common.readFile(this.getPrivateKeyPath(name,appCode));
+        String key = Common.readLocalFile(this.getPrivateKeyPath(name,appCode));
         user.setPrivateKey(key);
 
-        String cert = Common.readFile(this.getCertPath(name,appCode));
+        String cert = Common.readLocalFile(this.getCertPath(name,appCode));
         user.setCert(cert.getBytes());
 
         return user;

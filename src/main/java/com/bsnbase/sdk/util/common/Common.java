@@ -1,18 +1,20 @@
 package com.bsnbase.sdk.util.common;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import com.bsnbase.sdk.util.exception.GlobalException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.URLDecoder;
 
 public class Common {
+
+    private final static Logger logger = LoggerFactory.getLogger(Common.class);
+
     public static String getCNName(String name,String appCode){
         return name+"@"+appCode;
     }
-
 
     public static String getUserPrivateKeyPath(String fileName,String name,String appCode){
         String cn = getCNName(name,appCode);
@@ -43,13 +45,7 @@ public class Common {
         return bytess;
     }
 
-    public static String getClassPathResource(String path) throws Exception {
-        Resource keystoreResource = new ClassPathResource(path);
-        File keystoreFile = keystoreResource.getFile();
-        return keystoreFile.getAbsolutePath();
-    }
-
-    public static String readFile(String path) throws IOException {
+    public static String readLocalFile(String path) throws IOException {
         StringBuilder info = new StringBuilder();
         BufferedReader br = null;
         try {
@@ -70,6 +66,42 @@ public class Common {
             }
             return info.toString();
         }
+    }
+
+
+    public static String readFile(String path) throws IOException {
+        StringBuffer result = new StringBuffer();
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
+        try {
+            InputStream stream = Common.class.getResourceAsStream(path);
+            BufferedReader br = null;
+            try {
+                br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+                String lineTxt = null;
+                while ((lineTxt = br.readLine()) != null) {
+                    result.append(lineTxt).append("\n");;
+                }
+                br.close();
+            } catch (FileNotFoundException e) {
+                logger.error("FileNotFoundException:" + e);
+            } catch (IOException e) {
+                logger.error("IOException:" + e);
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        logger.error("close br error:" + e);
+                    }
+                }
+            }
+            return result.toString();
+        } catch (Exception e) {
+            logger.error("Path:{},Exception:{}",path, e);
+        }
+        return null;
     }
 
 }

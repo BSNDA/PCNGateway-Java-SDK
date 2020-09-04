@@ -40,7 +40,7 @@ public class BaseReqModel<T extends Object & IBody> implements IBaseReqModel {
         }
         AlgorithmTypeEnum algorithmTypeEnum = AlgorithmTypeEnum.fromAlgorithmTypeEnum(Config.config.getAppInfo().getAlgorithmType());
         AlgorithmTypeContext algorithmTypeContext = new AlgorithmTypeContext(algorithmTypeEnum);
-        String sign = algorithmTypeContext.getAlgorithmTypeHandle().sign(Common.readFile(Common.getClassPathResource(Config.config.getPrk())), signValue);
+        String sign = algorithmTypeContext.getAlgorithmTypeHandle().sign(Common.readFile(Config.config.getPrk()), signValue);
         this.mac = sign;
     }
 

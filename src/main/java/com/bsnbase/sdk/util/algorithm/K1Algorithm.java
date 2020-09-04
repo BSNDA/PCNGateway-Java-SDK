@@ -17,9 +17,8 @@ public  class K1Algorithm implements AlgorithmTypeHandle {
      */
     @Override
     public String sign(String stringPrivateKey, String signString) throws Exception {
-        PrivateKey privateKey = K1Util.loadECPrivateKey(stringPrivateKey, "EC");
-        byte[] signature = K1Util.signData("SHA256withECDSA", signString.getBytes(), privateKey);
-        return java.util.Base64.getEncoder().encodeToString(signature);
+        byte[] signByte = K1Util.signData(stringPrivateKey, signString.getBytes());
+        return Base64.getEncoder().encodeToString(signByte);
     }
 
     /**

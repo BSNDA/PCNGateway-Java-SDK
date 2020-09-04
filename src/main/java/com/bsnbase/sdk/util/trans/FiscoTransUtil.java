@@ -58,8 +58,8 @@ public class FiscoTransUtil {
         String pubFilePath = path +"/"+ userName + "@" + appCode+"_puk.pem";
         Boolean isExists = findFile(priFilePath)&&findFile(pubFilePath);
         if (isExists) {
-            String privateKey = Common.readFile(priFilePath).replaceAll("\n","");
-            String publicKey = Common.readFile(pubFilePath).replaceAll("\n","");
+            String privateKey = Common.readLocalFile(priFilePath).replaceAll("\n","");
+            String publicKey = Common.readLocalFile(pubFilePath).replaceAll("\n","");
             keyPair=new ECKeyPair(new BigInteger(privateKey),new BigInteger(publicKey));
         } else {
             Credentials genCredentials = GenCredential.create();

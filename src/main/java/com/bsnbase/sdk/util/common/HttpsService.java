@@ -9,8 +9,6 @@ import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
 import org.apache.http.client.HttpClient;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import javax.json.JsonException;
 import java.io.File;
@@ -197,8 +195,8 @@ public class HttpsService<T extends Object & IBody, K extends Object & IBody> {
 
 
     private HttpClient getHttpClient(String httpCertPath) throws Exception {
-        Resource keystoreResource = new ClassPathResource(httpCertPath);
-        File keystoreFile = keystoreResource.getFile();
+        String keystoreResource = this.getClass().getResource(httpCertPath).getFile();
+        File keystoreFile = new File(keystoreResource);
         return new HTTPSCertifiedClient().init(keystoreFile.getAbsolutePath());
     }
 

@@ -1,9 +1,20 @@
 package com.bsnbase.sdk.util.k1;
 
 import com.bsnbase.sdk.util.common.Common;
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.DERSequenceGenerator;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.signers.ECDSASigner;
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
+import org.fisco.bcos.web3j.abi.datatypes.Int;
+import org.hyperledger.fabric.sdk.security.CryptoPrimitives;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.security.*;
+import java.security.interfaces.ECPrivateKey;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -14,17 +25,42 @@ public class K1Util {
 
     /**
      * k1签名
-     * @param algorithm
-     * @param data
-     * @param key
+     * @param stringPrivateKey
+     * @param signString
      * @return
      * @throws Exception
      */
-    public static byte[] signData(String algorithm, byte[] data, PrivateKey key) throws Exception {
-        Signature signer = Signature.getInstance(algorithm);
-        signer.initSign(key);
-        signer.update(data);
-        return (signer.sign());
+    public static byte[] signData(String stringPrivateKey, byte[] signString) throws Exception {
+        CryptoPrimitives cryptoPrimitives = new CryptoPrimitives();
+        cryptoPrimitives.init();
+        PrivateKey privateKey = cryptoPrimitives.bytesToPrivateKey(stringPrivateKey.getBytes());
+        ECPrivateKey eck = (ECPrivateKey) privateKey;
+
+
+        ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256k1");
+        ECDomainParameters domain = new ECDomainParameters(spec.getCurve(), spec.getG(), spec.getN());
+        ECDSASigner signer = new ECDSASigner();
+        ECPrivateKeyParameters parameters = new ECPrivateKeyParameters(eck.getS(), domain);
+        signer.init(true, parameters);
+        byte[] hash = hash(signString);
+        BigInteger[] signature = signer.generateSignature(hash);
+
+        BigInteger r = signature[0];
+        BigInteger s = signature[1];
+
+        // BIP62: "S must be less than or equal to half of the Group Order N"
+
+        BigInteger overTwo = domain.getN().divide(new BigInteger("2"));
+        if (s.compareTo(overTwo) == 1) {
+            s = domain.getN().subtract(s);
+        }
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        DERSequenceGenerator seq = new DERSequenceGenerator(bos);
+        seq.addObject(new ASN1Integer(r));
+        seq.addObject(new ASN1Integer(s));
+        seq.close();
+        return bos.toByteArray();
     }
 
     /**
@@ -63,57 +99,23 @@ public class K1Util {
         return keyFactory.generatePublic(spec);
     }
 
-    // readBytes代码
-    public static byte[] readBytes(final InputStream inputStream) throws IOException {
-        final int BUFFER_SIZE = 1024;
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int readCount;
-        byte[] data = new byte[BUFFER_SIZE];
-        while ((readCount = inputStream.read(data, 0, data.length)) != -1) {
-            buffer.write(data, 0, readCount);
+
+
+    public static byte[] hash(byte[] input) {
+        return hash(input, 0, input.length);
+    }
+
+    public static byte[] hash(byte[] input, int offset, int length) {
+        MessageDigest digest = newDigest();
+        digest.update(input, offset, length);
+        return digest.digest();
+    }
+
+    public static MessageDigest newDigest() {
+        try {
+            return MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);  // Can't happen.
         }
-
-        buffer.flush();
-        return buffer.toByteArray();
     }
-
-
-    public static void main(String[] args) throws Exception {
-        testSignVerify();
-
-    }
-
-    public static void testSignVerify() throws Exception {
-        // 需要签名的数据
-
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC");
-        // curveName这里取值：secp256k1
-        ECGenParameterSpec ecGenParameterSpec = new ECGenParameterSpec("secp256k1");
-        keyPairGenerator.initialize(ecGenParameterSpec, new SecureRandom());
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-
-//        PublicKey publicKey = keyPair.getPublic();
-//        PrivateKey privateKey = keyPair.getPrivate();
-
-//        K1Util.savePublicKeyAsPEM(publicKey, "publickey.pem");
-//        K1Util.savePrivateKeyAsPEM(privateKey, "privatekey.pem");
-        PrivateKey privateKey =K1Util.loadECPrivateKey(Common.readFile(Common.getClassPathResource("cert/k1/private_key.pem")),"EC");
-        PublicKey publicKey =  K1Util.loadECPublicKey(Common.readFile(Common.getClassPathResource("cert/k1/public_Key.pem")),"EC");
-        String data = "-1用户已存在";
-        // 生成秘钥，在实际业务中，应该加载秘钥
-//        PublicKey publicKey1 = K1Util.loadECPublicKey(Common.readFile(Common.getClassPathResource("cert/k1/public_Key.pem")), "EC");
-//        PrivateKey privateKey1 = K1Util.loadECPrivateKey(Common.readFile(Common.getClassPathResource("cert/k1/private_Key.pem")), "EC");
-
-        // 计算签名
-        byte[] sign1 = signData("SHA256withECDSA", data.getBytes(), privateKey);
-
-        // sign1和sign2的内容不同，因为ECDSA在计算的时候，加入了随机数k，因此每次的值不一样
-        // 随机数k需要保密，并且每次不同
-
-        boolean a = verifySign("SHA256withECDSA", data.getBytes(), publicKey, sign1);
-
-
-        System.out.println(a);
-    }
-
 }
