@@ -12,6 +12,7 @@ import com.bsnbase.sdk.entity.res.xuperChain.ResGetBlockInformation;
 import com.bsnbase.sdk.entity.res.xuperChain.ResGetTransaction;
 import com.bsnbase.sdk.entity.res.xuperChain.ResKeyEscrow;
 import com.bsnbase.sdk.entity.res.xuperChain.ResUserRegister;
+import com.bsnbase.sdk.util.common.Common;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,8 +34,7 @@ public class XuperChainTest {
         config.setAppCode("app0001202008121628000612841");
         config.setUserCode("ceshi1002");
         config.setApi("https://suzhounode.bsngate.com:17602");
-        config.setPrk("cert/private_key.pem");
-        config.setPuk("cert/public_key.pem");
+        config.setPrk(Common.readFile("cert/private_key.pem"));
         config.setMspDir("D:/test");
         config.initConfig(config);
     }

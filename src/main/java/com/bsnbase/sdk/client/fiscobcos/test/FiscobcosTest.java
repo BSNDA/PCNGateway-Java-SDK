@@ -25,11 +25,14 @@ public class FiscobcosTest {
 
     public void initConfig() throws IOException {
         Config config = new Config();
-        config.setAppCode("app0001202008071659558652683");
-        config.setUserCode("gaowanqiu");
-        config.setApi("https://suzhounode.bsngate.com:17602");
-        config.setPrk("cert/private_key.pem");
-        config.setPuk("cert/public_key.pem");
+        config.setAppCode("app0003202008100054119967051");
+        config.setUserCode("USER0003202005291706487822713");
+        config.setApi("https://singaporenode.bsngate.com:17602");
+        config.setPrk("-----BEGIN PRIVATE KEY-----\n" +
+                "MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQgl0gRhh/ggUj27sVhg0yy\n" +
+                "LwpnU6+v4abU54akTBUk44+gBwYFK4EEAAqhRANCAATqgYIONnCKL19KO9h14ear\n" +
+                "zx6iejLpBF+Oj2/PLZMJtyS2X0Gi6BFKwzkwfwfak9mlWYzRp3+lJT+e3zsO2jsr\n" +
+                "-----END PRIVATE KEY-----");
         config.setMspDir("D:/test");
         config.initConfig(config);
     }

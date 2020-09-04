@@ -6,6 +6,7 @@ import com.bsnbase.sdk.client.fabric.FabricClient;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.fabric.*;
 import com.bsnbase.sdk.entity.res.fabric.*;
+import com.bsnbase.sdk.util.common.Common;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -25,11 +26,10 @@ public class FabricTest {
 	//初始化config
 	public void initConfig() throws IOException {
     	Config config = new Config();
-		config.setAppCode("app0001202007311431220086431");
-		config.setUserCode("USER0001202004241407488301320");
-		config.setApi("https://xinyangnode.bsngate.com:17602");
-        config.setPrk("cert/private_key.pem");
-		config.setPuk("cert/public_key.pem");
+		config.setAppCode("app0003202008100054119967051");
+		config.setUserCode("USER0003202005291706487822713");
+		config.setApi("https://singaporenode.bsngate.com:17602");
+        config.setPrk(Common.readLocalFile("D:/private_key.pem"));
 		config.setMspDir("D:/test");
         config.initConfig(config);
 	}

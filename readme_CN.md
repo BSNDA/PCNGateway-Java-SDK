@@ -47,43 +47,61 @@
  * __证书存储目录：__ 用来存储非托管应用在调用用户证书登记时生成的用户私钥和证书的目录
 
 ### 2. 准备调用
+#### 项目引用
+```
+maven clean
+maven install
+```
+将target目录下生成的bsn-sdk-java-jar-with-dependencies.jar引用到项目中
 
 #### 导入sdk包
 Fabric 需要引入下面的包
 ```
-import (
-    "github.com/BSNDA/PCNGateway-Java-SDK/tree/master/src/main/java/com/bsnbase/sdk/client/fabric"
-    "github.com/BSNDA/PCNGateway-Java-SDK/tree/master/src/main/java/com/bsnbase/sdk/entity/config"
-	)
+import com.bsnbase.sdk.client.fabric.FabricClient
+import com.bsnbase.sdk.entity.config.Config
 ```
 FISCO-BCOS 需要引入下面的包
 ```
-import (
-    "github.com/BSNDA/PCNGateway-Java-SDK/tree/master/src/main/java/com/bsnbase/sdk/client/fiscobcos"
-    "github.com/BSNDA/PCNGateway-Java-SDK/tree/master/src/main/java/com/bsnbase/sdk/entity/config"
-	)
+import com.bsnbase.sdk.client.fiscobcos.FiscobcosClient
+import com.bsnbase.sdk.entity.config.Config
 ```
 XuperChain 需要引入下面的包
 ```
-import (
-    "github.com/BSNDA/PCNGateway-Java-SDK/tree/master/src/main/java/com/bsnbase/sdk/client/xuperChain"
-    "github.com/BSNDA/PCNGateway-Java-SDK/tree/master/src/main/java/com/bsnbase/sdk/entity/config"
-	)
+import com.bsnbase.sdk.client.xuperChain.XuperClient
+import com.bsnbase.sdk.entity.config.Config
 ```
 #### 初始化config
 可以初始化一个存储所有配置的对象，这些具体的配置信息应当由调用者根据各自的项目配置或者读取之后，在调用时传入，  
 在config的`Init`方法中实现了获取一个App基础信息的操作，该操作请不要频繁的调用，该接口将占用您的TPS和流量，可以在项目使用一个静态对象存储`config`在需要时使用。  
-其中，应用私钥、节点网关公钥、https证书是存放在`resources`目录中，只需配置其相对于该目录的路径即可。  
+其中，应用私钥、节点网关公钥为pem中具体内容，
+com.bsnbase.sdk.util.common.Common提供根据路径获取内容方法，
+Common.readLocalFile参数为pem存储目录的绝对路径，
+Common.readFile参数为pem存储目录的相对路径，
+或者直接填入pem内容。
+puk字段为网关公钥，在证书下载压缩包gatewayCert目录下，可为空，
+puk字段为空时系统使用默认网关公钥请求。
 证书存储目录是磁盘的绝对路径。可以通过修改`util.keystore`中的实现修改子用户证书的存储方式。
 ```
 	api:="" //节点网关地址
 	userCode:="" //用户编号
 	appCode :="" //应用编号
-	puk :="cert/public_Key.pem" //节点网关公钥
-	prk :="cert/private_Key.pem" //应用私钥
+	puk :="" //节点网关公钥内容
+	prk :="" //应用私钥内容
 	mspDir:="" //证书存数目录
-	cert :="cert/bsn_gateway_https.crt" //证书
 ```
+#### 初始化Config
+使用已经生成的配置对象，调用以下代码可以创建一个Config对象，用来调用节点网关
+```
+	Config config = new Config();
+	config.setAppCode(appCode );
+	config.setUserCode(userCode);
+	config.setPrk(prkStr)
+	config.setApi(api);
+	config.setPuk(pukStr);
+	config.setMspDir(cert);
+	config.initConfig(config);
+```
+
 #### 初始化Config
 使用已经生成的配置对象，调用以下代码可以创建一个Config对象，用来调用节点网关
 ```
@@ -108,7 +126,6 @@ public void initConfig() throws IOException {
     config.setAppCode("app0001202004161020152918451");
     config.setUserCode("USER0001202004151958010871292");
     config.setApi("http://192.168.1.43:17502");
-    config.setCert("cert/bsn_gateway_https.crt");
     config.setPrk("cert/private_Key.pem");
     config.setPuk("cert/public_Key.pem");
     config.setMspDir("D:/test");

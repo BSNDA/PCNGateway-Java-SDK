@@ -36,7 +36,7 @@ public class BaseResArrayModel<T extends Object & IBody> implements IBaseResMode
         if(StringUtils.isBlank(Config.config.getPuk())){
             verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(PublicConfig.getPublicKey(algorithmTypeEnum),  this.mac,signValue);
         }else{
-            verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(Common.readFile(Config.config.getPuk()),  this.mac,signValue);
+            verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(Config.config.getPuk(),  this.mac,signValue);
         }
         return verify;
     }
