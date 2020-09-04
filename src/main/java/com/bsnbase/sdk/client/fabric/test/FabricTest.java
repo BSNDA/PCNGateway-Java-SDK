@@ -6,7 +6,7 @@ import com.bsnbase.sdk.client.fabric.FabricClient;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.fabric.*;
 import com.bsnbase.sdk.entity.res.fabric.*;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;

@@ -6,7 +6,7 @@ import com.bsnbase.sdk.client.fiscobcos.FiscobcosClient;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.fiscobcos.*;
 import com.bsnbase.sdk.entity.res.fiscobcos.*;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
