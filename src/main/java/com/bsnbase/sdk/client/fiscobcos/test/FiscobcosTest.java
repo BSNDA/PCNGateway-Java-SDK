@@ -1,11 +1,13 @@
 package com.bsnbase.sdk.client.fiscobcos.test;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.bsnbase.sdk.client.fiscobcos.FiscobcosClient;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.fiscobcos.*;
 import com.bsnbase.sdk.entity.res.fiscobcos.*;
+import com.bsnbase.sdk.util.common.Common;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,8 +17,15 @@ import java.util.List;
 public class FiscobcosTest {
 
     /**
-     *
      * 初始化config
+     *
+     * 应用私钥、节点网关公钥为pem中具体内容，
+     * com.bsnbase.sdk.util.common.Common提供根据路径获取内容方法，
+     * Common.readLocalFile参数为pem存储目录的绝对路径，
+     * 例如:Common.readFile("cert/private_key.pem")
+     * Common.readFile参数为pem存储目录的相对路径，
+     * 例如:Common.readLocalFile("D:/test/private_key.pem")
+     * 或者直接填入pem内容。
      *
      * config中puk字段为网关公钥，在证书下载压缩包gatewayCert目录下，可为空
      * puk字段为空时系统使用默认网关公钥请求
@@ -28,11 +37,7 @@ public class FiscobcosTest {
         config.setAppCode("app0003202008100054119967051");
         config.setUserCode("USER0003202005291706487822713");
         config.setApi("https://singaporenode.bsngate.com:17602");
-        config.setPrk("-----BEGIN PRIVATE KEY-----\n" +
-                "MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQgl0gRhh/ggUj27sVhg0yy\n" +
-                "LwpnU6+v4abU54akTBUk44+gBwYFK4EEAAqhRANCAATqgYIONnCKL19KO9h14ear\n" +
-                "zx6iejLpBF+Oj2/PLZMJtyS2X0Gi6BFKwzkwfwfak9mlWYzRp3+lJT+e3zsO2jsr\n" +
-                "-----END PRIVATE KEY-----");
+        config.setPrk(Common.readFile("cert/private_key.pem"));
         config.setMspDir("D:/test");
         config.initConfig(config);
     }
@@ -45,7 +50,7 @@ public class FiscobcosTest {
         try {
             initConfig();
             ReqUserRegister reqUserRegister = new ReqUserRegister();
-            reqUserRegister.setUserId("testSdk1");
+            reqUserRegister.setUserId("task852321");
             ResUserRegister resUserRegister = FiscobcosClient.register(reqUserRegister);
             System.out.println(JSONObject.toJSONString(resUserRegister, SerializerFeature.PrettyFormat));
         } catch (Exception e) {
@@ -62,10 +67,14 @@ public class FiscobcosTest {
         try {
             initConfig();
             ReqKeyEscrow reqKeyEscrow = new ReqKeyEscrow();
-            reqKeyEscrow.setUserId("testSdk1");
-            reqKeyEscrow.setContractName("111");
-            reqKeyEscrow.setFuncName("funcName");
-            reqKeyEscrow.setFuncParam("funcParam");
+            reqKeyEscrow.setUserId("task852321");
+            reqKeyEscrow.setContractName("BsnBaseGlobalContract");
+            reqKeyEscrow.setFuncName("insert");
+            List<Object> list=new ArrayList<>();
+            list.add("test1");
+            list.add(1);
+            list.add("test2");
+            reqKeyEscrow.setFuncParam(JSON.toJSONString(list));
             ResKeyEscrow resKeyEscrow = FiscobcosClient.reqChainCode(reqKeyEscrow);
             System.out.println(JSONObject.toJSONString(resKeyEscrow, SerializerFeature.PrettyFormat));
         } catch (Exception e) {

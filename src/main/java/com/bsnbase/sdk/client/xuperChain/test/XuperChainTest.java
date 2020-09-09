@@ -22,8 +22,15 @@ import java.util.Map;
 public class XuperChainTest {
 
     /**
-     *
      * 初始化config
+     *
+     * 应用私钥、节点网关公钥为pem中具体内容，
+     * com.bsnbase.sdk.util.common.Common提供根据路径获取内容方法，
+     * Common.readLocalFile参数为pem存储目录的绝对路径，
+     * 例如:Common.readFile("cert/private_key.pem")
+     * Common.readFile参数为pem存储目录的相对路径，
+     * 例如:Common.readLocalFile("D:/test/private_key.pem")
+     * 或者直接填入pem内容。
      *
      * config中puk字段为网关公钥，在证书下载压缩包gatewayCert目录下，可为空
      * puk字段为空时系统使用默认网关公钥请求
@@ -59,6 +66,19 @@ public class XuperChainTest {
 
     /**
      * 密钥托管模式下调用智能合约接口
+     * 默认合约方法参数示例：
+     * 增加：
+     * FuncName：insert_data
+     * FuncParam:{"base_key":"dev_0001","base_value":"test"}
+     *删除：
+     * FuncName：remove_data
+     * FuncParam:{"base_key":"dev_0001"}
+     *更新：
+     * FuncName：update_data
+     * FuncParam:{"base_key":"dev_0001","base_value":"test2"}
+     *查询：
+     * FuncName：select_data
+     * FuncParam:{"base_key":"dev_0001"}
      */
 
     @Test

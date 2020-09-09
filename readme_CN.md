@@ -87,7 +87,7 @@ puk字段为空时系统使用默认网关公钥请求。
 	appCode :="" //应用编号
 	puk :="" //节点网关公钥内容
 	prk :="" //应用私钥内容
-	mspDir:="" //证书存数目录
+	mspDir:="" //证书存储目录
 ```
 #### 初始化Config
 使用已经生成的配置对象，调用以下代码可以创建一个Config对象，用来调用节点网关
@@ -102,20 +102,6 @@ puk字段为空时系统使用默认网关公钥请求。
 	config.initConfig(config);
 ```
 
-#### 初始化Config
-使用已经生成的配置对象，调用以下代码可以创建一个Config对象，用来调用节点网关
-```
-	Config config = new Config();
-	config.setAppCode(appCode );
-	config.setUserCode(userCode);
-	config.setCert(cert) 
-	config.setPrk(prk)
-	config.setApi(api);
-	config.setPuk(puk);
-	config.setMspDir(cert);
-	config.initConfig(config);
-```
-
 ####   调用接口
 每一个网关接口已经封装了请求和响应的参数对象，只需要赋值就可直接调用，方法内已经实现了签名和验签的操作。  
 以下为注册子用户的调用操作，其他类似。
@@ -126,8 +112,8 @@ public void initConfig() throws IOException {
     config.setAppCode("app0001202004161020152918451");
     config.setUserCode("USER0001202004151958010871292");
     config.setApi("http://192.168.1.43:17502");
-    config.setPrk("cert/private_Key.pem");
-    config.setPuk("cert/public_Key.pem");
+    config.setPrk(Common.readFile("cert/private_key.pem"));
+    config.setPuk(Common.readFile("cert/public_Key.pem"));
     config.setMspDir("D:/test");
     config.initConfig(config);
 }
