@@ -13,6 +13,7 @@ import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.crypto.ECKeyPair;
 import org.fisco.bcos.web3j.crypto.EncryptType;
 import org.fisco.bcos.web3j.crypto.gm.GenCredential;
+import org.fisco.bcos.web3j.protocol.core.methods.response.AbiDefinition;
 import org.fisco.bcos.web3j.tx.TransactionAssembleManager;
 
 import java.io.File;
@@ -39,7 +40,8 @@ public class FiscoTransUtil {
         BigInteger blockLimit = BigInteger.valueOf(blockHeight+100);
         String signedStr="";
         String encodeTransaction = TransactionAssembleManager.transactionAssembleForMethodInvoke(abi,groupId, blockLimit, contractAddress, funcName, funcParam);
-        if(("select".equals(funcName.toLowerCase()))){
+        AbiDefinition abiDefinition = TransactionAssembleManager.getFunctionAbiDefinition(funcName, abi);
+        if(abiDefinition.isConstant()){
             signedStr=encodeTransaction;
         }else{
             ECKeyPair ecKeyPair=loadKeyPair(reqTransData.getUserName(),Config.config.getAppCode(),Config.config.getMspDir());
