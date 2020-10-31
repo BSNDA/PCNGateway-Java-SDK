@@ -27,17 +27,16 @@ public class FabricTest {
 	 * 或者直接填入pem内容。
 	 *
 	 * puk字段和prk字段为用户公钥和私钥不能为空
+	 *
+	 * testServerIdn 测试网服务需要配置为true,其他服务不用配置
 	 */
 
 	//初始化config
 	public void initConfig() throws IOException {
     	Config config = new Config();
-		config.setAppCode("app0003202008100054119967051");
-		config.setUserCode("USER0003202005291706487822713");
-		config.setApi("http://192.168.1.43:17502");
-        config.setPrk(Common.readLocalFile("D:/private_key.pem"));
 		config.setPuk(Common.readLocalFile("D:/public_key.pem"));
 		config.setMspDir("D:/test");
+      //config.setTestServerIdn(true);
         config.initConfig(config);
 	}
 	 /**

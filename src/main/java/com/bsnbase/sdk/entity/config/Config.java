@@ -43,6 +43,12 @@ public class Config {
      */
     @Deprecated
     String cert;
+    /**
+     * 网关公钥配置标识
+     * true  ：测试网服务
+     * false ：正常服务
+     */
+    boolean testServerIdn;
 
     //APP信息
     ResUserInfo appInfo;

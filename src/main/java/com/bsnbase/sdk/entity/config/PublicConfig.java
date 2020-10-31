@@ -66,7 +66,7 @@ public class PublicConfig {
 
 
     public static String getPublicKey(AlgorithmTypeEnum algorithmTypeEnum) {
-        boolean isTest=false;
+        boolean isTest=Config.config.testServerIdn;
         switch (algorithmTypeEnum) {
             case AppAlgorithmType_SM2:
                 return isTest?PubK_TEST_SM:PubK_SM;

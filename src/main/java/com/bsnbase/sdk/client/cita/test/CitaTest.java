@@ -31,6 +31,8 @@ public class CitaTest {
 	 * 或者直接填入pem内容。
 	 *
 	 * puk字段和prk字段为用户公钥和私钥不能为空
+	 *
+	 * testServerIdn 测试网服务需要配置为true,其他服务不用配置
 	 */
 
 	//初始化config
@@ -42,6 +44,7 @@ public class CitaTest {
 		config.setPrk(Common.readFile("cert/private_key.pem"));
 		config.setPuk(Common.readFile("cert/public_key.pem"));
 		config.setMspDir("D:/test");
+      //config.setTestServerIdn(true);
 		config.initConfig(config);
 	}
 	 /**
@@ -151,4 +154,5 @@ public class CitaTest {
 		}
 
 	}
+
 }
