@@ -37,7 +37,7 @@ The certificate storage directory is the absolute path to the disk. You can modi
 	api:="" //Node gateway address
 	userCode:="" //User ID
 	appCode :="" //AppID
-	puk :="cert/public_Key.pem" //Node gateway key
+	puk :="cert/public_Key.pem" //Public key
 	prk :="cert/private_Key.pem" //Private key
 	mspDir:="" //cert directory
 	cert :="cert/bsn_gateway_https.crt" //cert

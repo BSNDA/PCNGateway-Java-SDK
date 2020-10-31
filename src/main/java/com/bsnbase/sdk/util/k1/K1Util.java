@@ -21,7 +21,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class K1Util {
-    static final Base64.Decoder DECODER = Base64.getDecoder();
 
     /**
      * k1签名
@@ -81,23 +80,7 @@ public class K1Util {
 
 
 
-    public static PrivateKey loadECPrivateKey(String content, String algorithm) throws Exception {
-        String privateKeyPEM = content.replaceAll("-----BEGIN PRIVATE KEY-----", "")
-                .replaceAll("-----END PRIVATE KEY-----", "").replace("\r", "").replace("\n", "");
-        byte[] asBytes = DECODER.decode(privateKeyPEM.replace("\r\n", ""));
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(asBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-        return keyFactory.generatePrivate(spec);
-    }
 
-    public static PublicKey loadECPublicKey(String content, String algorithm) throws Exception {
-        String strPublicKey = content.replaceAll("-----BEGIN PUBLIC KEY-----", "")
-                .replaceAll("-----END PUBLIC KEY-----", "").replace("\r", "").replace("\n", "");
-        byte[] asBytes = DECODER.decode(strPublicKey.replace("\r\n", ""));
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(asBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-        return keyFactory.generatePublic(spec);
-    }
 
 
 

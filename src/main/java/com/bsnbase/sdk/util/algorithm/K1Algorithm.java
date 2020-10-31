@@ -1,6 +1,7 @@
 package com.bsnbase.sdk.util.algorithm;
 
 
+import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.common.UserCertInfo;
 import com.bsnbase.sdk.util.k1.K1Util;
 
@@ -29,7 +30,7 @@ public  class K1Algorithm implements AlgorithmTypeHandle {
      */
     @Override
     public boolean verify(String pemCertificateString, String sign, String str) throws Exception {
-        PublicKey publicKey = K1Util.loadECPublicKey(pemCertificateString, "EC");
+        PublicKey publicKey = Common.loadPublicKey(pemCertificateString, "EC");
         byte[] signByte = Base64.getDecoder().decode(sign);
         boolean verify = K1Util.verifySign("SHA256withECDSA", str.getBytes(), publicKey, signByte);
         return verify;

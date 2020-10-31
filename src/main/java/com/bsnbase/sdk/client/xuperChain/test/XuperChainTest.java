@@ -4,19 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.bsnbase.sdk.client.xuperChain.XuperClient;
 import com.bsnbase.sdk.entity.config.Config;
-import com.bsnbase.sdk.entity.req.xuperChain.ReqGetBlockInformation;
-import com.bsnbase.sdk.entity.req.xuperChain.ReqGetTransaction;
-import com.bsnbase.sdk.entity.req.xuperChain.ReqKeyEscrow;
-import com.bsnbase.sdk.entity.req.xuperChain.ReqUserRegister;
-import com.bsnbase.sdk.entity.res.xuperChain.ResGetBlockInformation;
-import com.bsnbase.sdk.entity.res.xuperChain.ResGetTransaction;
-import com.bsnbase.sdk.entity.res.xuperChain.ResKeyEscrow;
-import com.bsnbase.sdk.entity.res.xuperChain.ResUserRegister;
+import com.bsnbase.sdk.entity.req.xuperChain.*;
+import com.bsnbase.sdk.entity.res.xuperChain.*;
 import com.bsnbase.sdk.util.common.Common;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.security.PrivateKey;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class XuperChainTest {
@@ -24,7 +20,7 @@ public class XuperChainTest {
     /**
      * 初始化config
      *
-     * 应用私钥、节点网关公钥为pem中具体内容，
+     * 应用私钥、应用公钥为pem中具体内容，
      * com.bsnbase.sdk.util.common.Common提供根据路径获取内容方法，
      * Common.readLocalFile参数为pem存储目录的绝对路径，
      * 例如:Common.readFile("cert/private_key.pem")
@@ -32,16 +28,16 @@ public class XuperChainTest {
      * 例如:Common.readLocalFile("D:/test/private_key.pem")
      * 或者直接填入pem内容。
      *
-     * config中puk字段为网关公钥，在证书下载压缩包gatewayCert目录下，可为空
-     * puk字段为空时系统使用默认网关公钥请求
+     * puk字段和prk字段为用户公钥和私钥不能为空
      */
 
     public void initConfig() throws IOException {
         Config config = new Config();
-        config.setAppCode("app0001202008121628000612841");
-        config.setUserCode("ceshi1002");
-        config.setApi("https://suzhounode.bsngate.com:17602");
+        config.setAppCode("app0001202010221038364886804");
+        config.setUserCode("USER0001202010201539390086090");
+        config.setApi("http://192.168.1.43:17502");
         config.setPrk(Common.readFile("cert/private_key.pem"));
+        config.setPuk(Common.readFile("cert/public_key.pem"));
         config.setMspDir("D:/test");
         config.initConfig(config);
     }
@@ -55,7 +51,7 @@ public class XuperChainTest {
         try {
             initConfig();
             ReqUserRegister reqUserRegister=new ReqUserRegister();
-            reqUserRegister.setUserId("123test");
+            reqUserRegister.setUserId  ("123test");
             ResUserRegister resUserRegister=XuperClient.register(reqUserRegister);
             System.out.println(JSONObject.toJSONString(resUserRegister, SerializerFeature.PrettyFormat));
         } catch (IOException e) {
@@ -92,6 +88,7 @@ public class XuperChainTest {
             reqKeyEscrow.setFuncName("select_data");
             Map<String,Object> paramMap=new HashMap();
             paramMap.put("base_key","dev_001122");
+            paramMap.put("base_value","dev_001122");
             reqKeyEscrow.setFuncParam(JSONObject.toJSONString(paramMap));
             ResKeyEscrow resKeyEscrow= XuperClient.reqChainCode(reqKeyEscrow);
             System.out.println(JSONObject.toJSONString(resKeyEscrow, SerializerFeature.PrettyFormat));
@@ -101,7 +98,69 @@ public class XuperChainTest {
 
     }
 
+    /**
+     *
+     *  上传公钥模式获取账户地址
+     */
+    @Test
+    public void getTransInitiator() {
+        try {
+            initConfig();
+            String initiator=XuperClient.getUserAddress();
+            System.out.println("address:"+initiator);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
+
+
+    /**
+     * 公钥上传模式下调用智能合约Query接口
+     * initiator:代表xupchain的账户地址；可调用方法getTransInitiator生成address信息
+     */
+    @Test
+    public void transQuery() {
+        try {
+            initConfig();
+            ReqTransData reqTransData=new ReqTransData();
+            reqTransData.setContractName("cc_appxc_01");
+            reqTransData.setMethodName("get");
+            reqTransData.setInitiator("rJHdYSyCWcnhZ9bjhfbhoN5mfhMVCWGhX");
+            Map<String,String> args = new HashMap<>();
+            args.put("key", "dev_002");
+            reqTransData.setArgs(args);
+            ResKeyEscrowNo resKeyEscrowNo= XuperClient.reqChainCode(reqTransData);
+            System.out.println(JSONObject.toJSONString(resKeyEscrowNo, SerializerFeature.PrettyFormat));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 公钥上传模式下调用智能合约invoke接口
+     * initiator:代表xupchain的账户地址；可调用方法getTransInitiator生成address信息
+     */
+    @Test
+    public void transInvoke() {
+        try {
+            initConfig();
+            ReqTransData reqTransData=new ReqTransData();
+            reqTransData.setContractName("cc_appxc_01");
+            reqTransData.setMethodName("increase");
+            reqTransData.setInitiator("rJHdYSyCWcnhZ9bjhfbhoN5mfhMVCWGhX");
+            Map<String, String> args = new HashMap<>();
+            args.put("key", "123123123");
+            reqTransData.setArgs(args);
+            ResKeyEscrowNo resKeyEscrowNo= XuperClient.reqInvokeChainCode(reqTransData);
+            System.out.println(JSONObject.toJSONString(resKeyEscrowNo, SerializerFeature.PrettyFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     /**
      * 获取交易信息接口
      */
@@ -110,9 +169,9 @@ public class XuperChainTest {
         try {
         initConfig();
         ReqGetTransaction reqGetTransaction=new ReqGetTransaction();
-        reqGetTransaction.setTxHash("c30ece5db2774023b2a1ada3bd67d0c66e9576f4889cdcc9e2b260336dd01aa0");
+        reqGetTransaction.setTxHash("ffad46c6b89f5a770fe7fcd236a553c5c0842d25ca046286cbbc0b0196c1ff9e");
         ResGetTransaction resGetTransaction= XuperClient.getTxInfoByTxHash(reqGetTransaction);
-            System.out.println(JSONObject.toJSONString(resGetTransaction, SerializerFeature.PrettyFormat));
+        System.out.println(JSONObject.toJSONString(resGetTransaction, SerializerFeature.PrettyFormat));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,10 +185,62 @@ public class XuperChainTest {
         try {
             initConfig();
             ReqGetBlockInformation reqGetBlockInformation=new ReqGetBlockInformation();
-            reqGetBlockInformation.setBlockHash("123");
-            reqGetBlockInformation.setBlockHeight(1);
+//            reqGetBlockInformation.setBlockHash("0c38bd52a7a4cc15117bbadba8602c39154d20e6ac306d120942033a98df2954");
+            reqGetBlockInformation.setBlockHeight(135374);
             ResGetBlockInformation resGetBlockInformation= XuperClient.getBlockInfo(reqGetBlockInformation);
             System.out.println(JSONObject.toJSONString(resGetBlockInformation, SerializerFeature.PrettyFormat));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 链码事件注册接口
+     */
+    @Test
+    public void testChainCodeRegister() {
+        try {
+            initConfig();
+            ReqChainCodeRegister reqChainCodeRegister=new ReqChainCodeRegister();
+            reqChainCodeRegister.setContractName("cc_appxc_01");
+            reqChainCodeRegister.setEventKey("123");
+            reqChainCodeRegister.setNotifyUrl("123");
+            reqChainCodeRegister.setAttachArgs("123");
+            ResChainCodeRegister resChainCodeRegister= XuperClient.reqChainCodeRegister(reqChainCodeRegister);
+            System.out.println(JSONObject.toJSONString(resChainCodeRegister, SerializerFeature.PrettyFormat));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+    * 链码事件查询接口
+    */
+    @Test
+    public void testChainCodeQuery() {
+        try {
+            initConfig();
+            List<ResChainCodeQuery> resChainCodeQuery= XuperClient.reqChainCodeQuery();
+            System.out.println(JSONObject.toJSONString(resChainCodeQuery, SerializerFeature.PrettyFormat));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 链码事件注销接口
+     */
+    @Test
+    public void testChainCodeCancel() {
+        try {
+            initConfig();
+            ReqChainCodeCancel reqChainCodeCancel=new ReqChainCodeCancel();
+            reqChainCodeCancel.setEventId("");
+            ResChainCodeCancel resChainCodeCancel= XuperClient.reqChainCodeCancel(reqChainCodeCancel);
+            System.out.println(JSONObject.toJSONString(resChainCodeCancel, SerializerFeature.PrettyFormat));
         } catch (IOException e) {
             e.printStackTrace();
         }

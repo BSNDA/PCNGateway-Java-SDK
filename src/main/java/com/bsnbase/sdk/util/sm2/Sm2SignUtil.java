@@ -1,30 +1,59 @@
 package com.bsnbase.sdk.util.sm2;
 
+import com.bsnbase.sdk.entity.config.Config;
+import com.bsnbase.sdk.util.common.Common;
+import lombok.var;
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.DERSequenceGenerator;
+import org.bouncycastle.asn1.gm.GMNamedCurves;
+import org.bouncycastle.asn1.gm.GMObjectIdentifiers;
+import org.bouncycastle.asn1.nist.NISTNamedCurves;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.CryptoException;
+import org.bouncycastle.crypto.DerivationFunction;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.digests.SM3Digest;
-import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
-import org.bouncycastle.crypto.params.ParametersWithID;
-import org.bouncycastle.crypto.signers.SM2Signer;
+import org.bouncycastle.crypto.digests.ShortenedDigest;
+import org.bouncycastle.crypto.generators.KDF1BytesGenerator;
+import org.bouncycastle.crypto.params.*;
+import org.bouncycastle.crypto.signers.*;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
+import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jce.spec.ECNamedCurveSpec;
+import org.bouncycastle.math.ec.ECMultiplier;
+import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.util.Strings;
+import org.bouncycastle.util.encoders.Hex;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
+import org.hyperledger.fabric.sdk.security.CryptoPrimitives;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.ECPrivateKey;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
+
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
 
 /**
  * @author kuan
@@ -32,13 +61,14 @@ import java.util.Base64;
  * @description 国密签名与验签
  */
 public class Sm2SignUtil {
-
     private static final byte[] SM2_ID = {
             (byte) 0x31, (byte) 0x32, (byte) 0x33, (byte) 0x34, (byte) 0x35, (byte) 0x36, (byte) 0x37, (byte) 0x38,
             (byte) 0x31, (byte) 0x32, (byte) 0x33, (byte) 0x34, (byte) 0x35, (byte) 0x36, (byte) 0x37, (byte) 0x38
     };
 
     private static final String BC = BouncyCastleProvider.PROVIDER_NAME;
+
+
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -53,7 +83,16 @@ public class Sm2SignUtil {
         byte[] signBytes = SM2Sign(signDigest, getPrivateKey(privateKey.getBytes()));
         return Base64.getEncoder().encodeToString(signBytes);
     }
-
+    /**
+     * @return java.lang.String
+     * @Description 通过SM2私钥进行签名
+     * @Param [privateKeyPath, signDigest]
+     **/
+    public static  byte[] signSM2Byte(String privateKey, byte[] signDigest) throws Exception {
+        byte[] sm3DigestBytes = Sm2SignUtil.SM3Digest(signDigest);
+        byte[] signBytes = SM2Sign(sm3DigestBytes, getPrivateKey(privateKey.getBytes()));
+        return signBytes;
+    }
     /**
      * @return boolean
      * @Description 通过SM2公钥证书进行验签
@@ -90,7 +129,7 @@ public class Sm2SignUtil {
      * @Description SM2验证签名
      * @Param [inData, signature, publicKey]
      **/
-    private static boolean SM2VerifySign(byte[] inData, byte[] signature, PublicKey publicKey) throws Exception {
+    public static boolean SM2VerifySign(byte[] inData, byte[] signature, PublicKey publicKey) throws Exception {
         AsymmetricKeyParameter ecParam = ECUtil.generatePublicKeyParameter(publicKey);
         SM2Signer sm2Signer = new SM2Signer();
         sm2Signer.init(false, new ParametersWithID(ecParam, SM2_ID));
@@ -214,81 +253,62 @@ public class Sm2SignUtil {
             return info.toString();
         }
     }
+    /* access modifiers changed from: protected */
+    public static ECMultiplier createBasePointMultiplier() {
+        return new FixedPointCombMultiplier();
+    }
 
+    public static byte[] xuperSignature(String privateKeyStr,byte[] message) throws Exception {
+        PrivateKey privateKey = Sm2SignUtil.getPrivateKey(privateKeyStr.getBytes());
+        BCECPrivateKey ecPrivateKey = (BCECPrivateKey) privateKey;
+        X9ECParameters sm2ECParameters = GMNamedCurves.getByName("sm2p256v1");
+        ECDomainParameters ec = new ECDomainParameters(sm2ECParameters.getCurve(),
+                sm2ECParameters.getG(), sm2ECParameters.getN());
+        BigInteger n = ec.getN(); //阶n
+        ECPoint G = ec.getG();  //基点G
+        BigInteger r, s;
+        // 获取私钥d
+        BigInteger d = ecPrivateKey.getD();
 
-    public static void main(String[] args) throws Exception {
-
-        //================SM2签名校验========================
-
-//        String privateKeyPath = "D:\\private_Key.pem";
-//        String certPath = "D:\\public_Key.pem";
-//
-//        String unSignString = "USER0001202004151958010871292app0001202004172002586111406ccDown14";
-//        byte[] sm3DigestBytes = SM3Digest(unSignString.getBytes(StandardCharsets.UTF_8));
-//        String signResult = signSM2ByPKStr(privateKeyPath, sm3DigestBytes);
-//        System.out.println(signResult);
-//
-////        signResult = "MEQCIHic0uXEVcNPwCwLnQ6Dwxnyo4PLH+5QTRUBm+qxVuATAiBgvrh43lwrgdyI3/HC0xCkzsODLNn7zdmcLX9k/G405w==";
-//
-//        boolean isVerified = verifySM2ByPubKeyStr(certPath, signResult, unSignString.getBytes());
-//        System.out.println(isVerified);
-
-        //======================sm3校验========================
-
-//        System.out.println("-1用户已存在 UTF_8>>>"+Base64.getEncoder().encodeToString(unSignString.getBytes(StandardCharsets.UTF_8)));
-//        System.out.println("-1用户已存在 gbk>>>"+Base64.getEncoder().encodeToString(unSignString.getBytes("gbk")));
-//        System.out.println("-1用户已存在 gb2312>>>"+Base64.getEncoder().encodeToString(unSignString.getBytes("gb2312")));
-
-//        byte[] sm3DigestBytes = SM3Digest(unSignString.getBytes(StandardCharsets.UTF_8));
-//        System.out.println("sm3DigestBytes>>>>>>>"+Base64.getEncoder().encodeToString(sm3DigestBytes));
-
-//        boolean sm3Verify = SM3Verify(unSignString, Base64.getEncoder().encodeToString(sm3DigestBytes));
-//        System.out.println("sm3Verify>>>"+sm3Verify);
-
-//        PublicKey publicKey=getPublicKeyFromPem("D:\\test\\cert\\test23@app0001202007271538152051987_cert.pem");
-//        System.out.println(publicKey.getEncoded());
-
-
-//        Sm2Util.createKeyPair();
-//        KeyPair kp = Sm2Util.keyPair;
-//
-//        JcaPKCS8Generator gen1 = new JcaPKCS8Generator(kp.getPrivate(), null);
-//        PemObject obj1 = gen1.generate();
-//        StringWriter sw1 = new StringWriter();
-//        try (JcaPEMWriter pw = new JcaPEMWriter(sw1)) {
-//            pw.writeObject(obj1);
+        ECMultiplier basePointMultiplier = createBasePointMultiplier();
+        DSAKCalculator kCalculator = new RandomDSAKCalculator();
+        // 初始化随机数生成器
+//        if (kCalculator.isDeterministic()) {
+//            kCalculator.init(n, d, message);
+//        } else {
+        kCalculator.init(n, new SecureRandom());
 //        }
-//        String content = sw1.toString();
-//        System.out.println(content);
-//
-//        byte[] sm3DigestBytes = Sm2SignUtil.SM3Digest("123".getBytes(StandardCharsets.UTF_8));
-//        String a= Sm2SignUtil.signSM2ByPKStr(content, sm3DigestBytes);
-//
-//
-//        byte[] sm3DigestBytesVer = Sm2SignUtil.SM3Digest("123".getBytes(StandardCharsets.UTF_8));
-//
-//       boolean verify= SM2VerifySign(sm3DigestBytesVer, Base64.getDecoder().decode(a), kp.getPublic());
-//        System.out.println(verify);
 
-        String privateKey="-----BEGIN PRIVATE KEY-----\n" +
-                "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQg/7RMFXO8U9LyrTJW\n" +
-                "EZ3gtdUI5A5K+yPAEb3iiPe7bKegCgYIKoEcz1UBgi2hRANCAASvJdHvty4qiZ2r\n" +
-                "xcDYrMrgskyr6vthAy/Tgz/3S6SR/9ERuYVLh+Hzb6ptpIWHo0ek5j05ERh5vSzC\n" +
-                "PIXILYkE\n" +
-                "-----END PRIVATE KEY-----";
-        byte[] sm3DigestBytes = Sm2SignUtil.SM3Digest("123".getBytes(StandardCharsets.UTF_8));
-        String a= Sm2SignUtil.signSM2ByPKStr(privateKey, sm3DigestBytes);
+        do { // 计算s
+            BigInteger k;
+            BigInteger e;
+            BigInteger tmp;
+            BigInteger tmp2;
+            do { // 计算r，参照GM/T 0003.2-2012 6.1
+                k = kCalculator.nextK();
 
+                ECPoint p = basePointMultiplier.multiply(G, k).normalize();
 
-        PublicKey publicKey=getPublicKeyFromPem("D:\\test\\cert\\test23@app0001202007271538152051987_cert.pem");
+                e = org.bouncycastle.util.BigIntegers.fromUnsignedByteArray(message);
+                // r = (e + x) mod n
+                r = p.getAffineXCoord().toBigInteger().add(e).mod(n);
 
-       byte[] sm3DigestBytesVer = Sm2SignUtil.SM3Digest("123".getBytes(StandardCharsets.UTF_8));
+            } while (r.equals(ZERO) || r.add(k).equals(n));
 
-      boolean verify= SM2VerifySign(sm3DigestBytesVer, Base64.getDecoder().decode(a),publicKey);
-        System.out.println(verify);
+            // tmp = (1+d).inverse
+            tmp = d.add(ONE).modInverse(n);
+            // tmp2 = k - r*d
+            tmp2 = k.subtract(r.multiply(d));
+            s = tmp.multiply(tmp2).mod(n);
 
-//        boolean result= SM2VerifySign("123".getBytes(), Base64.getDecoder().decode(a),publicKey);
-//        System.out.println(result);
+        } while (s.equals(ZERO));
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        DERSequenceGenerator seq = new DERSequenceGenerator(bos);
+        seq.addObject(new ASN1Integer(r));
+        seq.addObject(new ASN1Integer(s));
+        seq.close();
+        return bos.toByteArray();
 
     }
 }

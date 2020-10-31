@@ -1,12 +1,19 @@
 package com.bsnbase.sdk.util.sm2;
 
+import com.bsnbase.sdk.util.algorithm.SM2Algorithm;
+import com.bsnbase.sdk.util.common.Common;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 import org.bouncycastle.asn1.gm.GMNamedCurves;
 import org.bouncycastle.asn1.gm.GMObjectIdentifiers;
 import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
+import org.bouncycastle.util.encoders.Hex;
 
+import java.nio.charset.StandardCharsets;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 
 public class Sm2Util {
     public static Signature signature;
@@ -47,13 +54,13 @@ public class Sm2Util {
      * @param plainText  明文
      * @return
      */
-    public static String encrypt(PrivateKey privateKey, String plainText) {
+    public static byte[]  encrypt(PrivateKey privateKey, byte[] plainText) {
 
         try {
             signature.initSign(privateKey);
-            signature.update(plainText.getBytes());
+            signature.update(plainText);
             byte[] bytes = signature.sign();
-            return new String(bytes, 0, bytes.length, "ISO-8859-1");
+            return bytes;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,6 +84,37 @@ public class Sm2Util {
             result = signature.verify(signResult);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    /**
+     * Hex字符串转byte
+     * @param inHex 待转换的Hex字符串
+     * @return  转换后的byte
+     */
+    public static byte hexToByte(String inHex) {
+        return (byte) Integer.parseInt(inHex, 16);
+    }
+
+
+        public static byte[] hexToByteArray(String inHex){
+        int hexlen = inHex.length();
+        byte[] result;
+        if (hexlen % 2 == 1){
+            //奇数
+            hexlen++;
+            result = new byte[(hexlen/2)];
+            inHex="0"+inHex;
+        }else {
+            //偶数
+            result = new byte[(hexlen/2)];
+        }
+        int j=0;
+        for (int i = 0; i < hexlen; i+=2){
+            result[j]=hexToByte(inHex.substring(i,i+2));
+            j++;
         }
         return result;
     }

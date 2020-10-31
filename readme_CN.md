@@ -23,7 +23,10 @@
 <td>FISCO-BCOS</td><td></td><td>支持</td><td>支持</td><td></td><td>支持</td><td>支持</td>
 </tr>
 <tr>
-<td>XuperChain</td><td></td><td></td><td></td><td></td><td></td><td>支持</td>
+<td>XuperChain</td><td></td><td></td><td>支持</td><td></td><td></td><td>支持</td>
+</tr>
+<tr>
+<td>CITA</td><td></td><td></td><td></td><td></td><td></td><td>支持</td>
 </tr>
 </table>
 </escape>
@@ -39,12 +42,10 @@
  * __节点网关接口地址：__ 参与的城市节点的节点网关的调用地址
  * __用户编号：__ 用户的编号
  * __应用编号：__ 参与的应用的编号
- * __应用公钥：__ 用户参与成功之后下载的节点网关的应用公钥
+ * __应用公钥：__ 用户参与成功之后下载的应用公钥
  * __应用私钥：__ 托管类型应用再参与成功之后由BSN生成的应用公钥，非托管应用为在参与应用时上传的公钥所对应的私钥
  * __Https证书：__ 调用https网关接口时使用的https证书
 
- #### 本地参数
- * __证书存储目录：__ 用来存储非托管应用在调用用户证书登记时生成的用户私钥和证书的目录
 
 ### 2. 准备调用
 #### 项目引用
@@ -78,14 +79,12 @@ com.bsnbase.sdk.util.common.Common提供根据路径获取内容方法，
 Common.readLocalFile参数为pem存储目录的绝对路径，
 Common.readFile参数为pem存储目录的相对路径，
 或者直接填入pem内容。
-puk字段为网关公钥，在证书下载压缩包gatewayCert目录下，可为空，
-puk字段为空时系统使用默认网关公钥请求。
 证书存储目录是磁盘的绝对路径。可以通过修改`util.keystore`中的实现修改子用户证书的存储方式。
 ```
 	api:="" //节点网关地址
 	userCode:="" //用户编号
 	appCode :="" //应用编号
-	puk :="" //节点网关公钥内容
+	puk :="" //应用应用内容
 	prk :="" //应用私钥内容
 	mspDir:="" //证书存储目录
 ```

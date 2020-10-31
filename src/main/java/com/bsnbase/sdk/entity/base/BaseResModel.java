@@ -30,12 +30,7 @@ public class BaseResModel<T extends Object & IBody> implements IBaseResModel {
         String signValue = (this.header == null ? "" : this.header.getHeaderString()) + (this.body == null ? "" : this.body.getEncryptionValue());
         AlgorithmTypeEnum algorithmTypeEnum = AlgorithmTypeEnum.fromAlgorithmTypeEnum(Config.config.getAppInfo().getAlgorithmType());
         AlgorithmTypeContext algorithmTypeContext = new AlgorithmTypeContext(algorithmTypeEnum);
-        boolean verify;
-        if(StringUtils.isBlank(Config.config.getPuk())){
-             verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(PublicConfig.getPublicKey(algorithmTypeEnum),  this.mac,signValue);
-        }else{
-             verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(Config.config.getPuk(),  this.mac,signValue);
-        }
+        boolean   verify = algorithmTypeContext.getAlgorithmTypeHandle().verify(PublicConfig.getPublicKey(algorithmTypeEnum),  this.mac,signValue);
          return verify;
     }
 }

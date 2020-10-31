@@ -19,7 +19,7 @@ public class FiscobcosTest {
     /**
      * 初始化config
      *
-     * 应用私钥、节点网关公钥为pem中具体内容，
+     * 应用私钥、应用公钥为pem中具体内容，
      * com.bsnbase.sdk.util.common.Common提供根据路径获取内容方法，
      * Common.readLocalFile参数为pem存储目录的绝对路径，
      * 例如:Common.readFile("cert/private_key.pem")
@@ -27,8 +27,7 @@ public class FiscobcosTest {
      * 例如:Common.readLocalFile("D:/test/private_key.pem")
      * 或者直接填入pem内容。
      *
-     * config中puk字段为网关公钥，在证书下载压缩包gatewayCert目录下，可为空
-     * puk字段为空时系统使用默认网关公钥请求
+     * puk字段和prk字段为用户公钥和私钥不能为空
      */
 
 
@@ -36,8 +35,9 @@ public class FiscobcosTest {
         Config config = new Config();
         config.setAppCode("app0003202008100054119967051");
         config.setUserCode("USER0003202005291706487822713");
-        config.setApi("https://singaporenode.bsngate.com:17602");
+        config.setApi("http://192.168.1.43:17502");
         config.setPrk(Common.readFile("cert/private_key.pem"));
+        config.setPuk(Common.readFile("cert/public_key.pem"));
         config.setMspDir("D:/test");
         config.initConfig(config);
     }
