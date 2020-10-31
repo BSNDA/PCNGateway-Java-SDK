@@ -18,13 +18,12 @@ public class ResChainCodeQuery implements IBody{
 			BlockEvent blockEvent = this.blockEvent[i];
 			str += (blockEvent.eventId == null ? "" : blockEvent.eventId);
 			str += (blockEvent.eventKey == null ? "" : blockEvent.eventKey);
+			str += (blockEvent.appCode == null ? "" : blockEvent.appCode);
+			str += (blockEvent.userCode == null ? "" : blockEvent.userCode);
+			str += (blockEvent.contractName == null ? "" : blockEvent.contractName);
 			str += (blockEvent.notifyUrl == null ? "" : blockEvent.notifyUrl);
 			str += (blockEvent.attachArgs == null ? "" : blockEvent.attachArgs);
 			str += (blockEvent.createTime == null ? "" : blockEvent.createTime);
-			str += (blockEvent.userCode == null ? "" : blockEvent.userCode);
-			str += (blockEvent.appCode == null ? "" : blockEvent.appCode);
-			str += (blockEvent.contractName == null ? "" : blockEvent.contractName);
-
 		}
 		return str;
 	}
