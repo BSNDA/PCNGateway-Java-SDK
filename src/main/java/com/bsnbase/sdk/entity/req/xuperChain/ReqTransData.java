@@ -10,5 +10,5 @@ public class ReqTransData {
 	String contractName;
     String methodName;
     String initiator;
-    Map<String,String> args;
+    Map<String,byte[]> args;
 }

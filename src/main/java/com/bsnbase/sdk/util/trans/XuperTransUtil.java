@@ -35,8 +35,8 @@ public class XuperTransUtil {
                     .setMethodName(reqTransData.getMethodName())
                     .setContractName(reqTransData.getContractName());
             Map<String, ByteString> paramArgs = new HashMap<>();
-            for (Map.Entry<String, String> entry : reqTransData.getArgs().entrySet()) {
-                paramArgs.put(entry.getKey(), ByteString.copyFrom(entry.getValue().getBytes()));
+            for (Map.Entry<String, byte[]> entry : reqTransData.getArgs().entrySet()) {
+                paramArgs.put(entry.getKey(), ByteString.copyFrom(entry.getValue()));
             }
             invokeRequestBuilder.putAllArgs(paramArgs);
         }

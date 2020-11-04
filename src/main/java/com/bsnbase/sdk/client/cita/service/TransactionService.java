@@ -26,7 +26,6 @@ public class TransactionService {
      */
     public static ResKeyEscrow reqChainCode(@NotNull ReqKeyEscrow kes) throws IOException {
         String api = Config.config.getApi() + "/api/cita/v1/node/reqChainCode";
-        fixReqKeyEscrowParam(kes);
         BaseReqModel<ReqKeyEscrow> req = new BaseReqModel<ReqKeyEscrow>();
         req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
         req.setBody(kes);
@@ -36,28 +35,6 @@ public class TransactionService {
         return res.getBody();
     }
 
-    /**
-     * 修改交易请求参数中方法参数的值
-     * key:bytes32，bytes32为byte转16进制，取64位，不足64位前面补0
-     * value:bytes16进制
-     * @param kes
-     */
-    private static void fixReqKeyEscrowParam(ReqKeyEscrow kes) {
-        String param= kes.getFuncParam();
-        List<Object> list= JSON.parseArray(param);
-        String key=list.get(0).toString();
-        String value=list.get(1).toString();
 
-        byte[] bytes=key.getBytes();
-        String keyHex = DatatypeConverter.printHexBinary(bytes);
-        String fixKey = String.format("%0" + 64 + "d", Long.parseLong(keyHex));
-
-        byte[] valueBytes=value.getBytes();
-        String fixValue=DatatypeConverter.printHexBinary(valueBytes);
-        List<String> fixParamList=new ArrayList<>();
-        fixParamList.add(fixKey);
-        fixParamList.add(fixValue);
-        kes.setFuncParam(JSON.toJSONString(fixParamList));
-    }
 
 }

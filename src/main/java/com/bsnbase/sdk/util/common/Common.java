@@ -5,6 +5,7 @@ import com.bsnbase.sdk.util.exception.GlobalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.net.URLDecoder;
 import java.security.*;
@@ -147,6 +148,29 @@ public class Common {
         final MessageDigest md = newDigest("SHA-256");
         md.update(msg, offset, length);
         return md.digest(md.digest());
+    }
+
+
+
+    /**
+     * 获取byte32字符
+     * @param value
+     * @return
+     */
+    public static String getByte32(byte[]  value) {
+        String keyHex = DatatypeConverter.printHexBinary(value);
+        String fixKey = String.format("%0" + 64 + "d", Long.parseLong(keyHex));
+        return fixKey;
+    }
+
+    /**
+     * 获取byte16字符
+     * @param value
+     * @return
+     */
+    public static String getByte16(byte[]  value) {
+        String fixValue=DatatypeConverter.printHexBinary(value);
+        return fixValue;
     }
 
 }

@@ -130,8 +130,8 @@ public class XuperChainTest {
             reqTransData.setContractName("cc_appxc_01");
             reqTransData.setMethodName("get");
             reqTransData.setInitiator("rJHdYSyCWcnhZ9bjhfbhoN5mfhMVCWGhX");
-            Map<String,String> args = new HashMap<>();
-            args.put("base_key", "asd77");
+            Map<String,byte[]> args = new HashMap<>();
+            args.put("base_key", "asd77".getBytes());
             reqTransData.setArgs(args);
             ResKeyEscrowNo resKeyEscrowNo= XuperClient.reqChainCode(reqTransData);
             System.out.println(JSONObject.toJSONString(resKeyEscrowNo, SerializerFeature.PrettyFormat));
@@ -154,9 +154,9 @@ public class XuperChainTest {
             reqTransData.setContractName("cc_appxc_01");
             reqTransData.setMethodName("increase");
             reqTransData.setInitiator("rJHdYSyCWcnhZ9bjhfbhoN5mfhMVCWGhX");
-            Map<String, String> args = new HashMap<>();
-            args.put("base_key", "asd77");
-            args.put("base_value", "asd2222" + Math.random());
+            Map<String, byte[]> args = new HashMap<>();
+            args.put("base_key", "asd77".getBytes());
+            args.put("base_value", "asd2222".getBytes());
             reqTransData.setArgs(args);
             ResKeyEscrowNo resKeyEscrowNo= XuperClient.reqInvokeChainCode(reqTransData);
             System.out.println(JSONObject.toJSONString(resKeyEscrowNo, SerializerFeature.PrettyFormat));

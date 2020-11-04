@@ -66,24 +66,35 @@ public class CitaTest {
     
     /**
      * 密钥托管模式交易处理
+	 *
+	 * 默认合约方法调用示例
+	 * 保存数据/更新数据：
+	 * FuncName：insert/update
+	 * FuncParam:第一个元素为byte32字符串(key),第二个元素为Byte16字符串(value)可通过Common.getByte32()和Common.getByte16()获取
+	 *删除数据/获取数据：：
+	 * FuncName：remove/retrieve
+	 * FuncParam:第一个元素为byte32字符串(key)
+	 *
      */
     @Test
     public void reqChainCode() {
-    	try {
-			initConfig();
-			ReqKeyEscrow reqkey = new ReqKeyEscrow();
-			reqkey.setContractName("CitaBsnBaseContract");
-			reqkey.setFuncName("insert");
-			List<Object> list=new ArrayList<>();
-			list.add("test");
-			list.add("1111");
-			reqkey.setFuncParam(JSON.toJSONString(list));
-			reqkey.setUserId("test55");
-			ResKeyEscrow resKeyEscrow = CitaClient.reqChainCode(reqkey);
-			System.out.println(JSONObject.toJSONString(resKeyEscrow, SerializerFeature.PrettyFormat));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			try {
+				initConfig();
+				ReqKeyEscrow reqkey = new ReqKeyEscrow();
+				reqkey.setContractName("CitaBsnBaseContract");
+				reqkey.setFuncName("retrieve");
+				List<Object> list=new ArrayList<>();
+				list.add(Common.getByte32("test1".getBytes()));
+				reqkey.setFuncParam(JSON.toJSONString(list));
+				System.out.println(JSON.toJSONString(list));
+				reqkey.setUserId("test56");
+				ResKeyEscrow resKeyEscrow = CitaClient.reqChainCode(reqkey);
+				System.out.println(JSONObject.toJSONString(resKeyEscrow, SerializerFeature.PrettyFormat));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+
     }
 
 	/**
