@@ -194,7 +194,11 @@
             <version>4.13.1</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.citahub.cita</groupId>
+            <artifactId>core</artifactId>
+            <version>20.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>

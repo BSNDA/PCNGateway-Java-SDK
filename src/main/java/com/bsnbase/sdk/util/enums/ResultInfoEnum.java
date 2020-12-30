@@ -29,7 +29,11 @@ public enum ResultInfoEnum {
 
     ALGORITHM_TYPE_ERROR(-1, "算法类型无效"),
 
-    BLOCK_HEIGHT_ERROR(-1, "获取块高失败");
+    BLOCK_HEIGHT_ERROR(-1, "获取块高失败"),
+
+    FUNCTION_ERROR(-1, "合约不支持该方法"),
+
+    FUNCTION_CALL_ERROR(-1, "方法调用错误");
 
 
     ResultInfoEnum(int code, String msg) {

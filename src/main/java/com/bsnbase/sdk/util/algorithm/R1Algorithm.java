@@ -3,18 +3,22 @@ package com.bsnbase.sdk.util.algorithm;
 import com.bsnbase.sdk.util.common.UserCertInfo;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DERSequenceGenerator;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.signers.ECDSASigner;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
 import org.hyperledger.fabric.sdk.helper.Config;
 import org.hyperledger.fabric.sdk.security.CryptoPrimitives;
-import sun.security.pkcs10.PKCS10;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -92,25 +96,31 @@ public class R1Algorithm implements AlgorithmTypeHandle {
     @Override
     public UserCertInfo getUserCertInfo(String DN) throws Exception {
         Security.addProvider(new BouncyCastleProvider());
-        //"SHA256withECDSA";
-        String sigAlg = "SHA256withECDSA";
         int algSize = 256;
+        String sigAlg = "SHA256withECDSA";
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("ECDSA");
         kpg.initialize(algSize, new SecureRandom());
         KeyPair kp = kpg.generateKeyPair();
-        Security.addProvider(new BouncyCastleProvider());
-        PublicKey publicKey = kp.getPublic();
         PrivateKey privateKey = kp.getPrivate();
-        PKCS10 pkcs10 = new sun.security.pkcs10.PKCS10(publicKey);
         Signature signature = Signature.getInstance(sigAlg);
         signature.initSign(privateKey);
-        @SuppressWarnings("restriction")
-        sun.security.x509.X500Name x500Name = new sun.security.x509.X500Name(DN);
-        pkcs10.encodeAndSign(x500Name, signature);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
-        pkcs10.print(ps);
-        String strPEMCSR = baos.toString();
+
+        X500Name x500Name=new X500Name(DN);
+        SubjectPublicKeyInfo subjectPublicKeyInfo= SubjectPublicKeyInfo.getInstance(kp.getPublic().getEncoded());
+
+        PKCS10CertificationRequestBuilder builder = new PKCS10CertificationRequestBuilder(x500Name, subjectPublicKeyInfo);
+        JcaContentSignerBuilder jcaContentSignerBuilder = new JcaContentSignerBuilder(sigAlg);
+        Provider BC = new BouncyCastleProvider();
+        jcaContentSignerBuilder.setProvider(BC);
+
+        ContentSigner contentSigner = jcaContentSignerBuilder.build(kp.getPrivate());
+        PKCS10CertificationRequest csr = builder.build(contentSigner);
+
+        byte[] der = csr.getEncoded();
+        String strPEMCSR = "-----BEGIN CERTIFICATE REQUEST-----\n";
+        strPEMCSR += new String(org.bouncycastle.util.encoders.Base64.encode(der));
+        strPEMCSR += "\n-----END CERTIFICATE REQUEST-----\n";
+
         UserCertInfo user = new UserCertInfo();
         user.setCSRPem(strPEMCSR);
         user.setKey(privateKey);

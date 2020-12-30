@@ -1,17 +1,18 @@
 package com.bsnbase.sdk.util.common;
 
 
-import com.bsnbase.sdk.util.exception.GlobalException;
+import com.citahub.cita.protobuf.ConvertStrByte;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
-import java.net.URLDecoder;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+
+import static com.citahub.cita.utils.Numeric.cleanHexPrefix;
 
 public class Common {
 
@@ -161,6 +162,28 @@ public class Common {
         String keyHex = DatatypeConverter.printHexBinary(value);
         String fixKey = String.format("%0" + 64 + "d", Long.parseLong(keyHex));
         return fixKey;
+    }
+    /**
+     * 获取byte
+     * @param par
+     * @return
+     */
+    public static byte[] getByte32(String par)
+    {
+        String keyHex = DatatypeConverter.printHexBinary(par.getBytes());
+        String fixKey = String.format("%0" + 64 + "d", Long.parseLong(keyHex));
+        byte[] value = ConvertStrByte.hexStringToBytes(cleanHexPrefix(fixKey));
+        int length = value.length;
+        int mod = length % 32;
+        byte[] dest;
+        if (mod != 0) {
+            int padding = 32 - mod;
+            dest = new byte[length + padding];
+            System.arraycopy(value, 0, dest, 0, length);
+        } else {
+            dest = value;
+        }
+        return  dest;
     }
 
     /**

@@ -1,4 +1,5 @@
 package com.bsnbase.sdk.entity.res.fabric;
+
 import com.bsnbase.sdk.entity.base.IBody;
 import lombok.Data;
 
@@ -10,14 +11,16 @@ public class ResUserInfo implements IBody {
     Integer algorithmType;
     String mspId;
     String channelId;
-   
-	@Override
-	public String getEncryptionValue() {
-		return (this.appName == null? "":this.appName)
-			+(this.appType == null? "":this.appType)
-			+(this.caType == null? "":this.caType)
-			+(this.algorithmType == null? "":this.algorithmType)
-			+(this.mspId == null? "":this.mspId)
-			+(this.channelId == null? "":this.channelId);
-	}
+    Integer version;
+
+    @Override
+    public String getEncryptionValue() {
+        return (this.appName == null ? "" : this.appName)
+                + (this.appType == null ? "" : this.appType)
+                + (this.caType == null ? "" : this.caType)
+                + (this.algorithmType == null ? "" : this.algorithmType)
+                + (this.mspId == null ? "" : this.mspId)
+                + (this.channelId == null ? "" : this.channelId)
+                + (this.version == null ? "" : this.version);
+    }
 }
