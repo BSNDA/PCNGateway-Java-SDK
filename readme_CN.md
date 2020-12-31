@@ -52,7 +52,7 @@
 ### 2. 准备调用
 #### 项目引用
 
-将resources/jar目录下bsn-sdk-java-jar-with-dependencies.jar引用到项目中
+将V1.2.0版本中bsn-sdk-java-jar-with-dependencies.jar引用到项目中
 
 #### 导入sdk包
 Fabric 需要引入下面的包
