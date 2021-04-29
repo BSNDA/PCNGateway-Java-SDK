@@ -15,6 +15,7 @@ public class ResChainCodeQuery implements IBody{
     String userCode;
     String appCode;
     String chainCode;
+    String eventType;
 	@Override
 	public String getEncryptionValue() {
 		return (this.eventId == null?"":this.eventId)
@@ -25,7 +26,8 @@ public class ResChainCodeQuery implements IBody{
 			+(this.orgCode == null?"":this.orgCode)
 			+(this.userCode == null?"":this.userCode)
 			+(this.appCode == null?"":this.appCode)
-			+(this.chainCode == null?"":this.chainCode);
+			+(this.chainCode == null?"":this.chainCode)
+			+(this.eventType == null?"":this.eventType);
 	}
     
 }
