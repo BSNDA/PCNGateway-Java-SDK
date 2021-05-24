@@ -215,4 +215,23 @@ public class FabricTest {
 			e.printStackTrace();
 		}
     }
+
+	/**
+	 * 块信息注册
+	 */
+	@Test
+	public void eventBlockRegister() {
+		try {
+			initConfig();
+			ReqChainCodeRegister data = new ReqChainCodeRegister();
+			data.setAttachArgs("name=张三&age=20");
+			data.setChainCode("cc_app0001202105171409067249868_01");
+			data.setEventKey("");
+			data.setNotifyUrl("http://192.168.6.128:8080/api/event/notifyUrl");
+			ResChainCodeRegister resChainCodeRegister = FabricClient.eventBlockRegister(data);
+			System.out.println(JSONObject.toJSONString(resChainCodeRegister, SerializerFeature.PrettyFormat));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

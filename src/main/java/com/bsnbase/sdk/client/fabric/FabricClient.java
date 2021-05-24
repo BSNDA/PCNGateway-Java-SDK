@@ -92,4 +92,14 @@ public class FabricClient {
         ResChainCodeRemove resChainCodeRemove = ChainCodeService.eventRemove(reqChainCodeRemove);
         return resChainCodeRemove;
     }
+
+    /**
+     * 块信息注册
+     */
+    public static ResChainCodeRegister eventBlockRegister(ReqChainCodeRegister reqChainCodeRegister) {
+        ResChainCodeRegister resChainCodeRegister = ChainCodeService.eventBlockRegister(reqChainCodeRegister);
+        return resChainCodeRegister;
+    }
+
+
 }

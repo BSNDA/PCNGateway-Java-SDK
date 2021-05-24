@@ -60,5 +60,22 @@ public class ChainCodeService {
         BaseResModel<ResChainCodeRemove> res = httpService.post(req,api, ResChainCodeRemove.class);
         return res.getBody();
 	}
-    
+
+
+
+    /**
+     * 块信息注册
+     * @param reqData
+     */
+    public static ResChainCodeRegister eventBlockRegister(ReqChainCodeRegister reqData){
+        String api =  Config.config.getApi() + "/api/fabric/v1/chainCode/event/blockRegister";
+        BaseReqModel<ReqChainCodeRegister> req = new  BaseReqModel<ReqChainCodeRegister>();
+        req.setReqHeader(Config.config.getUserCode(),Config.config.getAppCode());
+        req.setBody(reqData);
+        HttpService<ReqChainCodeRegister,ResChainCodeRegister> httpService =new HttpService<ReqChainCodeRegister,ResChainCodeRegister>();
+        BaseResModel<ResChainCodeRegister> res = httpService.post(req,api, ResChainCodeRegister.class);
+        return res.getBody();
+    }
+
+
 }
