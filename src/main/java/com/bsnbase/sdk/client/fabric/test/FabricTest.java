@@ -33,14 +33,16 @@ public class FabricTest {
 
 	//初始化config
 	public void initConfig() throws IOException {
-    	Config config = new Config();
-		config.setAppCode("app0003202008100054119967051");
-		config.setUserCode("USER0003202005291706487822713");
-		config.setApi("http://192.168.1.43:17502");
-		config.setPrk(Common.readLocalFile("D:/private_key.pem"));
-		config.setPuk(Common.readLocalFile("D:/public_key.pem"));
-      //config.setTestServerIdn(true);
-		config.setMspDir("D:/test");
+//    	Config config = new Config();
+//		config.setAppCode("app0003202008100054119967051");
+//		config.setUserCode("USER0003202005291706487822713");
+//		config.setApi("http://192.168.1.43:17502");
+//		config.setPrk(Common.readLocalFile("D:/private_key.pem"));
+//		config.setPuk(Common.readLocalFile("D:/public_key.pem"));
+//		config.setMspDir("D:/test");
+//		config.initConfig(config);
+		String filePath="config/config.json";
+		Config config=Config.buildByConfigJson(filePath);
 		config.initConfig(config);
 	}
 	 /**

@@ -2,13 +2,14 @@ package com.bsnbase.sdk.entity.config;
 
 import java.io.IOException;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bsnbase.sdk.client.fabric.service.AppService;
 import com.bsnbase.sdk.entity.res.fabric.ResUserInfo;
+import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
 import com.bsnbase.sdk.util.keystore.IKeyStore;
 import com.bsnbase.sdk.util.keystore.KeyStore;
-import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
 
 import lombok.Data;
 
@@ -72,4 +73,52 @@ public class Config {
             appInfo = res;
         }
     }
+
+    /**
+     * 读取本地配置文件
+     * @param filePath
+     * @return
+     */
+    public static Config buildLocalConfigByJson(String filePath) {
+        String result="";
+        try {
+             result= Common.readLocalFile(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new GlobalException(ResultInfoEnum.CONFIG_NOT_EXISTS);
+        }
+        Config config=buildConfgiByJsonStr(result);
+        return config;
+    };
+
+    /**
+     * 读取项目配置resource目录下文件
+     * @param filePath
+     * @return
+     */
+    public static Config buildByConfigJson(String filePath) {
+        String result="";
+        try {
+            result= Common.readFile(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new GlobalException(ResultInfoEnum.CONFIG_NOT_EXISTS);
+        }
+        Config config=buildConfgiByJsonStr(result);
+
+        return config;
+    }
+
+    private static Config buildConfgiByJsonStr(String result) {
+        JsonConfig config = JSONObject.parseObject(result, JsonConfig.class);
+        Config cg = new Config();
+        cg.setAppCode(config.getAppCode());
+        cg.setUserCode(config.getUserCode());
+        cg.setApi(config.getNodeApi());
+        cg.setPuk(config.getBsnPublicKey());
+        cg.setPrk(config.getUserPrivateKey());
+        cg.setMspDir(config.getMspPath());
+        return cg;
+    }
+
 }

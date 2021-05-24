@@ -33,7 +33,10 @@ public enum ResultInfoEnum {
 
     FUNCTION_ERROR(-1, "合约不支持该方法"),
 
-    FUNCTION_CALL_ERROR(-1, "方法调用错误");
+    FUNCTION_CALL_ERROR(-1, "方法调用错误"),
+
+    CONFIG_NOT_EXISTS(-1, "配置文件不存在");
+
 
 
     ResultInfoEnum(int code, String msg) {

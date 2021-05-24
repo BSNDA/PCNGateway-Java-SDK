@@ -201,8 +201,31 @@
         </dependency>
     </dependencies>
 
+
+
     <build>
         <finalName>bsn-sdk-java</finalName>
+
+
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.pem</include>
+                    <include>**/*.json</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 
         <plugins>
             <plugin>

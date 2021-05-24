@@ -7,7 +7,6 @@ import com.bsnbase.sdk.client.fiscobcos.FiscobcosClient;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.fiscobcos.*;
 import com.bsnbase.sdk.entity.res.fiscobcos.*;
-import com.bsnbase.sdk.util.common.Common;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -34,14 +33,17 @@ public class FiscobcosTest {
 
 
     public void initConfig() throws IOException {
-        Config config = new Config();
-        config.setAppCode("app0003202008100054119967051");
-        config.setUserCode("USER0003202005291706487822713");
-        config.setApi("http://192.168.1.43:17502");
-        config.setPrk(Common.readFile("cert/private_key.pem"));
-        config.setPuk(Common.readFile("cert/public_key.pem"));
-        config.setMspDir("D:/test");
-      //config.setTestServerIdn(true);
+//        Config config = new Config();
+//        config.setAppCode("app0001202010221038364886804");
+//        config.setUserCode("USER0001202010201539390086090");
+//        config.setApi("http://192.168.1.43:17502");
+//        config.setPrk(Common.readFile("cert/private_key.pem"));
+//        config.setPuk(Common.readFile("cert/public_key.pem"));
+//        config.setMspDir("D:/test");
+//        config.setTestServerIdn(true);
+//        config.initConfig(config);
+        String filePath="config/config.json";
+        Config config=Config.buildByConfigJson(filePath);
         config.initConfig(config);
     }
 
