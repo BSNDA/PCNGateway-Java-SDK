@@ -16,8 +16,11 @@ public class ReqUserRegister implements IBody {
     @JSONField(name  = "secret")
     String secret;
 
+    @JSONField(name  = "extendProperties")
+    String extendProperties;
+
     @Override
     public String getEncryptionValue() {
-        return (this.name == null? "":this.name) +(this.secret==null?"":this.secret);
+        return (this.name == null? "":this.name) +(this.secret==null?"":this.secret)+(this.extendProperties==null?"":this.extendProperties);
     }
 }

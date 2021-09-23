@@ -10,6 +10,6 @@ public class ResUserRegister implements IBody{
     String secret;
 	@Override
 	public String getEncryptionValue() {
-        return (this.name == null? "":this.name) +(this.secret==null?"":this.secret);
+        return (this.name == null? "":this.name) +(this.secret==null?"":this.secret) ;
 	}
 }

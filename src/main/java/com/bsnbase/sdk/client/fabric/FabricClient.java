@@ -15,9 +15,9 @@ public class FabricClient {
     /**
      * 用户注册
      */
-    public static ResUserRegister userRegister( ReqUserRegister register) throws Exception {
+    public static ResUserRegister userRegister(ReqUserRegister register) throws Exception {
         ResUserRegister resUserRegister = UserService.userRegister(register);
-        return  resUserRegister;
+        return resUserRegister;
     }
 
     /**
@@ -40,8 +40,8 @@ public class FabricClient {
      * 公钥上传模式交易
      */
     public static ResKeyEscrowNo nodeTrans(ReqKeyEscrow reqkey) throws Exception {
-            ResKeyEscrowNo resKeyEscrowNo = TransactionService.nodeTrans(reqkey);
-            return resKeyEscrowNo;
+        ResKeyEscrowNo resKeyEscrowNo = TransactionService.nodeTrans(reqkey);
+        return resKeyEscrowNo;
     }
 
 
@@ -57,8 +57,8 @@ public class FabricClient {
      * 获取块信息
      */
     public static ResGetBlockInformation getBlockInfo(ReqGetBlockInformation reqGetBlockInformation) {
-       ResGetBlockInformation resGetBlockInformation=  NodeService.getBlockInfo(reqGetBlockInformation);
-       return resGetBlockInformation;
+        ResGetBlockInformation resGetBlockInformation = NodeService.getBlockInfo(reqGetBlockInformation);
+        return resGetBlockInformation;
     }
 
     /**
@@ -80,7 +80,7 @@ public class FabricClient {
     /**
      * 链码事件查询
      */
-    public static  List<ResChainCodeQuery> eventQuery() {
+    public static List<ResChainCodeQuery> eventQuery() {
         List<ResChainCodeQuery> resChainCodeQueries = ChainCodeService.eventQuery();
         return resChainCodeQueries;
     }
@@ -101,5 +101,25 @@ public class FabricClient {
         return resChainCodeRegister;
     }
 
+    /**
+     * 获取交易数据接口
+     *
+     * @param reqTransData
+     * @return
+     */
+    public static ResTransData getTransData(ReqTransData reqTransData) {
+        ResTransData resTransData = NodeService.getTransData(reqTransData);
+        return resTransData;
+    }
 
+    /**
+     * 获取块数据接口
+     *
+     * @param reqGetBlockData
+     * @return
+     */
+    public static ResGetBlockData getBlockData(ReqGetBlockData reqGetBlockData) {
+        ResGetBlockData resGetBlockData = NodeService.getBlockData(reqGetBlockData);
+        return resGetBlockData;
+    }
 }

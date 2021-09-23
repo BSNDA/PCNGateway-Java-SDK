@@ -71,11 +71,11 @@ public class FabricTest {
     	try {
 			initConfig();
 			ReqKeyEscrow reqkey = new ReqKeyEscrow();
-			String[] args = {"{\"baseKey\":\"test2020050\",\"baseValue\":\"this is string \"}"};
+			String[] args = {"{\"basekey\":\"123\",\"basevalue\":\"123\"}"};
 			reqkey.setArgs(args);
 			reqkey.setFuncName("set");
-			reqkey.setChainCode("cc_app0001202007311431220086431_01");
-			reqkey.setUserName("test28");
+			reqkey.setChainCode("cc_app0001202109171125562435760_01");
+			reqkey.setUserName("test54");
 			ResKeyEscrow resKeyEscrow = FabricClient.reqChainCode(reqkey);
 			System.out.println(JSONObject.toJSONString(resKeyEscrow, SerializerFeature.PrettyFormat));
 		} catch (Exception e) {
@@ -111,8 +111,8 @@ public class FabricTest {
 			String[] args = {"{\"baseKey\":\"test20200650\",\"baseValue\":\"this is string \"}"};
 			reqkey.setArgs(args);
 			reqkey.setFuncName("set");
-			reqkey.setChainCode("cc_app0001202007311431220086431_01");
-			reqkey.setUserName("test54");
+			reqkey.setChainCode("cc_6d5bb02349ea4aefb9a5027e89f206e2");
+			reqkey.setUserName("USER0001");
 			ResKeyEscrowNo resKeyEscrowNo = FabricClient.nodeTrans(reqkey);
 			System.out.println(JSONObject.toJSONString(resKeyEscrowNo, SerializerFeature.PrettyFormat));
 		} catch (Exception e) {
@@ -232,6 +232,46 @@ public class FabricTest {
 			data.setNotifyUrl("http://192.168.6.128:8080/api/event/notifyUrl");
 			ResChainCodeRegister resChainCodeRegister = FabricClient.eventBlockRegister(data);
 			System.out.println(JSONObject.toJSONString(resChainCodeRegister, SerializerFeature.PrettyFormat));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * 获取交易数据接口
+	 * 链下系统使用该接口可以根据交易ID获取交易信息,返回交易信息的base64字符串。
+	 */
+	@Test
+	public void reqTransData() {
+		try {
+			initConfig();
+			ReqTransData reqTransData = new ReqTransData();
+			reqTransData.setTxId("b033975bcf1e3a20190a5d5a7de6eb461aa8ae98cbc7ebfcf56beb2ee9775930");
+			ResTransData resChainCodeCancel = FabricClient.getTransData(reqTransData);
+
+			System.out.println(JSONObject.toJSONString(resChainCodeCancel, SerializerFeature.PrettyFormat));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 获取块数据接口
+	 * 数据上链后，链下业务系统调用城市节点网关该接口会获得当前交易所在块信息
+	 */
+	@Test
+	public void getBlockData() {
+		try {
+			initConfig();
+			ReqGetBlockData reqGetBlockData = new ReqGetBlockData();
+
+			reqGetBlockData.setBlockNumber(3);
+			reqGetBlockData.setBlockHash("c3c6523958c3811192b8d358dd2617f1b14cb661de6b022c1a822269e8a8c48d");
+			reqGetBlockData.setTxId("c3c6523958c3811192b8d358dd2617f1b14cb661de6b022c1a822269e8a8c48d");
+			ResGetBlockData resGetBlockData = FabricClient.getBlockData(reqGetBlockData);
+
+			System.out.println(JSONObject.toJSONString(resGetBlockData, SerializerFeature.PrettyFormat));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
