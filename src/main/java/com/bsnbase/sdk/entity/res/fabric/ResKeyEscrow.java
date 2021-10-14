@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Data
 public class ResKeyEscrow implements IBody{
-    blockInfo blockInfo;
-    ccRes ccRes;
+    BlockInfo blockInfo;
+    CcRes ccRes;
    
 	@Override
 	public String getEncryptionValue() {
