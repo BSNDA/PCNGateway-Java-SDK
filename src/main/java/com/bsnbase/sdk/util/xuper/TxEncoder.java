@@ -22,12 +22,12 @@ public class TxEncoder {
         buffer = new StringBuilder();
     }
 
-    public  static byte[] makeTxDigest(XchainOuterClass.Transaction tx) {
+    public static byte[] makeTxDigest(XchainOuterClass.Transaction tx) {
         TxEncoder enc = new TxEncoder();
         return Common.doubleSha256(enc.encodeTx(tx, false));
     }
 
-    public   static byte[] makeTxID(XchainOuterClass.Transaction tx) {
+    public static byte[] makeTxID(XchainOuterClass.Transaction tx) {
         TxEncoder enc = new TxEncoder();
         return Common.doubleSha256(enc.encodeTx(tx, true));
     }
@@ -45,8 +45,8 @@ public class TxEncoder {
     }
 
     byte[] encodeTx(XchainOuterClass.Transaction tx, boolean needSign) {
-            String a=null;
-            encode(a);
+        String a = null;
+        encode(a);
 
         for (XchainOuterClass.TxInput input : tx.getTxInputsList()) {
             encode(input.getRefTxid());
@@ -80,9 +80,9 @@ public class TxEncoder {
         encode(invokes);
 
         encode(tx.getInitiator());
-        List<String> list=null;
+        List<String> list = null;
 
-        if(tx.getAuthRequireList().size()>0){
+        if (tx.getAuthRequireList().size() > 0) {
             encode(tx.getAuthRequireList());
         }
         encode(list);
@@ -97,7 +97,7 @@ public class TxEncoder {
                 encode(sigs);
             }
 
-            sigs=null;
+            sigs = null;
             if (tx.getAuthRequireSignsCount() != 0) {
                 sigs = new Object[tx.getAuthRequireSignsCount()];
 
@@ -106,7 +106,7 @@ public class TxEncoder {
                 sigs[i] = SignatureInfoBean.create(tx.getAuthRequireSigns(i));
             }
             encode(sigs);
-            sigs=null;
+            sigs = null;
             if (tx.hasXuperSign()) {
                 encode(sigs);
             }

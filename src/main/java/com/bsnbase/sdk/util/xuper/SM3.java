@@ -1,4 +1,5 @@
 package com.bsnbase.sdk.util.xuper;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -6,13 +7,10 @@ import java.util.Arrays;
 
 /**
  * SM3杂凑算法实现
- * @author Potato
  *
  */
 public class SM3 {
 
-    private static char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8',
-            '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     private static final String ivHexStr = "7380166f 4914b2b9 172442d7 da8a0600 a96f30bc 163138aa e38dee4d b0fb0e4e";
     private static final BigInteger IV = new BigInteger(ivHexStr.replaceAll(" ",
             ""), 16);
@@ -20,6 +18,8 @@ public class SM3 {
     private static final Integer Tj63 = Integer.valueOf("7a879d8a", 16);
     private static final byte[] FirstPadding = {(byte) 0x80};
     private static final byte[] ZeroPadding = {(byte) 0x00};
+    private static char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8',
+            '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     private static int T(int j) {
         if (j >= 0 && j <= 15) {
@@ -194,17 +194,17 @@ public class SM3 {
         int n = b;
         if (n < 0)
             n = 256 + n;
-            int d1 = n / 16;
-            int d2 = n % 16;
-            return "" + hexDigits[d1] + hexDigits[d2];
+        int d1 = n / 16;
+        int d2 = n % 16;
+        return "" + hexDigits[d1] + hexDigits[d2];
     }
 
-        public static String byteArrayToHexString ( byte[] b){
-            StringBuffer resultSb = new StringBuffer();
-            for (int i = 0; i < b.length; i++) {
-                resultSb.append(byteToHexString(b[i]));
-            }
-            return resultSb.toString();
+    public static String byteArrayToHexString(byte[] b) {
+        StringBuffer resultSb = new StringBuffer();
+        for (int i = 0; i < b.length; i++) {
+            resultSb.append(byteToHexString(b[i]));
         }
+        return resultSb.toString();
+    }
 
 }

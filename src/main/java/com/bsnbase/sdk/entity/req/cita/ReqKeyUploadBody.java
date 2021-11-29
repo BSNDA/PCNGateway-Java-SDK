@@ -4,17 +4,17 @@ import com.bsnbase.sdk.entity.base.IBody;
 import lombok.Data;
 
 /**
- * Description： 公钥上传，请求体
- * Author: wxq
- * Date: Created in 2020/12/10 18:00
- * Version: 0.0.1
- * Modified By:
+ * Request body of invoke the smart contract in public key upload mode interface
  */
 @Data
 public class ReqKeyUploadBody implements IBody {
-    //合约名称
+    /**
+     * Contract name
+     */
     private String contractName;
-    //交易签名数据
+    /**
+     * Transaction signature
+     */
     private String transData;
 
     @Override

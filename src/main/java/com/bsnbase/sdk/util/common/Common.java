@@ -18,26 +18,12 @@ public class Common {
 
     private final static Logger logger = LoggerFactory.getLogger(Common.class);
 
-    public static String getCNName(String name,String appCode){
-        return name+"@"+appCode;
+    public static String getCNName(String name, String appCode) {
+        return name + "@" + appCode;
     }
-
-    public static String getUserPrivateKeyPath(String fileName,String name,String appCode){
-        String cn = getCNName(name,appCode);
-
-        return fileName +"/"+cn+"PrivateKey.pem";
-    }
-
-
-    public static String getUserCertPath(String fileName,String name,String appCode){
-        String cn = getCNName(name,appCode);
-
-        return fileName +"/"+cn+"Cert.pem";
-    }
-
 
     /**
-     * string与 byte数组转换
+     * Convert string to byte array
      *
      * @param s
      */
@@ -45,13 +31,19 @@ public class Common {
 
         byte[][] bytess = new byte[s.length][0];
 
-        for (int i=0;i<s.length;i++){
+        for (int i = 0; i < s.length; i++) {
             bytess[i] = s[i].getBytes();
         }
         return bytess;
     }
 
-    public static String readLocalFile(String path) throws IOException {
+    /**
+     * Read local file
+     *
+     * @param path
+     * @return
+     */
+    public static String readLocalFile(String path) {
         StringBuilder info = new StringBuilder();
         BufferedReader br = null;
         try {
@@ -74,7 +66,13 @@ public class Common {
         }
     }
 
-
+    /**
+     * Read files in resource folder
+     *
+     * @param path
+     * @return
+     * @throws IOException
+     */
     public static String readFile(String path) throws IOException {
         StringBuffer result = new StringBuffer();
         if (!path.startsWith("/")) {
@@ -87,7 +85,8 @@ public class Common {
                 br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
                 String lineTxt = null;
                 while ((lineTxt = br.readLine()) != null) {
-                    result.append(lineTxt).append("\n");;
+                    result.append(lineTxt).append("\n");
+                    ;
                 }
                 br.close();
             } catch (FileNotFoundException e) {
@@ -105,11 +104,19 @@ public class Common {
             }
             return result.toString();
         } catch (Exception e) {
-            logger.error("Path:{},Exception:{}",path, e);
+            logger.error("Path:{},Exception:{}", path, e);
         }
         return null;
     }
 
+    /**
+     * Load private key in pem file
+     *
+     * @param content
+     * @param algorithm
+     * @return
+     * @throws Exception
+     */
     public static PrivateKey loadPrivateKey(String content, String algorithm) throws Exception {
         String privateKeyPEM = content.replaceAll("-----BEGIN PRIVATE KEY-----", "")
                 .replaceAll("-----END PRIVATE KEY-----", "").replace("\r", "").replace("\n", "");
@@ -119,6 +126,14 @@ public class Common {
         return keyFactory.generatePrivate(spec);
     }
 
+    /**
+     * Load public key in pem file
+     *
+     * @param content
+     * @param algorithm
+     * @return
+     * @throws Exception
+     */
     public static PublicKey loadPublicKey(String content, String algorithm) throws Exception {
         String strPublicKey = content.replaceAll("-----BEGIN PUBLIC KEY-----", "")
                 .replaceAll("-----END PUBLIC KEY-----", "").replace("\r", "").replace("\n", "");
@@ -127,6 +142,13 @@ public class Common {
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return keyFactory.generatePublic(spec);
     }
+
+    /**
+     * Creates a MessageDigest instance object with the specified algorithm name.
+     *
+     * @param algo
+     * @return
+     */
 
     public static MessageDigest newDigest(String algo) {
         try {
@@ -152,24 +174,25 @@ public class Common {
     }
 
 
-
     /**
-     * 获取byte32字符
+     * Get byte32 value
+     *
      * @param value
      * @return
      */
-    public static String getByte32(byte[]  value) {
+    public static String getByte32(byte[] value) {
         String keyHex = DatatypeConverter.printHexBinary(value);
         String fixKey = String.format("%0" + 64 + "d", Long.parseLong(keyHex));
         return fixKey;
     }
+
     /**
-     * 获取byte
+     * Get byte
+     *
      * @param par
      * @return
      */
-    public static byte[] getByte32(String par)
-    {
+    public static byte[] getByte32(String par) {
         String keyHex = DatatypeConverter.printHexBinary(par.getBytes());
         String fixKey = String.format("%0" + 64 + "d", Long.parseLong(keyHex));
         byte[] value = ConvertStrByte.hexStringToBytes(cleanHexPrefix(fixKey));
@@ -183,17 +206,7 @@ public class Common {
         } else {
             dest = value;
         }
-        return  dest;
-    }
-
-    /**
-     * 获取byte16字符
-     * @param value
-     * @return
-     */
-    public static String getByte16(byte[]  value) {
-        String fixValue=DatatypeConverter.printHexBinary(value);
-        return fixValue;
+        return dest;
     }
 
 }

@@ -12,16 +12,12 @@ import org.hyperledger.fabric.protos.common.Common;
 import org.hyperledger.fabric.protos.msp.Identities;
 import org.hyperledger.fabric.protos.peer.Chaincode;
 import org.hyperledger.fabric.protos.peer.ProposalPackage;
-import org.hyperledger.fabric.sdk.exception.CryptoException;
-import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 import java.util.Base64;
 import java.util.Map;
 
@@ -115,7 +111,7 @@ public class TransData {
         Chaincode.ChaincodeInput input = chaincodeInput(request.getFcn(), request.getArgs());
         Chaincode.ChaincodeID chaincodeId = chaincodeID(request.getChaincodeId());
         ProposalPackage.ChaincodeProposalPayload payload = chaincodeProposalPayload(input, chaincodeId, request.getTransientMap());
-        TransactionHeader transactionHeader = transactionHeader(request.getChanelId(), user.getMspId(), user.getCert());
+        TransactionHeader transactionHeader = transactionHeader(request.getChannelId(), user.getMspId(), user.getCert());
         Common.Header header = header(transactionHeader, chaincodeId);
         ProposalPackage.Proposal.Builder proposal = ProposalPackage.Proposal.newBuilder();
         proposal.setHeader(convertToByteString(header));
@@ -130,27 +126,8 @@ public class TransData {
         byte[] signBytes;
         try {
             AlgorithmTypeEnum algorithmTypeEnum = AlgorithmTypeEnum.fromAlgorithmTypeEnum(com.bsnbase.sdk.entity.config.Config.config.getAppInfo().getAlgorithmType());
-            signBytes = FabricTransUtil.getTransSign(algorithmTypeEnum,user.getPrivateKey(),proposalBytes);
-        } catch (CryptoException e) {
-            e.printStackTrace();
-            throw new GlobalException(ResultInfoEnum.TRANSACTION_SIGNING_ERROR);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            throw new GlobalException(ResultInfoEnum.TRANSACTION_SIGNING_ERROR);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            throw new GlobalException(ResultInfoEnum.TRANSACTION_SIGNING_ERROR);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new GlobalException(ResultInfoEnum.TRANSACTION_SIGNING_ERROR);
-        } catch (InvalidArgumentException e) {
-            e.printStackTrace();
-            throw new GlobalException(ResultInfoEnum.TRANSACTION_SIGNING_ERROR);
-        } catch (UnrecoverableKeyException e) {
-            e.printStackTrace();
-            throw new GlobalException(ResultInfoEnum.TRANSACTION_SIGNING_ERROR);
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
+            signBytes = FabricTransUtil.getTransSign(algorithmTypeEnum, user.getPrivateKey(), proposalBytes);
+        } catch (Exception e) {
             throw new GlobalException(ResultInfoEnum.TRANSACTION_SIGNING_ERROR);
         }
         ProposalPackage.SignedProposal.Builder sig = ProposalPackage.SignedProposal.newBuilder();
@@ -178,7 +155,7 @@ public class TransData {
     }
 
     /**
-     * 将byte转为16进制
+     * Convert byte to hexadecimal
      *
      * @param bytes
      * @return
@@ -190,7 +167,7 @@ public class TransData {
         for (int i = 0; i < bytes.length; i++) {
             temp = Integer.toHexString(bytes[i] & 0xFF);
             if (temp.length() == 1) {
-                // 1得到一位的进行补0操作
+                // 1 to get a bit of the complementary 0 operation
                 stringBuffer.append("0");
             }
             stringBuffer.append(temp);

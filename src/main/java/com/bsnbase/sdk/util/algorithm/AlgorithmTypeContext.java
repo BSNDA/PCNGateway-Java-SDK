@@ -2,6 +2,9 @@ package com.bsnbase.sdk.util.algorithm;
 
 import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
 
+/**
+ * Perform signature, verification, and get certificate functions based on algorithm type
+ */
 public class AlgorithmTypeContext {
 
     private AlgorithmTypeEnum algorithmTypeEnum;

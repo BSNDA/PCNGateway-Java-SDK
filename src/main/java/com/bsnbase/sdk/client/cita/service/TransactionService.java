@@ -7,13 +7,14 @@ import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.cita.ReqKeyEscrow;
 import com.bsnbase.sdk.entity.req.cita.ReqKeyUpload;
 import com.bsnbase.sdk.entity.req.cita.ReqKeyUploadBody;
-import com.bsnbase.sdk.entity.res.cita.ResGetBlockHeight;
-import com.bsnbase.sdk.entity.res.cita.ResKeyEscrow;
+import com.bsnbase.sdk.entity.resp.cita.ResGetBlockHeight;
+import com.bsnbase.sdk.entity.resp.cita.ResKeyEscrow;
+import com.bsnbase.sdk.util.PathUtil.PathUtil;
 import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.common.HttpService;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
-import com.bsnbase.sdk.util.sm2.Sm2SignUtil;
+import com.bsnbase.sdk.util.sign.Sm2SignUtil;
 import com.citahub.cita.abi.FunctionEncoder;
 import com.citahub.cita.abi.datatypes.DynamicBytes;
 import com.citahub.cita.abi.datatypes.Function;
@@ -47,14 +48,18 @@ public class TransactionService {
     private static Long quota = 1000000L;
 
     /**
-     * 密钥托管模式交易处理
-     *
-     * @param kes
-     * @return
-     * @throws IOException
+     * Invoke the smart contract in Key Trust Mode
+     * When the off-chain business system connects to the BSN gateway, it needs to add the corresponding parameters in the request message according to the interface description. After invoking the gateway, the gateway will return the execution result of the smart contract.
+     * Example of default contract method call
+     * Save data/Update data.
+     * FuncName: insert/update
+     * FuncParam: The first element is a byte32 string (key), the second element is a byte16 string (value), which can be obtained by Common.getByte32() and Common.getByte16().
+     * Delete data/Get data:.
+     * FuncName: remove/retrieve
+     * FuncParam: the first element is a byte32 string (key)
      */
     public static ResKeyEscrow reqChainCode(@NotNull ReqKeyEscrow kes) throws IOException {
-        String api = Config.config.getApi() + "/api/cita/v1/node/reqChainCode";
+        String api = Config.config.getApi() + PathUtil.CITA_NODE_REQ_CHAIN_CODE;
         BaseReqModel<ReqKeyEscrow> req = new BaseReqModel<ReqKeyEscrow>();
         req.setReqHeader(Config.config.getUserCode(), Config.config.getAppCode());
         req.setBody(kes);
@@ -66,21 +71,47 @@ public class TransactionService {
 
 
     /**
-     * 密钥上传模式交易处理
-     *
-     * @throws IOException
+     * Invoke the smart contract in Public Key Upload Mode
+     * When the off-chain business system connects to the BSN gateway, it needs to add the corresponding parameters in the request message according to the interface description. After invoking the gateway, the gateway will return the execution result of the smart contract.
+     * In the transaction of public key upload mode, the private key of the on-chain transaction is generated and saved by the user, and then the client will assemble and sign the on-chain data locally, and upload the signed data to the node gateway.
+     * The gateway forwards the data to the corresponding blockchain node to initiate the transaction request. In this mode, the ABI of the contract and the contract address are required to assemble the data.
+     * The ABI of the contract is obtained by compiling the contract when developing the contract, and the contract address can be obtained from the details page of the participated service.
+     * The method to assemble the on-chain data has been implemented in the SDK of the gateway, and it can be called directly.
+     * -----------------------------------------------------------------------------------------------------------------
+     * Example of default contract method parameters
+     * FuncParam: the parameter type of the preset chaincode package is already handled in Service, just pass String.
+     * <p>
+     * Save data
+     * FuncName:insert
+     * FuncParam:{"insert1219", "123456"}
+     * <p>
+     * Remove data
+     * FuncName:remove
+     * FuncParam:{"insert1219"}
+     * <p>
+     * Update data
+     * FuncName:update
+     * FuncParam:{"insert1219", "1234567"}
+     * Retrieve data
+     * FuncName:retrieve
+     * FuncParam:{"insert1219"}
+     * <p>
+     * Get key by index
+     * FuncName:keyAtIndex
+     * FuncParam:{"1"}
+     * -----------------------------------------------------------------------------------------------------------------
      */
     public static ResKeyEscrow nodeTrans(@NotNull ReqKeyUpload req) throws Exception {
 
-        // 1 秘钥托管用户
+        // 1 The user in Key Trust Mode
         if (Config.config.getAppInfo().getCaType() == 1) {
             throw new GlobalException(ResultInfoEnum.FUNCTION_CALL_ERROR);
         }
 
-        String api = Config.config.getApi() + "/api/cita/v1/node/trans";
+        String api = Config.config.getApi() + PathUtil.CITA_NODE_TRANS;
         nonce = new Random(System.currentTimeMillis());
 
-        // 获取当前块高
+        // Get current block height
         ResGetBlockHeight resGetBlockHeight = NodeService.getBlockHeight();
         long blockIndex = 0;
         if (resGetBlockHeight != null && !resGetBlockHeight.getData().isEmpty()) {
@@ -89,13 +120,13 @@ public class TransactionService {
             throw new GlobalException(ResultInfoEnum.BLOCK_HEIGHT_ERROR);
         }
 
-        // 获取FuncData
+        // Get FuncData
         String addFuncData = getAddFuncData(req);
 
-        // 获取签名后的交易
+        // Get the signed transaction
         String rawTx = getRawTx(req, blockIndex, addFuncData);
 
-        // 发送交易
+        // Send transaction
         ReqKeyUploadBody transBody = new ReqKeyUploadBody();
         transBody.setContractName(req.getContractName());
         transBody.setTransData(rawTx);
@@ -110,7 +141,7 @@ public class TransactionService {
     }
 
     /**
-     * 获取交易签名字符串
+     * Get the signed transaction in string format
      *
      * @param req
      * @param blockIndex
@@ -140,7 +171,7 @@ public class TransactionService {
     }
 
     /**
-     * 获取FuncData
+     * Get FuncData
      *
      * @param req
      * @return
@@ -169,7 +200,7 @@ public class TransactionService {
             throw new GlobalException(ResultInfoEnum.FUNCTION_ERROR);
         }
 
-        // function
+        // Function
         Function addFunc = new Function(req.getFuncName(), inputs, Collections.emptyList());
         return FunctionEncoder.encode(addFunc);
     }

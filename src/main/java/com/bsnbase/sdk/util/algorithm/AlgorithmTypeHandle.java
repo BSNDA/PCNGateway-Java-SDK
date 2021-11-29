@@ -2,34 +2,33 @@ package com.bsnbase.sdk.util.algorithm;
 
 import com.bsnbase.sdk.util.common.UserCertInfo;
 
-import java.security.KeyPair;
-
 public interface AlgorithmTypeHandle {
     /**
-     * 签名
-     * @param stringPrivateKey
-     * @param signString
+     * Signature
+     *
+     * @param stringPrivateKey Private key
+     * @param signString       String to be signed
      * @return
      */
     String sign(String stringPrivateKey, String signString) throws Exception;
 
     /**
-     * 验签
-     * @param pemCertificateString
-     * @param signatureString
-     * @param unsignedString
+     * Signature verification
+     *
+     * @param pemCertificateString Public key
+     * @param signatureString      Signed string
+     * @param unsignedString       Unsigned string
      * @return
      */
     boolean verify(String pemCertificateString, String signatureString, String unsignedString) throws Exception;
 
     /**
-     * 获取证书CSR
+     * Get certificate CSR
+     *
      * @param DN
      * @return
      */
-     UserCertInfo getUserCertInfo(String DN) throws Exception;
-
-
+    UserCertInfo getUserCertInfo(String DN) throws Exception;
 
 
 }

@@ -5,13 +5,14 @@ import lombok.Data;
 
 @Data
 public class ResHeader {
-    @JSONField(name  = "code")
+
+    @JSONField(name = "code")
     int code;
 
-    @JSONField(name  = "msg")
-    String msg ;
+    @JSONField(name = "msg")
+    String msg;
 
-    public String getHeaderString(){
-        return  this.code + this.msg;
+    public String getHeaderString() {
+        return this.code + this.msg;
     }
 }

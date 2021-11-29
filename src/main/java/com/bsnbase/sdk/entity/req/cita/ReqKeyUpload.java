@@ -4,29 +4,26 @@ import com.bsnbase.sdk.entity.base.IBody;
 import lombok.Data;
 
 /**
- * Description： 秘钥上传
- * Author: wxq
- * Date: Created in 2020/12/9 16:48
- * Version: 0.0.1
- * Modified By:
+ * Request parameters of invoke the smart contract in Public Key Upload Mode interface
  */
+
 @Data
 public class ReqKeyUpload implements IBody {
 
     /**
-     * 合约名称
+     * Contract name
      */
     String contractName;
     /**
-     * 合约地址
+     * Contract address
      */
     String contractAddr;
     /**
-     * 方法名称
+     * Method name
      */
     String funcName;
     /**
-     * 方法参数
+     * Method parameters
      */
     String[] args;
 

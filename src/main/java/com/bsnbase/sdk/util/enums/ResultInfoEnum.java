@@ -1,69 +1,67 @@
 package com.bsnbase.sdk.util.enums;
 
 /**
- * 功能描述：返回信息
- *
+ * Function description: returned information
  */
 public enum ResultInfoEnum {
-    SUCCESS(0, "成功"),
 
-    SYSTEM_ERROR(-1, "系统异常，稍后重试"),
+    SUCCESS(0, "Success"),
 
-    RES_MAC_ERROR(-1, "验签失败"),
+    SYSTEM_ERROR(-1, "System exception, try again later"),
 
-    INVALID_RESPONSE_ERROR(-1, "响应结果无效"),
+    RES_MAC_ERROR(-1, "Signature verification failed"),
 
-    DATA_CONVERSION_ERROR(-1, "数据转换失败,无效的响应结果"),
+    INVALID_RESPONSE_ERROR(-1, "Response result is invalid"),
 
-    GET_CSR_ERROR(-1, "获取CSR异常"),
+    DATA_CONVERSION_ERROR(-1, "Data conversion failed, invalid response result"),
 
-    REQUEST_HEADER_ERROR(-1, "请求参数的header不能为空"),
+    GET_CSR_ERROR(-1, "Get CSR exception"),
 
-    TRANSACTION_SIGNING_ERROR(-1, "交易签名失败"),
+    REQUEST_HEADER_ERROR(-1, "The header of the request parameter cannot be empty"),
 
-    USER_CERTIFICATE_ERROR(-1, "获取用户证书失败"),
+    TRANSACTION_SIGNING_ERROR(-1, "Transaction signature failed"),
 
-    TRANSACTION_CONVERSION_ERROR(-1, "交易数据转换失败"),
+    USER_CERTIFICATE_ERROR(-1, "Failed to get user certificate"),
 
-    GET_APP_INFO_ERROR(-1, "获取App信息异常"),
+    TRANSACTION_CONVERSION_ERROR(-1, "Failed to convert transaction data"),
 
-    ALGORITHM_TYPE_ERROR(-1, "算法类型无效"),
+    GET_APP_INFO_ERROR(-1, "Exception to get App information"),
 
-    BLOCK_HEIGHT_ERROR(-1, "获取块高失败"),
+    ALGORITHM_TYPE_ERROR(-1, "Invalid algorithm type"),
 
-    FUNCTION_ERROR(-1, "合约不支持该方法"),
+    BLOCK_HEIGHT_ERROR(-1, "Failed to get block height"),
 
-    FUNCTION_CALL_ERROR(-1, "方法调用错误"),
+    FUNCTION_ERROR(-1, "The method is not supported by the contract"),
 
-    CONFIG_NOT_EXISTS(-1, "配置文件不存在");
+    FUNCTION_CALL_ERROR(-1, "Method call error"),
+
+    CONFIG_NOT_EXISTS(-1, "Configuration file does not exist");
 
 
+    /**
+     * Code
+     */
+    private int code;
+    /**
+     * Message
+     */
+    private String msg;
 
     ResultInfoEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
-    /**
-     * 标识
-     */
-    private int code;
-
-    /**
-     * 信息
-     */
-    private String msg;
-
     public int getCode() {
         return code;
     }
 
-    public String getMsg() {
-        return msg;
-    }
-
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 
     public void setMsg(String msg) {

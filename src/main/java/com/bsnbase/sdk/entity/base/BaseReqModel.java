@@ -2,21 +2,30 @@ package com.bsnbase.sdk.entity.base;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.bsnbase.sdk.entity.config.Config;
-import com.bsnbase.sdk.util.common.Common;
+import com.bsnbase.sdk.util.algorithm.AlgorithmTypeContext;
 import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
-import com.bsnbase.sdk.util.algorithm.*;
 import lombok.Data;
 
+/**
+ * General data structure of the request gateway
+ */
 @Data
 public class BaseReqModel<T extends Object & IBody> implements IBaseReqModel {
+    /**
+     * Request header
+     */
     @JSONField(name = "header")
     ReqHeader header;
-
+    /**
+     * Request signature, where the content of the signature is "header information + the value retrieved by getEncryptionValue method.
+     */
     @JSONField(name = "mac")
     String mac;
-
+    /**
+     * Request body
+     */
     @JSONField(name = "body")
     T body;
 
@@ -27,6 +36,9 @@ public class BaseReqModel<T extends Object & IBody> implements IBaseReqModel {
         this.body = body;
     }
 
+    /**
+     * The request gateway calls the "sign" method
+     */
     @Override
     public void sign() throws Exception {
         if (this.header == null) {
@@ -46,7 +58,7 @@ public class BaseReqModel<T extends Object & IBody> implements IBaseReqModel {
 
 
     @Override
-    public void setReqHeader(String userCode,String appCode) {
+    public void setReqHeader(String userCode, String appCode) {
         this.header = new ReqHeader();
         this.header.setAppCode(appCode);
         this.header.setUserCode(userCode);

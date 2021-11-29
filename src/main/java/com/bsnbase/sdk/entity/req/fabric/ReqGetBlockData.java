@@ -1,13 +1,25 @@
 package com.bsnbase.sdk.entity.req.fabric;
 
 import com.bsnbase.sdk.entity.base.IBody;
-import com.citahub.cita.abi.datatypes.Int;
 import lombok.Data;
+
+/**
+ * Request parameters of get block data interface
+ */
 
 @Data
 public class ReqGetBlockData implements IBody {
+    /**
+     * Block number
+     */
     Integer blockNumber;
+    /**
+     * Block hash
+     */
     String blockHash;
+    /**
+     * Transaction ID
+     */
     String txId;
 
     @Override

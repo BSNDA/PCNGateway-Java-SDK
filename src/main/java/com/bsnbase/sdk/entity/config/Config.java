@@ -1,66 +1,117 @@
 package com.bsnbase.sdk.entity.config;
 
-import java.io.IOException;
-
 import com.alibaba.fastjson.JSONObject;
 import com.bsnbase.sdk.client.fabric.service.AppService;
-import com.bsnbase.sdk.entity.res.fabric.ResUserInfo;
+import com.bsnbase.sdk.entity.resp.fabric.ResUserInfo;
 import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
 import com.bsnbase.sdk.util.keystore.IKeyStore;
 import com.bsnbase.sdk.util.keystore.KeyStore;
-
+import com.google.common.base.Preconditions;
 import lombok.Data;
 
+import java.io.IOException;
+
+/**
+ * User configuration information
+ */
 @Data
 public class Config {
+    public static Config config;
     /**
-     * 节点网关地址
+     * Node gateway Url
      */
     String api;
     /**
-     * 用户编号
+     * Usercode
      */
     String userCode;
     /**
-     * 用户编号
+     * Appcode
      */
     String appCode;
     /**
-     * 应用公钥
+     * User's public key
      */
     String puk;
     /**
-     * 应用私钥
+     * User's private key
      */
     String prk;
     /**
-     * 证书存数目录
+     * Certificate storage directory
      */
     String mspDir;
     /**
-     * 证书
-     */
-    @Deprecated
-    String cert;
-    /**
-     * 网关公钥配置标识
-     * true  ：测试网服务
-     * false ：正常服务
+     * BSN gateway public key configuration identity
+     * true：Testnet services
+     * false：Product environment services
      */
     boolean testServerIdn;
-
-    //APP信息
+    /**
+     * APP Info
+     */
     ResUserInfo appInfo;
-
-    //子用户证书存储处理
+    /**
+     * Storage processing of sub-user certificate
+     */
     IKeyStore keyStore;
 
-    public static Config config;
+    /**
+     * Read the local configuration file
+     *
+     * @param filePath
+     * @return
+     */
+    public static Config buildLocalConfigByJson(String filePath) {
+        String result = "";
+        try {
+            result = Common.readLocalFile(filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GlobalException(ResultInfoEnum.CONFIG_NOT_EXISTS);
+        }
+        Config config = buildConfgiByJsonStr(result);
+        return config;
+    }
+
+    /**
+     * Read the project configuration in the file under the directory of resource
+     *
+     * @param filePath
+     * @return
+     */
+    public static Config buildByConfigJson(String filePath) {
+        String result = "";
+        try {
+            result = Common.readFile(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new GlobalException(ResultInfoEnum.CONFIG_NOT_EXISTS);
+        }
+        Config config = buildConfgiByJsonStr(result);
+
+        return config;
+    }
+
+    ;
+
+    private static Config buildConfgiByJsonStr(String result) {
+        JsonConfig config = JSONObject.parseObject(result, JsonConfig.class);
+        Config cg = new Config();
+        cg.setAppCode(config.getAppCode());
+        cg.setUserCode(config.getUserCode());
+        cg.setApi(config.getNodeApi());
+        cg.setPuk(config.getBsnPublicKey());
+        cg.setPrk(config.getUserPrivateKey());
+        cg.setMspDir(config.getMspPath());
+        return cg;
+    }
 
     public void initConfig(Config cg) {
         if (config == null) {
+            valid(cg);
             config = cg;
             keyStore = new KeyStore(config.getMspDir());
             ResUserInfo res = null;
@@ -74,51 +125,14 @@ public class Config {
         }
     }
 
-    /**
-     * 读取本地配置文件
-     * @param filePath
-     * @return
-     */
-    public static Config buildLocalConfigByJson(String filePath) {
-        String result="";
-        try {
-             result= Common.readLocalFile(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new GlobalException(ResultInfoEnum.CONFIG_NOT_EXISTS);
-        }
-        Config config=buildConfgiByJsonStr(result);
-        return config;
-    };
+    private void valid(Config config) {
+        Preconditions.checkNotNull(config.getApi(), "Node gateway Url cannot be null");
+        Preconditions.checkNotNull(config.getUserCode(), "Usercode cannot be null");
+        Preconditions.checkNotNull(config.getAppCode(), "Appcode cannot be null");
+        Preconditions.checkNotNull(config.getPrk(), "User private key cannot be null");
+        Preconditions.checkNotNull(config.getPuk(), "User public key cannot be null");
+        Preconditions.checkNotNull(config.getMspDir(), "Certificate storage directory cannot be null");
 
-    /**
-     * 读取项目配置resource目录下文件
-     * @param filePath
-     * @return
-     */
-    public static Config buildByConfigJson(String filePath) {
-        String result="";
-        try {
-            result= Common.readFile(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new GlobalException(ResultInfoEnum.CONFIG_NOT_EXISTS);
-        }
-        Config config=buildConfgiByJsonStr(result);
-
-        return config;
-    }
-
-    private static Config buildConfgiByJsonStr(String result) {
-        JsonConfig config = JSONObject.parseObject(result, JsonConfig.class);
-        Config cg = new Config();
-        cg.setAppCode(config.getAppCode());
-        cg.setUserCode(config.getUserCode());
-        cg.setApi(config.getNodeApi());
-        cg.setPuk(config.getBsnPublicKey());
-        cg.setPrk(config.getUserPrivateKey());
-        cg.setMspDir(config.getMspPath());
-        return cg;
     }
 
 }

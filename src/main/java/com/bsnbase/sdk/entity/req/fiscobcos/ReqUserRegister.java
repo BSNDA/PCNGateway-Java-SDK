@@ -5,16 +5,19 @@ import com.bsnbase.sdk.entity.base.IBody;
 import lombok.Data;
 
 /**
- * 用户注册请求参数
+ * Request parameters for FISCO-BCOS user registration interface
  */
 @Data
 public class ReqUserRegister implements IBody {
-	@JSONField(name  = "userId")
-	String userId ;
+    /**
+     * Username
+     */
+    @JSONField(name = "userId")
+    String userId;
 
 
     @Override
     public String getEncryptionValue() {
-        return (this.userId == null? "":this.userId);
+        return (this.userId == null ? "" : this.userId);
     }
 }

@@ -8,6 +8,7 @@ import com.bsnbase.sdk.entity.base.IBody;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,11 @@ import javax.json.JsonException;
 
 public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
-    public BaseResModel<K> post(BaseReqModel<T> req, String url,  Class<K> clazz) {
+    //Default network connection timeout
+    private static final int CONNECTION_TIMEOUT = 3000;
+
+
+    public BaseResModel<K> post(BaseReqModel<T> req, String url, Class<K> clazz) {
 
         String res;
         BaseResModel<K> resModel = new BaseResModel<K>();
@@ -25,7 +30,7 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
             req.sign();
             res = doPost(req, url);
 
-            System.out.println("响应结果：" + res);
+            System.out.println("Response: " + res);
         } catch (GlobalException e) {
             throw e;
         } catch (Exception e) {
@@ -45,7 +50,7 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
             } catch (JsonException e) {
                 throw new GlobalException(ResultInfoEnum.DATA_CONVERSION_ERROR);
             }
-            // 验签、数据转换
+            // Signature verfication, data transfer
             if (resModel == null) {
                 throw new GlobalException(ResultInfoEnum.INVALID_RESPONSE_ERROR);
             }
@@ -82,7 +87,7 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
         BaseResModel<K> resModel = new BaseResModel<K>();
         try {
             res = doPost(req, url);
-            System.out.println("响应结果：" + res);
+            System.out.println("Response: " + res);
         } catch (GlobalException e) {
             throw e;
         } catch (Exception e) {
@@ -102,7 +107,7 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
             } catch (JsonException e) {
                 throw new GlobalException(ResultInfoEnum.DATA_CONVERSION_ERROR);
             }
-            // 验签、数据转换
+            // Signature verfication, data transfer
             if (resModel == null) {
                 throw new GlobalException(ResultInfoEnum.INVALID_RESPONSE_ERROR);
             }
@@ -119,15 +124,14 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
     }
 
 
-
-    public BaseResArrayModel<K> arrayPost(BaseReqModel<T> req, String url,  Class<K> clazz) {
+    public BaseResArrayModel<K> arrayPost(BaseReqModel<T> req, String url, Class<K> clazz) {
 
         String res;
         BaseResArrayModel<K> resModel = new BaseResArrayModel<K>();
         try {
             req.sign();
             res = doPost(req, url);
-            System.out.println("响应结果：" + res);
+            System.out.println("Response: " + res);
         } catch (Exception e) {
             e.printStackTrace();
             throw new GlobalException(ResultInfoEnum.SYSTEM_ERROR);
@@ -145,7 +149,7 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
             } catch (JsonException e) {
                 throw new GlobalException(ResultInfoEnum.DATA_CONVERSION_ERROR);
             }
-            // 验签、数据转换
+            // Signature verfication, data transfer
             if (resModel == null) {
                 throw new GlobalException(ResultInfoEnum.INVALID_RESPONSE_ERROR);
             }
@@ -177,23 +181,24 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
     }
 
 
-
     private String doPost(@NotNull BaseReqModel<T> req, String url) throws Exception {
         String param = JSON.toJSONString(req);
-        System.out.println("------发送数据格式-------------:" + param);
+        System.out.println("-------------Request Url-------------:\n" + url);
+        System.out.println("-------------Sent data-------------:\n" + param);
         HttpClient httpClient = getHttpClient();
-        String res = HTTPSClientUtil.doPost(httpClient, url, param);
-        System.out.println("响应结果：" + res);
+        String res = HttpClientUtil.doPost(httpClient, url, param);
+        System.out.println("Response: " + res);
         return res;
     }
 
 
-
-
-
-
     private HttpClient getHttpClient() throws Exception {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(
+                CONNECTION_TIMEOUT
+        ).build();
+        CloseableHttpClient httpClient = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig).build();
+
         return httpClient;
     }
 

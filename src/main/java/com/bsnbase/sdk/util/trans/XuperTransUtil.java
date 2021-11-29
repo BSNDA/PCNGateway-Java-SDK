@@ -3,10 +3,10 @@ package com.bsnbase.sdk.util.trans;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.xuperChain.ReqTrans;
 import com.bsnbase.sdk.entity.req.xuperChain.ReqTransData;
-import com.bsnbase.sdk.entity.res.xuperChain.ResKeyEscrowNo;
+import com.bsnbase.sdk.entity.resp.xuperChain.ResKeyEscrowNo;
 import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.pb.XchainOuterClass;
-import com.bsnbase.sdk.util.sm2.Sm2SignUtil;
+import com.bsnbase.sdk.util.sign.Sm2SignUtil;
 import com.bsnbase.sdk.util.xuper.TxEncoder;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
@@ -76,11 +76,11 @@ public class XuperTransUtil {
         byte[] hash = TxEncoder.makeTxDigest(txBuilder.build());
 
 
-        byte[]  sig = Sm2SignUtil.xuperSignature(Config.config.getPrk(),hash);
+        byte[] sig = Sm2SignUtil.xuperSignature(Config.config.getPrk(), hash);
         XchainOuterClass.SignatureInfo siginfo = XchainOuterClass.SignatureInfo.newBuilder()
-        .setPublicKey(createJSONPublicKey(Config.config.getPuk()))
-        .setSign(ByteString.copyFrom(sig))
-        .build();
+                .setPublicKey(createJSONPublicKey(Config.config.getPuk()))
+                .setSign(ByteString.copyFrom(sig))
+                .build();
 
 
         txBuilder.addInitiatorSigns(siginfo);
@@ -89,7 +89,7 @@ public class XuperTransUtil {
 
         txBuilder.setTxid(ByteString.copyFrom(txid));
 
-        XchainOuterClass.Transaction transaction=txBuilder.build();
+        XchainOuterClass.Transaction transaction = txBuilder.build();
 
         ReqTrans reqTrans = new ReqTrans();
         reqTrans.setFlag(1);
@@ -104,7 +104,7 @@ public class XuperTransUtil {
     static private String createJSONPublicKey(String pemCertificateString) throws Exception {
         PublicKey publicKey = Common.loadPublicKey(pemCertificateString, "EC");
         ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
-        ECPoint ecPoint1=ecPublicKey.getQ();
+        ECPoint ecPoint1 = ecPublicKey.getQ();
         BigInteger x = ecPoint1.getAffineXCoord().toBigInteger();
         BigInteger y = ecPoint1.getAffineYCoord().toBigInteger();
         Map<String, Object> m = new LinkedHashMap<>();

@@ -4,33 +4,36 @@ import com.bsnbase.sdk.entity.base.IBody;
 import lombok.Data;
 
 /**
- * 密钥托管模式请求参数
+ * Request parameters in Key Trust Mode
  */
 @Data
-public class ReqKeyEscrow implements IBody  {
-	/**
-	 * 用户ID
-	 */
+public class ReqKeyEscrow implements IBody {
+    /**
+     * User ID
+     * User ID registered through the registration interface
+     */
     String userId;
-	/**
-	 * 合约名称
-	 */
+    /**
+     * Contract name
+     */
     String contractName;
-	/**
-	 * 方法名称
-	 */
+    /**
+     * Method name
+     */
     String funcName;
-	/**
-	 * 方法参数
-	 */
+    /**
+     * Method parameters
+     * Convert array format parameters to json string assignment
+     */
     String funcParam;
-	@Override
-	public String getEncryptionValue() {
 
-		String str = (this.userId == null ? "" : this.userId);
-		str += (this.contractName == null ? "" : this.contractName);
-		str += (this.funcName == null ? "" : this.funcName);
-		str += (this.funcParam == null ? "" : this.funcParam);
-		return str;
-	}
+    @Override
+    public String getEncryptionValue() {
+
+        String str = (this.userId == null ? "" : this.userId);
+        str += (this.contractName == null ? "" : this.contractName);
+        str += (this.funcName == null ? "" : this.funcName);
+        str += (this.funcParam == null ? "" : this.funcParam);
+        return str;
+    }
 }

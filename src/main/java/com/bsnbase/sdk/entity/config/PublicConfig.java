@@ -2,13 +2,18 @@ package com.bsnbase.sdk.entity.config;
 
 import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
 
+/**
+ * BSN gateway public key is used to verify the data returned from the gateway
+ * divided into product environment and testnet, the public key of testnet is marked as "_TEST_"
+ * can be configured in the attribute "testServerIdn" in Config
+ * true: testnet; false or not configured: product environment
+ */
 public class PublicConfig {
 
     private static final String PubK_SM = "-----BEGIN PUBLIC KEY-----\n" +
             "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEIlh1C0iWAdcKnM/yAaZZT/42NVzT\n" +
             "Vyr31H9MDhHbPkp+/B3gsp5iZOr6OTAGO9jpN10/YMIrxt2IMg5auIEvMA==\n" +
             "-----END PUBLIC KEY-----\n";
-
 
 
     private static final String PubK_R1 = "-----BEGIN CERTIFICATE-----\n" +
@@ -64,16 +69,15 @@ public class PublicConfig {
             "-----END PUBLIC KEY-----\n";
 
 
-
     public static String getPublicKey(AlgorithmTypeEnum algorithmTypeEnum) {
-        boolean isTest=Config.config.testServerIdn;
+        boolean isTest = Config.config.testServerIdn;
         switch (algorithmTypeEnum) {
             case AppAlgorithmType_SM2:
-                return isTest?PubK_TEST_SM:PubK_SM;
+                return isTest ? PubK_TEST_SM : PubK_SM;
             case AppAlgorithmType_R1:
-                return isTest?PubK_TEST_R1:PubK_R1;
+                return isTest ? PubK_TEST_R1 : PubK_R1;
             case AppAlgorithmType_K1:
-                return isTest?PubK_TEST_K1:Pubk_K1;
+                return isTest ? PubK_TEST_K1 : Pubk_K1;
             default:
         }
         return "";

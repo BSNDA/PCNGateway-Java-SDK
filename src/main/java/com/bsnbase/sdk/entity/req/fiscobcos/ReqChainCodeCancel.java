@@ -3,11 +3,20 @@ package com.bsnbase.sdk.entity.req.fiscobcos;
 import com.bsnbase.sdk.entity.base.IBody;
 import lombok.Data;
 
+/**
+ * Request parameters for FISCO-BCOS chaincode event removal interface
+ */
+
 @Data
-public class ReqChainCodeCancel implements IBody  {
-	String eventId;
-	@Override
-	public String getEncryptionValue() {
-		return  (this.eventId == null? "":this.eventId);
-	}
+public class ReqChainCodeCancel implements IBody {
+
+    /**
+     * Event ID
+     */
+    String eventId;
+
+    @Override
+    public String getEncryptionValue() {
+        return (this.eventId == null ? "" : this.eventId);
+    }
 }

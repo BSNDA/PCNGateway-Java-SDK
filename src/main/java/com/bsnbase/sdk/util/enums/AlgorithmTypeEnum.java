@@ -27,16 +27,16 @@ public enum AlgorithmTypeEnum {
 
     }
 
-    public int getValue() {
-        return this.nCode;
-    }
-
     public static AlgorithmTypeEnum fromAlgorithmTypeEnum(int algorithmType) {
         for (AlgorithmTypeEnum algorithmTypeEnum : AlgorithmTypeEnum.values()) {
             if (algorithmTypeEnum.getValue() == algorithmType) {
                 return algorithmTypeEnum;
             }
         }
-            throw new GlobalException(ResultInfoEnum.ALGORITHM_TYPE_ERROR);
+        throw new GlobalException(ResultInfoEnum.ALGORITHM_TYPE_ERROR);
+    }
+
+    public int getValue() {
+        return this.nCode;
     }
 }

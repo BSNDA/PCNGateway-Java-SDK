@@ -1,8 +1,8 @@
 package com.bsnbase.sdk.util.algorithm;
 
 import com.bsnbase.sdk.util.common.UserCertInfo;
-import com.bsnbase.sdk.util.sm2.Sm2SignUtil;
-import com.bsnbase.sdk.util.sm2.Sm2Util;
+import com.bsnbase.sdk.util.sign.Sm2SignUtil;
+import com.bsnbase.sdk.util.sign.Sm2Util;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -17,7 +17,7 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.Provider;
 
-public  class SM2Algorithm implements AlgorithmTypeHandle {
+public class SM2Algorithm implements AlgorithmTypeHandle {
     /**
      * @param privateKey
      * @param signString
@@ -42,7 +42,7 @@ public  class SM2Algorithm implements AlgorithmTypeHandle {
     }
 
     /**
-     * 获取证书CSR
+     * Get certificate CSR
      *
      * @param DN
      * @return
