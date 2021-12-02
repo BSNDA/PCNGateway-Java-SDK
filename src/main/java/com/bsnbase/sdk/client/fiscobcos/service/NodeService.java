@@ -5,7 +5,7 @@ import com.bsnbase.sdk.entity.base.BaseResModel;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.fiscobcos.*;
 import com.bsnbase.sdk.entity.resp.fiscobcos.*;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 import org.jetbrains.annotations.NotNull;
 

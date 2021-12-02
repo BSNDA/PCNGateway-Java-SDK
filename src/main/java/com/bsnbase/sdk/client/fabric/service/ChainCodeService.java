@@ -12,7 +12,7 @@ import com.bsnbase.sdk.entity.resp.fabric.ResBlockRegister;
 import com.bsnbase.sdk.entity.resp.fabric.ResChainCodeQuery;
 import com.bsnbase.sdk.entity.resp.fabric.ResChainCodeRegister;
 import com.bsnbase.sdk.entity.resp.fabric.ResChainCodeRemove;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 
 import java.util.List;

@@ -100,8 +100,9 @@ public class Base58 {
      * @return the base58-encoded string
      */
     public static String encodeChecked(int version, byte[] payload) {
-        if (version < 0 || version > 255)
+        if (version < 0 || version > 255) {
             throw new IllegalArgumentException("Version not in range.");
+        }
 
         // A stringified buffer is:
         // 1 byte version + data bytes + 4 bytes check code (a truncated hash)
@@ -170,13 +171,15 @@ public class Base58 {
      */
     public static byte[] decodeChecked(String input) throws Exception {
         byte[] decoded = decode(input);
-        if (decoded.length < 4)
+        if (decoded.length < 4) {
             throw new Exception("Input too short: " + decoded.length);
+        }
         byte[] data = Arrays.copyOfRange(decoded, 0, decoded.length - 4);
         byte[] checksum = Arrays.copyOfRange(decoded, decoded.length - 4, decoded.length);
         byte[] actualChecksum = Arrays.copyOfRange(Hash.doubleSha256(data), 0, 4);
-        if (!Arrays.equals(checksum, actualChecksum))
+        if (!Arrays.equals(checksum, actualChecksum)) {
             throw new Exception("invalid checksum");
+        }
         return data;
     }
 

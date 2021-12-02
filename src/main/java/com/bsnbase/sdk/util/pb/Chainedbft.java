@@ -787,7 +787,9 @@ public final class Chainedbft {
 
         public int getSerializedSize() {
             int size = memoizedSerializedSize;
-            if (size != -1) return size;
+            if (size != -1) {
+                return size;
+            }
 
             size = 0;
             if (!proposalId_.isEmpty()) {
@@ -1520,7 +1522,9 @@ public final class Chainedbft {
 
         public int getSerializedSize() {
             int size = memoizedSerializedSize;
-            if (size != -1) return size;
+            if (size != -1) {
+                return size;
+            }
 
             size = 0;
             for (int i = 0; i < qCSignInfos_.size(); i++) {
@@ -2052,7 +2056,9 @@ public final class Chainedbft {
 
         public int getSerializedSize() {
             int size = memoizedSerializedSize;
-            if (size != -1) return size;
+            if (size != -1) {
+                return size;
+            }
 
             size = 0;
             if (!address_.isEmpty()) {
@@ -2824,7 +2830,9 @@ public final class Chainedbft {
 
         public int getSerializedSize() {
             int size = memoizedSerializedSize;
-            if (size != -1) return size;
+            if (size != -1) {
+                return size;
+            }
 
             size = 0;
             if (type_ != com.bsnbase.sdk.util.pb.Chainedbft.QCState.NEW_VIEW.getNumber()) {
@@ -3619,7 +3627,9 @@ public final class Chainedbft {
 
         public int getSerializedSize() {
             int size = memoizedSerializedSize;
-            if (size != -1) return size;
+            if (size != -1) {
+                return size;
+            }
 
             size = 0;
             if (!proposalId_.isEmpty()) {

@@ -7,7 +7,7 @@ import com.bsnbase.sdk.entity.req.fabric.ReqKeyEscrowEnroll;
 import com.bsnbase.sdk.entity.req.fabric.ReqUserRegister;
 import com.bsnbase.sdk.entity.resp.fabric.ResKeyEscrowEnroll;
 import com.bsnbase.sdk.entity.resp.fabric.ResUserRegister;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 import com.bsnbase.sdk.util.common.StoreUtils;
 import com.bsnbase.sdk.util.common.UserCertInfo;

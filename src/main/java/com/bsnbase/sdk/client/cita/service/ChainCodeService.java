@@ -10,7 +10,7 @@ import com.bsnbase.sdk.entity.req.cita.ReqChainCodeRegister;
 import com.bsnbase.sdk.entity.resp.cita.ResChainCodeCancel;
 import com.bsnbase.sdk.entity.resp.cita.ResChainCodeQuery;
 import com.bsnbase.sdk.entity.resp.cita.ResChainCodeRegister;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 
 import java.util.List;

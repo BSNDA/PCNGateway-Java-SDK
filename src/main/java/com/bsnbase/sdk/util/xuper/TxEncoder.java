@@ -117,6 +117,7 @@ public class TxEncoder {
     }
 
     private static class PbByteStringAdapter implements JsonSerializer<ByteString> {
+        @Override
         public JsonElement serialize(ByteString src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(Base64.toBase64String(src.toByteArray()));
         }

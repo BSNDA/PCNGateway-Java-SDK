@@ -10,7 +10,7 @@ import com.bsnbase.sdk.entity.req.xuperChain.ReqChainCodeRegister;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResChainCodeCancel;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResChainCodeQuery;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResChainCodeRegister;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class ChainCodeService {
      */
     public static ResChainCodeRegister eventRegister(ReqChainCodeRegister reqData) {
         String api = Config.config.getApi() + PathUtil.XUPERCHAIN_EVENT_REGISTER;
-        BaseReqModel<ReqChainCodeRegister> req = new BaseReqModel<ReqChainCodeRegister>(reqData);
+        BaseReqModel<ReqChainCodeRegister> req = new BaseReqModel<>(reqData);
         req.setReqHeader(Config.config.getUserCode(), Config.config.getAppCode());
         HttpService<ReqChainCodeRegister, ResChainCodeRegister> httpService = new HttpService<ReqChainCodeRegister, ResChainCodeRegister>();
         BaseResModel<ResChainCodeRegister> res = httpService.post(req, api, ResChainCodeRegister.class);
@@ -36,9 +36,9 @@ public class ChainCodeService {
      */
     public static List<ResChainCodeQuery> eventQuery() {
         String api = Config.config.getApi() + PathUtil.XUPERCHAIN_EVENT_QUERY;
-        BaseReqModel<ReqChainCodeQuery> req = new BaseReqModel<ReqChainCodeQuery>();
+        BaseReqModel<ReqChainCodeQuery> req = new BaseReqModel<>();
         req.setReqHeader(Config.config.getUserCode(), Config.config.getAppCode());
-        HttpService<ReqChainCodeQuery, ResChainCodeQuery> httpService = new HttpService<ReqChainCodeQuery, ResChainCodeQuery>();
+        HttpService<ReqChainCodeQuery, ResChainCodeQuery> httpService = new HttpService<>();
         BaseResArrayModel<ResChainCodeQuery> res = httpService.arrayPost(req, api, ResChainCodeQuery.class);
         return res.getBody();
     }

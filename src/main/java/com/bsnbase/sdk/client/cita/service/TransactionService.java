@@ -9,7 +9,7 @@ import com.bsnbase.sdk.entity.req.cita.ReqKeyUpload;
 import com.bsnbase.sdk.entity.req.cita.ReqKeyUploadBody;
 import com.bsnbase.sdk.entity.resp.cita.ResGetBlockHeight;
 import com.bsnbase.sdk.entity.resp.cita.ResKeyEscrow;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.common.HttpService;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;

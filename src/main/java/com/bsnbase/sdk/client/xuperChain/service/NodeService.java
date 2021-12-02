@@ -7,7 +7,7 @@ import com.bsnbase.sdk.entity.req.xuperChain.ReqGetBlockInformation;
 import com.bsnbase.sdk.entity.req.xuperChain.ReqGetTransaction;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResGetBlockInformation;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResGetTransaction;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 
 public class NodeService {

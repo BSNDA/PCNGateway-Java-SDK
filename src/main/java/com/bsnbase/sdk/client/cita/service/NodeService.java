@@ -10,7 +10,7 @@ import com.bsnbase.sdk.entity.resp.cita.ResGetBlockHeight;
 import com.bsnbase.sdk.entity.resp.cita.ResGetBlockInformation;
 import com.bsnbase.sdk.entity.resp.cita.ResGetTransaction;
 import com.bsnbase.sdk.entity.resp.cita.ResGetTxReceiptByTxHash;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 
 public class NodeService {

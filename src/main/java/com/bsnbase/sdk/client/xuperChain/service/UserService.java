@@ -5,7 +5,7 @@ import com.bsnbase.sdk.entity.base.BaseResModel;
 import com.bsnbase.sdk.entity.config.Config;
 import com.bsnbase.sdk.entity.req.xuperChain.ReqUserRegister;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResUserRegister;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 
 public class UserService {

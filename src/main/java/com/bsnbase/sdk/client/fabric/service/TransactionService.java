@@ -10,7 +10,7 @@ import com.bsnbase.sdk.entity.resp.fabric.ResKeyEscrow;
 import com.bsnbase.sdk.entity.resp.fabric.ResKeyEscrowNo;
 import com.bsnbase.sdk.entity.transactionHeader.TransactionRequest;
 import com.bsnbase.sdk.entity.transactionHeader.TransactionUser;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.common.HttpService;
 import com.bsnbase.sdk.util.common.Nonce;

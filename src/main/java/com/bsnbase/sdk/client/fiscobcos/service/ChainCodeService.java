@@ -10,7 +10,7 @@ import com.bsnbase.sdk.entity.req.fiscobcos.ReqChainCodeRegister;
 import com.bsnbase.sdk.entity.resp.fiscobcos.ResChainCodeCancel;
 import com.bsnbase.sdk.entity.resp.fiscobcos.ResChainCodeQuery;
 import com.bsnbase.sdk.entity.resp.fiscobcos.ResChainCodeRegister;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import com.bsnbase.sdk.entity.req.fiscobcos.ReqTrans;
 import com.bsnbase.sdk.entity.req.fiscobcos.ReqTransData;
 import com.bsnbase.sdk.entity.resp.fiscobcos.ResKeyEscrow;
 import com.bsnbase.sdk.entity.resp.fiscobcos.ResTrans;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 import com.bsnbase.sdk.util.trans.FiscoTransUtil;
 import org.jetbrains.annotations.NotNull;

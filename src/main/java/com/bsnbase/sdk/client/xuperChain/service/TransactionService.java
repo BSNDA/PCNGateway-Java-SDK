@@ -7,7 +7,7 @@ import com.bsnbase.sdk.entity.req.xuperChain.ReqKeyEscrow;
 import com.bsnbase.sdk.entity.req.xuperChain.ReqTrans;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResKeyEscrow;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResKeyEscrowNo;
-import com.bsnbase.sdk.util.PathUtil.PathUtil;
+import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.HttpService;
 import org.jetbrains.annotations.NotNull;
 
