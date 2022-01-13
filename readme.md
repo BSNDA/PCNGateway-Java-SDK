@@ -4,7 +4,11 @@
 
 ### 1. Before calling
 
+#### System Requirements
+* __JDK:__ ORACLE JDK8 must meet
+
 #### App parameter
+
 
 > Application parameters are obtained from the application details page after the user participates in the application, or some parameters are set locally, specifically including
 

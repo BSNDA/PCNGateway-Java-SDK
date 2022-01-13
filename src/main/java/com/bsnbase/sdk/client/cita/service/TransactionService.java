@@ -184,12 +184,12 @@ public class TransactionService {
         switch (req.getFuncName()) {
             case "insert":
             case "update":
-                inputs.add(new Bytes32(Common.getByte32(req.getArgs()[0])));
+                inputs.add(new Bytes32(Common.getByte32String(req.getArgs()[0])));
                 inputs.add(new DynamicBytes(req.getArgs()[1].getBytes()));
                 break;
             case "retrieve":
             case "remove":
-                inputs.add(new Bytes32(Common.getByte32(req.getArgs()[0])));
+                inputs.add(new Bytes32(Common.getByte32String(req.getArgs()[0])));
                 break;
             case "keyAtIndex":
                 inputs.add(new Uint256(Long.parseLong(req.getArgs()[0])));

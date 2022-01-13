@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.bsnbase.sdk.client.fabric.service.AppService;
 import com.bsnbase.sdk.entity.resp.fabric.ResUserInfo;
 import com.bsnbase.sdk.util.common.Common;
+import com.bsnbase.sdk.util.enums.AppTypeEnum;
+import com.bsnbase.sdk.util.enums.CaTypeEnum;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
 import com.bsnbase.sdk.util.keystore.IKeyStore;
@@ -121,6 +123,9 @@ public class Config {
                 e.printStackTrace();
                 throw new GlobalException(ResultInfoEnum.GET_APP_INFO_ERROR);
             }
+            if(CaTypeEnum.NON_HOSTED.nCode==res.getCaType()&&AppTypeEnum.FABIRC.getValue().equals(res.getAppType().toLowerCase())){
+                validMspDir(config);
+            }
             appInfo = res;
         }
     }
@@ -131,8 +136,10 @@ public class Config {
         Preconditions.checkNotNull(config.getAppCode(), "Appcode cannot be null");
         Preconditions.checkNotNull(config.getPrk(), "User private key cannot be null");
         Preconditions.checkNotNull(config.getPuk(), "User public key cannot be null");
-        Preconditions.checkNotNull(config.getMspDir(), "Certificate storage directory cannot be null");
+    }
 
+    private void validMspDir(Config config) {
+        Preconditions.checkNotNull(config.getMspDir(), "Certificate storage directory cannot be null");
     }
 
 }
