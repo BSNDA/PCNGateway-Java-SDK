@@ -1,7 +1,6 @@
 package com.bsnbase.sdk.util.aes;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.bouncycastle.util.encoders.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -96,7 +95,7 @@ This class is only useful for raw keys that can be represented as a byte array a
             // Here the package will not be found in Base64Encoder
             //Solution:
             // Remove the JRE System Library in the Build path of the project first, then add the library JRE System Library, recompile and everything will be fine.
-            String AES_encode = new String(new BASE64Encoder().encode(byte_AES));
+            String AES_encode = new String(Base64.encode(byte_AES));
             //11. Return the string
             return AES_encode;
         } catch (Exception e) {
@@ -132,7 +131,7 @@ This class is only useful for raw keys that can be represented as a byte array a
             //7. Initialize the cipher, the first parameter is the Encrypt_mode or Decrypt_mode operation, the second parameter is the KEY used
             cipher.init(Cipher.DECRYPT_MODE, key);
             //8. Decode the encrypted and encoded content into a byte array
-            byte[] byte_content = new BASE64Decoder().decodeBuffer(content);
+            byte[] byte_content = Base64.decode(content);
             /*
              * Decrypt
              */

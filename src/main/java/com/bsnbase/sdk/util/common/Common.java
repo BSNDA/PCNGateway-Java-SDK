@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -182,7 +183,7 @@ public class Common {
      */
     public static String getByte32(byte[] value) {
         String keyHex = DatatypeConverter.printHexBinary(value);
-        String fixKey = String.format("%0" + 64 + "d", Long.parseLong(keyHex));
+        String fixKey = addZeroForNum(keyHex, 64);
         return fixKey;
     }
 
@@ -192,9 +193,9 @@ public class Common {
      * @param par
      * @return
      */
-    public static byte[] getByte32(String par) {
+    public static byte[] getByte32String(String par) {
         String keyHex = DatatypeConverter.printHexBinary(par.getBytes());
-        String fixKey = String.format("%0" + 64 + "d", Long.parseLong(keyHex));
+        String fixKey = addZeroForNum(keyHex,64);
         byte[] value = ConvertStrByte.hexStringToBytes(cleanHexPrefix(fixKey));
         int length = value.length;
         int mod = length % 32;
@@ -209,4 +210,17 @@ public class Common {
         return dest;
     }
 
+    public static String addZeroForNum(String str, int strLength) {
+        int strLen = str.length();
+        if (strLen < strLength) {
+            while (strLen < strLength) {
+                StringBuffer sb = new StringBuffer();
+                sb.append("0").append(str);
+                str = sb.toString();
+                strLen = str.length();
+            }
+        }
+
+        return str;
+    }
 }

@@ -1,7 +1,6 @@
 package com.bsnbase.sdk.util.xuper;
 
 import com.bsnbase.sdk.util.common.Common;
-import com.bsnbase.sdk.util.pb.XchainOuterClass;
 import com.google.gson.*;
 import com.google.protobuf.ByteString;
 import org.bouncycastle.util.encoders.Base64;
@@ -22,12 +21,12 @@ public class TxEncoder {
         buffer = new StringBuilder();
     }
 
-    public static byte[] makeTxDigest(XchainOuterClass.Transaction tx) {
+    public static byte[] makeTxDigest(com.baidu.xuper.pb.XchainOuterClass.Transaction tx) {
         TxEncoder enc = new TxEncoder();
         return Common.doubleSha256(enc.encodeTx(tx, false));
     }
 
-    public static byte[] makeTxID(XchainOuterClass.Transaction tx) {
+    public static byte[] makeTxID(com.baidu.xuper.pb.XchainOuterClass.Transaction tx) {
         TxEncoder enc = new TxEncoder();
         return Common.doubleSha256(enc.encodeTx(tx, true));
     }
@@ -44,11 +43,11 @@ public class TxEncoder {
         }
     }
 
-    byte[] encodeTx(XchainOuterClass.Transaction tx, boolean needSign) {
+    byte[] encodeTx(com.baidu.xuper.pb.XchainOuterClass.Transaction tx, boolean needSign) {
         String a = null;
         encode(a);
 
-        for (XchainOuterClass.TxInput input : tx.getTxInputsList()) {
+        for (com.baidu.xuper.pb.XchainOuterClass.TxInput input : tx.getTxInputsList()) {
             encode(input.getRefTxid());
             encode(input.getRefOffset());
             encode(input.getFromAddr());
@@ -59,13 +58,13 @@ public class TxEncoder {
         encode(tx.getNonce());
         encode(tx.getTimestamp());
         encode(tx.getVersion());
-        for (XchainOuterClass.TxInputExt input : tx.getTxInputsExtList()) {
+        for (com.baidu.xuper.pb.XchainOuterClass.TxInputExt input : tx.getTxInputsExtList()) {
             encode(input.getBucket());
             encode(input.getKey());
             encode(input.getRefTxid());
             encode(input.getRefOffset());
         }
-        for (XchainOuterClass.TxOutputExt output : tx.getTxOutputsExtList()) {
+        for (com.baidu.xuper.pb.XchainOuterClass.TxOutputExt output : tx.getTxOutputsExtList()) {
             encode(output.getBucket());
             encode(output.getKey());
             encode(output.getValue());
@@ -124,7 +123,7 @@ public class TxEncoder {
     }
 
     private static class InvokeRequestBean {
-        static Object create(XchainOuterClass.InvokeRequest pb) {
+        static Object create(com.baidu.xuper.pb.XchainOuterClass.InvokeRequest pb) {
             LinkedHashMap<String, Object> m = new LinkedHashMap<>();
             if (!pb.getMethodName().isEmpty()) {
                 m.put("module_name", pb.getModuleName());
@@ -155,7 +154,7 @@ public class TxEncoder {
     }
 
     private static class ResourceLimitBean {
-        static Object create(XchainOuterClass.ResourceLimit pb) {
+        static Object create(com.baidu.xuper.pb.XchainOuterClass.ResourceLimit pb) {
             LinkedHashMap<String, Object> m = new LinkedHashMap<>();
             if (pb.getType().getNumber() != 0) {
                 m.put("type", pb.getType().getNumber());
@@ -168,7 +167,7 @@ public class TxEncoder {
     }
 
     private static class SignatureInfoBean {
-        static Object create(XchainOuterClass.SignatureInfo pb) {
+        static Object create(com.baidu.xuper.pb.XchainOuterClass.SignatureInfo pb) {
             LinkedHashMap<String, Object> m = new LinkedHashMap<>();
             if (!pb.getPublicKey().isEmpty()) {
                 m.put("PublicKey", pb.getPublicKey());

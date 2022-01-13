@@ -5,7 +5,6 @@ import com.bsnbase.sdk.entity.req.xuperChain.ReqTrans;
 import com.bsnbase.sdk.entity.req.xuperChain.ReqTransData;
 import com.bsnbase.sdk.entity.resp.xuperChain.ResKeyEscrowNo;
 import com.bsnbase.sdk.util.common.Common;
-import com.bsnbase.sdk.util.pb.XchainOuterClass;
 import com.bsnbase.sdk.util.sign.Sm2SignUtil;
 import com.bsnbase.sdk.util.xuper.TxEncoder;
 import com.google.gson.Gson;
@@ -29,7 +28,7 @@ public class XuperTransUtil {
 
 
     public static ReqTrans buildRequest(ReqTransData reqTransData) {
-        XchainOuterClass.InvokeRequest.Builder invokeRequestBuilder = XchainOuterClass.InvokeRequest.newBuilder();
+        com.baidu.xuper.pb.XchainOuterClass.InvokeRequest.Builder invokeRequestBuilder = com.baidu.xuper.pb.XchainOuterClass.InvokeRequest.newBuilder();
         if (reqTransData.getContractName() != null && reqTransData.getMethodName() != null && reqTransData.getArgs() != null) {
             invokeRequestBuilder.setModuleName("wasm")
                     .setMethodName(reqTransData.getMethodName())
@@ -41,7 +40,7 @@ public class XuperTransUtil {
             invokeRequestBuilder.putAllArgs(paramArgs);
         }
 
-        XchainOuterClass.InvokeRequest invokeRequest = invokeRequestBuilder.build();
+        com.baidu.xuper.pb.XchainOuterClass.InvokeRequest invokeRequest = invokeRequestBuilder.build();
 
 
         ReqTrans reqTrans = new ReqTrans();
@@ -54,10 +53,10 @@ public class XuperTransUtil {
     public static ReqTrans buildTransaction(ReqTransData reqTransData, ResKeyEscrowNo resKeyEscrowNo) throws Exception {
         byte[] bytes = Base64.getDecoder().decode(resKeyEscrowNo.getPreExecRes());
 
-        XchainOuterClass.InvokeResponse invokeResponse = XchainOuterClass.InvokeResponse.parseFrom(bytes);
+        com.baidu.xuper.pb.XchainOuterClass.InvokeResponse invokeResponse = com.baidu.xuper.pb.XchainOuterClass.InvokeResponse.parseFrom(bytes);
 
 
-        XchainOuterClass.Transaction.Builder txBuilder = XchainOuterClass.Transaction.newBuilder()
+        com.baidu.xuper.pb.XchainOuterClass.Transaction.Builder txBuilder = com.baidu.xuper.pb.XchainOuterClass.Transaction.newBuilder()
                 .setDesc(ByteString.copyFromUtf8("sdk contract transaction"))
                 .setVersion(txVersion)
                 .setCoinbase(false)
@@ -77,7 +76,7 @@ public class XuperTransUtil {
 
 
         byte[] sig = Sm2SignUtil.xuperSignature(Config.config.getPrk(), hash);
-        XchainOuterClass.SignatureInfo siginfo = XchainOuterClass.SignatureInfo.newBuilder()
+        com.baidu.xuper.pb.XchainOuterClass.SignatureInfo siginfo = com.baidu.xuper.pb.XchainOuterClass.SignatureInfo.newBuilder()
                 .setPublicKey(createJSONPublicKey(Config.config.getPuk()))
                 .setSign(ByteString.copyFrom(sig))
                 .build();
@@ -89,7 +88,7 @@ public class XuperTransUtil {
 
         txBuilder.setTxid(ByteString.copyFrom(txid));
 
-        XchainOuterClass.Transaction transaction = txBuilder.build();
+        com.baidu.xuper.pb.XchainOuterClass.Transaction transaction = txBuilder.build();
 
         ReqTrans reqTrans = new ReqTrans();
         reqTrans.setFlag(1);
