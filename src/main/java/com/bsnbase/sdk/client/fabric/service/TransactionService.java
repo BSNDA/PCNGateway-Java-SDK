@@ -10,6 +10,7 @@ import com.bsnbase.sdk.entity.resp.fabric.ResKeyEscrow;
 import com.bsnbase.sdk.entity.resp.fabric.ResKeyEscrowNo;
 import com.bsnbase.sdk.entity.transactionHeader.TransactionRequest;
 import com.bsnbase.sdk.entity.transactionHeader.TransactionUser;
+import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
 import com.bsnbase.sdk.util.path.PathUtil;
 import com.bsnbase.sdk.util.common.Common;
 import com.bsnbase.sdk.util.common.HttpService;
@@ -56,6 +57,10 @@ public class TransactionService {
         try {
             user = Config.config.getKeyStore().loadUser(reqkey.getUserName(), Config.config.getAppCode());
             user.setMspId(Config.config.getAppInfo().getMspId());
+            AlgorithmTypeEnum algorithmTypeEnum = AlgorithmTypeEnum.fromAlgorithmTypeEnum(Config.config.getAppInfo().getAlgorithmType());
+            if (algorithmTypeEnum==AlgorithmTypeEnum.AppAlgorithmType_SM2 && Config.config.getAppInfo().getFabricVersion().equals("2.2.1")){
+                user.setSM3(true);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new GlobalException(ResultInfoEnum.USER_CERTIFICATE_ERROR.getMsg());

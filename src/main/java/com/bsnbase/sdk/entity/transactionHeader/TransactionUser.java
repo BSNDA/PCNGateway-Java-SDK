@@ -19,4 +19,6 @@ public class TransactionUser {
      * Private key
      */
     String privateKey;
+
+    boolean isSM3;
 }

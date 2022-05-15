@@ -22,10 +22,16 @@ public class ReqGetBlockData implements IBody {
      */
     String txId;
 
+    /**
+     * DataType Options as json
+     */
+    String dataType ;
+
     @Override
     public String getEncryptionValue() {
         return (this.blockNumber == null ? 0 : this.blockNumber)
                 + (this.blockHash == null ? "" : this.blockHash)
-                + (this.txId == null ? "" : this.txId);
+                + (this.txId == null ? "" : this.txId)
+                + (this.dataType == null ? "" : this.dataType);
     }
 }

@@ -13,9 +13,15 @@ public class ReqTransData implements IBody {
      * Transaction ID
      */
     String txId;
+    /**
+     * DataType Options as json
+     */
+    String dataType ;
 
     @Override
     public String getEncryptionValue() {
-        return this.txId == null ? "" : this.txId;
+
+        return (this.txId == null ? "" : this.txId)
+                + (this.dataType == null ? "" : this.dataType);
     }
 }

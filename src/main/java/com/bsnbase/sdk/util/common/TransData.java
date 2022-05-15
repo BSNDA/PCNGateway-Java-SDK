@@ -6,6 +6,7 @@ import com.bsnbase.sdk.entity.transactionHeader.TransactionUser;
 import com.bsnbase.sdk.util.enums.AlgorithmTypeEnum;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
+import com.bsnbase.sdk.util.sign.Sm2SignUtil;
 import com.bsnbase.sdk.util.trans.FabricTransUtil;
 import com.google.protobuf.util.Timestamps;
 import org.hyperledger.fabric.protos.common.Common;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -66,7 +68,7 @@ public class TransData {
         return serializedIdentity.build();
     }
 
-    private static TransactionHeader transactionHeader(String channeId, String mspId, byte[] cert) throws IOException {
+    private static TransactionHeader transactionHeader(String channeId, String mspId, byte[] cert, boolean isSM3) throws IOException {
         TransactionHeader transactionHeader = new TransactionHeader();
         transactionHeader.setChannelId(channeId);
         byte[] nonce = Nonce.getNonce();
@@ -74,7 +76,13 @@ public class TransData {
         Identities.SerializedIdentity creator = serializedIdentity(mspId, cert);
         byte[] creatorBytes = convertToBytes(creator);
         transactionHeader.setCreator(convertToByteString(creator));
-        transactionHeader.setTransactionId(getTxid(nonce, creatorBytes));
+
+        if (isSM3) {
+            transactionHeader.setTransactionId(getTxidBySM3(nonce, creatorBytes));
+        }else {
+            transactionHeader.setTransactionId(getTxid(nonce, creatorBytes));
+        }
+
         return transactionHeader;
     }
 
@@ -111,7 +119,7 @@ public class TransData {
         Chaincode.ChaincodeInput input = chaincodeInput(request.getFcn(), request.getArgs());
         Chaincode.ChaincodeID chaincodeId = chaincodeID(request.getChaincodeId());
         ProposalPackage.ChaincodeProposalPayload payload = chaincodeProposalPayload(input, chaincodeId, request.getTransientMap());
-        TransactionHeader transactionHeader = transactionHeader(request.getChannelId(), user.getMspId(), user.getCert());
+        TransactionHeader transactionHeader = transactionHeader(request.getChannelId(), user.getMspId(), user.getCert(),user.isSM3());
         Common.Header header = header(transactionHeader, chaincodeId);
         ProposalPackage.Proposal.Builder proposal = ProposalPackage.Proposal.newBuilder();
         proposal.setHeader(convertToByteString(header));
@@ -137,6 +145,15 @@ public class TransData {
         return Base64.getEncoder().encodeToString(signProposalBytes);
     }
 
+    private static String getTxidBySM3(@NotNull byte[] nonce, @NotNull byte[] creator) {
+        byte[] by = new byte[nonce.length + creator.length];
+        System.arraycopy(nonce, 0, by, 0, nonce.length);
+        System.arraycopy(creator, 0, by, nonce.length, creator.length);
+
+        byte[] sm3DigestBytes = Sm2SignUtil.SM3Digest(by);
+        String encodestr = byte2Hex(sm3DigestBytes);
+        return encodestr;
+    }
 
     private static String getTxid(@NotNull byte[] nonce, @NotNull byte[] creator) {
         byte[] by = new byte[nonce.length + creator.length];
