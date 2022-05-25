@@ -17,11 +17,6 @@
         <io.grpc.version>1.40.1</io.grpc.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.70</version>
-        </dependency>
 
         <dependency>
             <groupId>com.google.protobuf</groupId>
@@ -199,8 +194,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.70</version>
-            <scope>compile</scope>
+            <version>2.0.4</version>
         </dependency>
 
         <dependency>

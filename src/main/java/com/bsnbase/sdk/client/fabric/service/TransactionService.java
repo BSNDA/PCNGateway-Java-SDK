@@ -37,7 +37,6 @@ public class TransactionService {
         BaseReqModel<ReqKeyEscrow> req = new BaseReqModel<ReqKeyEscrow>();
         req.setReqHeader(Config.config.getUserCode(), Config.config.getAppCode());
         kes.setNonce(Nonce.getNonceString());
-        System.out.println(kes.getEncryptionValue());
         req.setBody(kes);
 
         HttpService<ReqKeyEscrow, ResKeyEscrow> httpService = new HttpService<ReqKeyEscrow, ResKeyEscrow>();

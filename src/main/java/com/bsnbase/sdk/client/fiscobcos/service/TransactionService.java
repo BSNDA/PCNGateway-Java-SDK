@@ -31,7 +31,6 @@ public class TransactionService {
         String api = Config.config.getApi() + PathUtil.FISCOBCOS_NODE_REQ_CHAINCODE;
         BaseReqModel<ReqKeyEscrow> req = new BaseReqModel<ReqKeyEscrow>(kes);
         req.setReqHeader(Config.config.getUserCode(), Config.config.getAppCode());
-        System.out.println(kes.getEncryptionValue());
         req.setBody(kes);
         HttpService<ReqKeyEscrow, ResKeyEscrow> httpService = new HttpService<ReqKeyEscrow, ResKeyEscrow>();
         BaseResModel<ResKeyEscrow> res = httpService.post(req, api, ResKeyEscrow.class);

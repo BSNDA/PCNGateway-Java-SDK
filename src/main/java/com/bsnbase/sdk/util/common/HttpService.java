@@ -7,6 +7,7 @@ import com.bsnbase.sdk.entity.base.BaseResModel;
 import com.bsnbase.sdk.entity.base.IBody;
 import com.bsnbase.sdk.util.enums.ResultInfoEnum;
 import com.bsnbase.sdk.util.exception.GlobalException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.json.JsonException;
 
 
+@Slf4j
 public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
     //Default network connection timeout
@@ -29,8 +31,6 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
         try {
             req.sign();
             res = doPost(req, url);
-
-            System.out.println("Response: " + res);
         } catch (GlobalException e) {
             throw e;
         } catch (Exception e) {
@@ -87,7 +87,6 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
         BaseResModel<K> resModel = new BaseResModel<K>();
         try {
             res = doPost(req, url);
-            System.out.println("Response: " + res);
         } catch (GlobalException e) {
             throw e;
         } catch (Exception e) {
@@ -131,7 +130,6 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
         try {
             req.sign();
             res = doPost(req, url);
-            System.out.println("Response: " + res);
         } catch (Exception e) {
             e.printStackTrace();
             throw new GlobalException(ResultInfoEnum.SYSTEM_ERROR);
@@ -183,11 +181,11 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
     private String doPost(@NotNull BaseReqModel<T> req, String url) throws Exception {
         String param = JSON.toJSONString(req);
-        System.out.println("-------------Request Url-------------:\n" + url);
-        System.out.println("-------------Sent data-------------:\n" + param);
+        log.info("-------------Request Url-------------:\n" + url);
+        log.info("-------------Sent Data-------------:\n" + param);
         HttpClient httpClient = getHttpClient();
         String res = HttpClientUtil.doPost(httpClient, url, param);
-        System.out.println("Response: " + res);
+        log.info("-------------Response Data-------------:" + res);
         return res;
     }
 
