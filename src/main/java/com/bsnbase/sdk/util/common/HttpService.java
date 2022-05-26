@@ -1,6 +1,7 @@
 package com.bsnbase.sdk.util.common;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bsnbase.sdk.entity.base.BaseReqModel;
 import com.bsnbase.sdk.entity.base.BaseResArrayModel;
 import com.bsnbase.sdk.entity.base.BaseResModel;
@@ -15,13 +16,14 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.json.JsonException;
+import javax.json.JsonObject;
 
 
 @Slf4j
 public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
     //Default network connection timeout
-    private static final int CONNECTION_TIMEOUT = 3000;
+    private static final int CONNECTION_TIMEOUT = 20000;
 
 
     public BaseResModel<K> post(BaseReqModel<T> req, String url, Class<K> clazz) {
