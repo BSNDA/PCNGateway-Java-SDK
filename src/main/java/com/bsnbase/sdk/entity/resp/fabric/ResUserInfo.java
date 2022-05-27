@@ -40,6 +40,8 @@ public class ResUserInfo implements IBody {
      */
     Integer version;
 
+    String fabricVersion;
+
     @Override
     public String getEncryptionValue() {
         return (this.appName == null ? "" : this.appName)

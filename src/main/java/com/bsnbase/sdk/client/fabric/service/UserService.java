@@ -42,7 +42,6 @@ public class UserService {
     public static ResKeyEscrowEnroll userEnroll(@NotNull ReqKeyEscrowEnroll kes) throws IOException {
         String api = Config.config.getApi() + PathUtil.FABRIC_USER_ENROLL;
         UserCertInfo certInfo = StoreUtils.generateCSR(kes.getName(), Config.config.getAppCode());
-        System.out.println(certInfo.getCSRPem());
         kes.setCsrPem(certInfo.getCSRPem());
 
         BaseReqModel<ReqKeyEscrowEnroll> req = new BaseReqModel<ReqKeyEscrowEnroll>();
