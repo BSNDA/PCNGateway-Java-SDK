@@ -1,7 +1,6 @@
 package com.bsnbase.sdk.util.common;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.bsnbase.sdk.entity.base.BaseReqModel;
 import com.bsnbase.sdk.entity.base.BaseResArrayModel;
 import com.bsnbase.sdk.entity.base.BaseResModel;
@@ -16,7 +15,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.json.JsonException;
-import javax.json.JsonObject;
 
 
 @Slf4j
@@ -47,9 +45,11 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
                 String bodystr = JSON.toJSONString(resModel.getBody());
 
-                resModel.setBody(JSON.parseObject(bodystr, clazz));
+                boolean checkJson = JsonUtil.getJSONType(bodystr);
 
-            } catch (JsonException e) {
+                resModel.setBody(checkJson ? JSON.parseObject(bodystr, clazz) : null);
+
+            } catch (Exception e) {
                 throw new GlobalException(ResultInfoEnum.DATA_CONVERSION_ERROR);
             }
             // Signature verfication, data transfer
@@ -201,5 +201,6 @@ public class HttpService<T extends Object & IBody, K extends Object & IBody> {
 
         return httpClient;
     }
+
 
 }
