@@ -23,6 +23,7 @@ import org.fisco.bcos.web3j.utils.Numeric;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.*;
 
 public class AbiUtil {
@@ -126,8 +127,8 @@ public class AbiUtil {
                 if (isConstant) {
                     return encodedFunction;
                 } else {
-                    Random r = new Random();
-                    BigInteger randomid = new BigInteger(250, r);
+                    SecureRandom random = new SecureRandom();
+                    BigInteger randomid = new BigInteger(250, random);
                     BigInteger blockNumberLimit = blockNumber.add(new BigInteger(String.valueOf(600L)));
                     ExtendedRawTransaction extendedRawTransaction = ExtendedRawTransaction.createTransaction(randomid, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT, blockNumberLimit, contractAddress, BigInteger.ZERO, encodedFunction, new BigInteger("1"), BigInteger.valueOf((long) groupId), "");
                     byte[] encodedTransaction = ExtendedTransactionEncoder.encode(extendedRawTransaction);

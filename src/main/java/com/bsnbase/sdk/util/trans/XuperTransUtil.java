@@ -14,6 +14,7 @@ import org.bouncycastle.math.ec.ECPoint;
 
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,7 +24,8 @@ public class XuperTransUtil {
     static public final int txVersion = 1;
 
     static public String newNonce() {
-        return String.valueOf(System.nanoTime()) + (int) (Math.random() * 100000000);
+        SecureRandom secureRandom = new SecureRandom();
+        return String.valueOf(System.nanoTime()) + (secureRandom.nextInt() * 100000000);
     }
 
 
