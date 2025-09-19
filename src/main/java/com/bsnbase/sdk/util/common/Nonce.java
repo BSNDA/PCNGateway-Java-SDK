@@ -1,12 +1,13 @@
 package com.bsnbase.sdk.util.common;
 
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Random;
 
 public class Nonce {
     public static byte[] getNonce() {
         byte[] arr = new byte[24];
-        new Random().nextBytes(arr);
+        new SecureRandom().nextBytes(arr);
         return arr;
     }
 

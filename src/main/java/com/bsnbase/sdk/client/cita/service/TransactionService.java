@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.PrivateKey;
+import java.security.SecureRandom;
 import java.security.interfaces.ECPrivateKey;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,7 +110,7 @@ public class TransactionService {
         }
 
         String api = Config.config.getApi() + PathUtil.CITA_NODE_TRANS;
-        nonce = new Random(System.currentTimeMillis());
+        nonce = new SecureRandom(String.valueOf(System.currentTimeMillis()).getBytes());
 
         // Get current block height
         ResGetBlockHeight resGetBlockHeight = NodeService.getBlockHeight();
